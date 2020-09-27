@@ -19,19 +19,19 @@ public class Ag4trContent {
 
     private static final Map<Identifier, Item> AG4TRITEMS = new LinkedHashMap<>();
 
-    public static final Item RUBBER_BOOTS = addToAg4trItems("rubber_boots", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.FEET));
-    public static final Item RUBBER_CHESTPLATE = addToAg4trItems("rubber_chestplate",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.CHEST));
-    public static final Item RUBBER_LEGGINGS = addToAg4trItems("rubber_leggings",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.LEGS));
-    public static final Item RUBBER_HELMET = addToAg4trItems("rubber_helmet",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.HEAD));
+    public static final Item RUBBER_BOOTS = addItem("rubber_boots", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.FEET));
+    public static final Item RUBBER_CHESTPLATE = addItem("rubber_chestplate",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.CHEST));
+    public static final Item RUBBER_LEGGINGS = addItem("rubber_leggings",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.LEGS));
+    public static final Item RUBBER_HELMET = addItem("rubber_helmet",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.HEAD));
 
-    public static final Item COMPOSITE_ARMOR_PLATE = addToAg4trItems("composite_armor_plate",new Item(new Item.Settings().group(ItemGroup.MISC)));
-    public static final Item COMPOSITE_CHESTPLATE = addToAg4trItems("composite_chestplate",new CompositeArmorPiece(COMPOSITE_ARMOR_MATERIAL, EquipmentSlot.CHEST));
+    public static final Item COMPOSITE_ARMOR_PLATE = addItem("composite_armor_plate",new Item(new Item.Settings().group(ItemGroup.MISC)));
+    public static final Item COMPOSITE_CHESTPLATE = addItem("composite_chestplate",new CompositeArmorPiece(COMPOSITE_ARMOR_MATERIAL, EquipmentSlot.CHEST));
 
-    public static final Item NV_GOGGLES = addToAg4trItems("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
-    public static final Item EXOLEGS = addToAg4trItems("exolegs_leggings", new ExoskeletonArmorPiece(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.LEGS));
-    public static final Item REBREATHER = addToAg4trItems("rebreather", new DivingArmorPiece(DIVING_ARMOR_MATERIAL, EquipmentSlot.HEAD));
+    public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
+    public static final Item EXOLEGS = addItem("exolegs_leggings", new ExoskeletonArmorPiece(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.LEGS));
+    public static final Item REBREATHER = addItem("rebreather", new DivingArmorPiece(DIVING_ARMOR_MATERIAL, EquipmentSlot.HEAD));
 
-    private static <I extends Item> I addToAg4trItems(String name, I item) {
+    private static <I extends Item> I addItem(String name, I item) {
         AG4TRITEMS.put(new Identifier(Ag4tr.MOD_ID, name), item);
         return item;
     }
