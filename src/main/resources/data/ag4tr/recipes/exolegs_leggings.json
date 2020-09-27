@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#C#",
+        "BLB",
+        "L L"
+    ],
+    "key": {
+        "#": {
+            "item": "techreborn:red_cell_battery"
+        },
+        "C": {
+            "item": "techreborn:advanced_circuit"
+        },
+        "B": {
+            "item": "techreborn:electronic_circuit"
+        },
+        "L": {
+            "item": "techreborn:refined_iron_plate"
+        }
+    },
+    "result": {
+        "item": "ag4tr:exolegs_leggings",
+        "count": 1
+    }
+}

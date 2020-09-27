@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#BS",
+        "BGB"
+    ],
+    "key": {
+        "#": {
+            "item": "techreborn:advanced_circuit"
+        },
+        "B": {
+            "item": "techreborn:carbon_plate"
+        },
+        "S": {
+            "item": "techreborn:red_cell_battery"
+        },
+        "G": {
+            "item": "minecraft:green_stained_glass_pane"
+        }
+    },
+    "result": {
+        "item": "ag4tr:nv_goggles",
+        "count": 1
+    }
+}

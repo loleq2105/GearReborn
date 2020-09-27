@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "ag4tr:item/composite_leggings"
+  }
+}
+

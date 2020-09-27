@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "ag4tr",
+  "version": "${version}",
+  "name": "Ag4tr",
+  "description": "Additional gear for Tech Reborn!",
+  "authors": [
+    "loleq21"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/ag4tr/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "dev.loleq21.ag4tr.client.Ag4trClient"
+    ],
+    "main": [
+      "dev.loleq21.ag4tr.Ag4tr"
+    ]
+  },
+  "mixins": [
+    "ag4tr.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.9.3+build.207",
+    "fabric": "*",
+    "minecraft": "1.16.2",
+    "techreborn": ">=3.4.5"
+  }
+}
