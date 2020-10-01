@@ -113,7 +113,7 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
 
     @Override
     public EnergyTier getTier() {
-        return EnergyTier.LOW;
+        return EnergyTier.MEDIUM;
     }
 
     @Override
