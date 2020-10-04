@@ -23,7 +23,12 @@ import techreborn.utils.InitUtils;
 public class DivingArmorPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions {
 
     public DivingArmorPiece(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(ItemGroup.COMBAT));
+        super(material, slot, new Settings().group(ItemGroup.COMBAT).maxCount(1).maxDamage(-1));
+    }
+
+    @Override
+    public boolean isDamageable() {
+        return false;
     }
 
     @Override
@@ -75,4 +80,5 @@ public class DivingArmorPiece extends ArmorItem implements ArmorTickable, Energy
         }
         InitUtils.initPoweredItems(this, itemList);
     }
+
 }

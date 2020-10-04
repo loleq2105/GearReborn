@@ -25,7 +25,7 @@
   "depends": {
     "fabricloader": ">=0.9.3+build.207",
     "fabric": "*",
-    "minecraft": "1.16.2",
-    "techreborn": ">=3.4.5"
+    "minecraft": "1.16.3",
+    "techreborn": ">=3.5.4"
   }
 }

@@ -18,7 +18,12 @@ import techreborn.utils.InitUtils;
 public class FdrBootsArmorPiece extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions {
 
     public FdrBootsArmorPiece(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(ItemGroup.COMBAT));
+        super(material, slot, new Settings().group(ItemGroup.COMBAT).maxCount(1).maxDamage(-1));
+    }
+
+    @Override
+    public boolean isDamageable() {
+        return false;
     }
 
     @Override
