@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "# #",
+        "KWK",
+        "BWB"
+    ],
+    "key": {
+        "#": {
+            "item": "techreborn:red_cell_battery"
+        },
+        "K": {
+            "item": "techreborn:advanced_circuit"
+        },
+        "W": {
+            "item": "techreborn:refined_iron_plate"
+        },
+        "B": {
+            "item": "techreborn:rubber"
+        }
+    },
+    "result": {
+        "item": "ag4tr:fdt_boots",
+        "count": 1
+    }
+}

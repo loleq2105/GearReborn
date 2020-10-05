@@ -11,6 +11,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,18 +55,24 @@ public abstract class LivingEntityMixin extends Entity {
                     int powerRequiredToNullDmg = ayeer*32;
                     if (ayeer>0 && Energy.of(equeepedBootsItmStck).getEnergy()>=powerRequiredToNullDmg) {
                         Energy.of(equeepedBootsItmStck).use(powerRequiredToNullDmg);
-                        info.cancel();
+                        if (!world.isClient) {
+                            info.cancel();
+                        }
                     }
                     if (ayeer>0 && Energy.of(equeepedBootsItmStck).getEnergy()<powerRequiredToNullDmg) {
                         int howMuchMoreEnergyBootsShouldve2NullDmgCompletely = powerRequiredToNullDmg-(int)Energy.of(equeepedBootsItmStck).getEnergy();
                         Energy.of(equeepedBootsItmStck).use(Energy.of(equeepedBootsItmStck).getEnergy());
                         float damageThatTheBootsWerentAbleToNullify = howMuchMoreEnergyBootsShouldve2NullDmgCompletely/32;
                         this.damage(DamageSource.FALL, damageThatTheBootsWerentAbleToNullify);
-                        info.cancel();
-
+                        if (!world.isClient) {
+                            info.cancel();
+                        }
                     }
+                    //this doesn't work for some reason...
+                    //this.playSound(SoundEvents.BLOCK_ANVIL_LAND, 1f, 1f);
 
                 }
+
             }
         }
     }
