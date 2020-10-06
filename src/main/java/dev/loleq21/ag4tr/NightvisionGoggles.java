@@ -2,6 +2,7 @@ package dev.loleq21.ag4tr;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -13,8 +14,10 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
@@ -22,6 +25,9 @@ import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
 import techreborn.utils.InitUtils;
+import techreborn.utils.MessageIDs;
+
+import java.util.List;
 
 import static dev.loleq21.ag4tr.client.Ag4trClient.NV_KEY_BIND;
 
@@ -39,38 +45,28 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     private PlayerEntity user;
     private ServerWorld serverworld;
 
-    private static boolean nvKeyDownOnLast;
-    private static boolean nvKeyToggled;
-
-    public static boolean isToggledOn(){
-        if(NV_KEY_BIND.isPressed()){
-            nvKeyDownOnLast = true;
-        }else if(!NV_KEY_BIND.isPressed() && nvKeyDownOnLast && !nvKeyToggled){
-            nvKeyDownOnLast = false;
-            nvKeyToggled = true;
-            return nvKeyToggled;
-        }else if(!NV_KEY_BIND.isPressed() && nvKeyDownOnLast && nvKeyToggled){
-            nvKeyDownOnLast = false;
-            nvKeyToggled = false;
-            return nvKeyToggled;
-        }
-        return nvKeyToggled;
-    }
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
         if (world instanceof ServerWorld) {
-                serverworld = (ServerWorld) world;
+            serverworld = (ServerWorld) world;
+        }
                 if (entity instanceof PlayerEntity) {
                     user = (PlayerEntity) entity;
                 }
 
-                        if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && isToggledOn() && Energy.of(stack).use(20)) {
+            if(NV_KEY_BIND.isPressed()) {
+                if (stack.getCooldown() == 0) {
+                    Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Night Vision Enabled", "Night Vision Disabled");
+                }
+                stack.setCooldown(2);
+            }
+
+                        if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(20)) {
                             user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5, 1));
                         }
 
-                    }
 
     }
 
@@ -102,6 +98,12 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     @Override
     public EnergyTier getTier() {
         return EnergyTier.LOW;
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
+        Ag4trItemUtils.buildActiveTooltip(stack, tooltip, "Night Vision Enabled", "Night Vision Disabled");
     }
 
     @Environment(EnvType.CLIENT)

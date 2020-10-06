@@ -3,6 +3,7 @@ package dev.loleq21.ag4tr;
 import com.google.common.collect.Multimap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -15,7 +16,10 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorTickable;
 import reborncore.api.items.ItemStackModifiers;
 import reborncore.common.powerSystem.PowerSystem;
@@ -25,7 +29,9 @@ import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
 import techreborn.utils.InitUtils;
+import techreborn.utils.MessageIDs;
 
+import java.util.List;
 import java.util.UUID;
 
 import static dev.loleq21.ag4tr.client.Ag4trClient.EXOLEGS_JUMP_BOOST_KEY_BIND;
@@ -43,34 +49,14 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
 
     private static final UUID[] MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 
-    private double playerVelocity;
-    private boolean playerIsWalking;
-
-    private boolean jbKeyDownOnLast;
-    private boolean jbKeyToggled;
-    private boolean jbIsToggledOn(){
-        if(EXOLEGS_JUMP_BOOST_KEY_BIND.isPressed()){
-            jbKeyDownOnLast = true;
-        }else if(!EXOLEGS_JUMP_BOOST_KEY_BIND.isPressed() && jbKeyDownOnLast && !jbKeyToggled){
-            jbKeyDownOnLast = false;
-            jbKeyToggled = true;
-            return jbKeyToggled;
-        }else if(!EXOLEGS_JUMP_BOOST_KEY_BIND.isPressed() && jbKeyDownOnLast && jbKeyToggled){
-            jbKeyDownOnLast = false;
-            jbKeyToggled = false;
-            return jbKeyToggled;
-        }
-        return jbKeyToggled;
-    }
-
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
 
         switch (this.slot){
             case LEGS:
-                playerVelocity = Math.sqrt(Math.pow(playerEntity.getVelocity().getX(),2)+Math.pow(playerEntity.getVelocity().getZ(),2));
+                double playerVelocity = Math.sqrt(Math.pow(playerEntity.getVelocity().getX(), 2) + Math.pow(playerEntity.getVelocity().getZ(), 2));
                 //playerEntity.sendMessage(new LiteralText(String.valueOf(playerVelocity)), true);
-                playerIsWalking = playerEntity.isOnGround() == (playerVelocity > 0.034D) == !playerEntity.isSprinting();
+                boolean playerIsWalking = playerEntity.isOnGround() == (playerVelocity > 0.034D) == !playerEntity.isSprinting();
                 //playerIsJumpingProbably = !playerEntity.isSneaking() && !playerEntity.isSwimming() && !playerEntity.isOnGround() && playerEntity.getVelocity().getY()>0;
                 if (playerEntity.isSprinting() && Energy.of(itemStack).getEnergy() >= 16) {
                     Energy.of(itemStack).use(16);
@@ -84,7 +70,21 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
                     Energy.of(itemStack).use(16);
                 }
 
-                if (jbIsToggledOn() && Energy.of(itemStack).getEnergy() >= 8) {
+                //i don't feel like this is the best way to do this
+
+                if(EXOLEGS_JUMP_BOOST_KEY_BIND.isPressed()) {
+                    if (itemStack.getCooldown() == 0) {
+                        Ag4trItemUtils.switchActive(itemStack, playerEntity.getEntityWorld().isClient(), MessageIDs.poweredToolID, "Jump Boost Enabled", "Jump Boost Disabled");
+                        if (!Ag4trItemUtils.isActive(itemStack)){
+                            playerEntity.playSound(SoundEvents.BLOCK_PISTON_CONTRACT, 1F, 2F);
+                        } else {
+                            playerEntity.playSound(SoundEvents.BLOCK_PISTON_EXTEND, 1F, 2F);
+                        }
+                    }
+                    itemStack.setCooldown(2);
+                }
+
+                if (ItemUtils.isActive(itemStack) && Energy.of(itemStack).getEnergy() >= 8) {
                      playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 5, 2));
                      Energy.of(itemStack).use(8);
                  }
@@ -128,6 +128,12 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
         if (this.slot == EquipmentSlot.LEGS && equipmentSlot == EquipmentSlot.LEGS && Energy.of(itemStack).getEnergy() > 2) {
             multimap.put(EntityAttributes.GENERIC_MOVEMENT_SPEED, new EntityAttributeModifier(MODIFIERS[equipmentSlot.getEntitySlotId()], "Movement Speed", 0.06D, EntityAttributeModifier.Operation.ADDITION));
         }
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
+        Ag4trItemUtils.buildActiveTooltip(stack, tooltip, "Jump Boost Enabled", "Jump Boost Disabled");
     }
 
     @Environment(EnvType.CLIENT)
