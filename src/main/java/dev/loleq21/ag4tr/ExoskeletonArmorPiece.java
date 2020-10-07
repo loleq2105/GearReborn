@@ -43,8 +43,13 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
     }
 
     @Override
-    public boolean isDamageable() {
-        return false;
+    public void getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack, Multimap<EntityAttribute, EntityAttributeModifier> multimap) {
+        multimap.removeAll(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        if (this.slot == EquipmentSlot.LEGS && equipmentSlot == EquipmentSlot.LEGS) {
+            if (Energy.of(itemStack).getEnergy() > 4) {
+                multimap.put(EntityAttributes.GENERIC_MOVEMENT_SPEED, new EntityAttributeModifier(MODIFIERS[equipmentSlot.getEntitySlotId()], "Movement Speed", 0.06D, EntityAttributeModifier.Operation.ADDITION));
+            }
+        }
     }
 
     private static final UUID[] MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
@@ -56,18 +61,15 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
             case LEGS:
                 double playerVelocity = Math.sqrt(Math.pow(playerEntity.getVelocity().getX(), 2) + Math.pow(playerEntity.getVelocity().getZ(), 2));
                 //playerEntity.sendMessage(new LiteralText(String.valueOf(playerVelocity)), true);
-                boolean playerIsWalking = playerEntity.isOnGround() == (playerVelocity > 0.034D) == !playerEntity.isSprinting();
+                boolean playerIsWalking = playerEntity.isOnGround() && (playerVelocity > 0.034D) && !playerEntity.isSprinting();
                 //playerIsJumpingProbably = !playerEntity.isSneaking() && !playerEntity.isSwimming() && !playerEntity.isOnGround() && playerEntity.getVelocity().getY()>0;
-                if (playerEntity.isSprinting() && Energy.of(itemStack).getEnergy() >= 16) {
-                    Energy.of(itemStack).use(16);
-                }
+                if (playerEntity.isSprinting() && Energy.of(itemStack).use(16)) { }
                 //0.034
-                if (playerIsWalking && Energy.of(itemStack).getEnergy() >= 4) {
-                    Energy.of(itemStack).use(4);
-                }
-                if (playerEntity.isSwimming() && Energy.of(itemStack).getEnergy() >= 16) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 5, 1));
-                    Energy.of(itemStack).use(16);
+                if (playerIsWalking && Energy.of(itemStack).use(4)) { }
+                if (playerEntity.isSwimming()) {
+                    if (Energy.of(itemStack).use(8)) {
+                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 5, 1));
+                    }
                 }
 
                 //i don't feel like this is the best way to do this
@@ -76,7 +78,7 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
                     if (itemStack.getCooldown() == 0) {
                         Ag4trItemUtils.switchActive(itemStack, playerEntity.getEntityWorld().isClient(), MessageIDs.poweredToolID, "Jump Boost Enabled", "Jump Boost Disabled");
                         if (!Ag4trItemUtils.isActive(itemStack)){
-                            playerEntity.playSound(SoundEvents.BLOCK_PISTON_CONTRACT, 1F, 2F);
+                            //playerEntity.playSound(SoundEvents.BLOCK_PISTON_CONTRACT, 1F, 2F);
                         } else {
                             playerEntity.playSound(SoundEvents.BLOCK_PISTON_EXTEND, 1F, 2F);
                         }
@@ -84,9 +86,8 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
                     itemStack.setCooldown(2);
                 }
 
-                if (ItemUtils.isActive(itemStack) && Energy.of(itemStack).getEnergy() >= 8) {
+                if (ItemUtils.isActive(itemStack) && Energy.of(itemStack).use(8)) {
                      playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 5, 2));
-                     Energy.of(itemStack).use(8);
                  }
                 break;
         }
@@ -122,13 +123,6 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
         return EnergyTier.MEDIUM;
     }
 
-    @Override
-    public void getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack, Multimap<EntityAttribute, EntityAttributeModifier> multimap) {
-        multimap.removeAll(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        if (this.slot == EquipmentSlot.LEGS && equipmentSlot == EquipmentSlot.LEGS && Energy.of(itemStack).getEnergy() > 2) {
-            multimap.put(EntityAttributes.GENERIC_MOVEMENT_SPEED, new EntityAttributeModifier(MODIFIERS[equipmentSlot.getEntitySlotId()], "Movement Speed", 0.06D, EntityAttributeModifier.Operation.ADDITION));
-        }
-    }
 
     @Environment(EnvType.CLIENT)
     @Override
