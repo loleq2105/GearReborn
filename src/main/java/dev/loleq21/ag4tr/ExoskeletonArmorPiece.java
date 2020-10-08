@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -16,6 +17,7 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -36,7 +38,7 @@ import java.util.UUID;
 
 import static dev.loleq21.ag4tr.client.Ag4trClient.EXOLEGS_JUMP_BOOST_KEY_BIND;
 
-public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions, ItemStackModifiers {
+public class ExoskeletonArmorPiece extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions, ItemStackModifiers {
 
     public ExoskeletonArmorPiece(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(ItemGroup.COMBAT).maxCount(1).maxDamage(-1));
@@ -55,43 +57,69 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
     private static final UUID[] MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 
     @Override
-    public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
-        switch (this.slot){
-            case LEGS:
-                double playerVelocity = Math.sqrt(Math.pow(playerEntity.getVelocity().getX(), 2) + Math.pow(playerEntity.getVelocity().getZ(), 2));
-                //playerEntity.sendMessage(new LiteralText(String.valueOf(playerVelocity)), true);
-                boolean playerIsWalking = playerEntity.isOnGround() && (playerVelocity > 0.034D) && !playerEntity.isSprinting();
-                //playerIsJumpingProbably = !playerEntity.isSneaking() && !playerEntity.isSwimming() && !playerEntity.isOnGround() && playerEntity.getVelocity().getY()>0;
-                if (playerEntity.isSprinting() && Energy.of(itemStack).use(16)) { }
-                //0.034
-                if (playerIsWalking && Energy.of(itemStack).use(4)) { }
-                if (playerEntity.isSwimming()) {
-                    if (Energy.of(itemStack).use(8)) {
-                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 5, 1));
-                    }
-                }
+        if (entity instanceof PlayerEntity) {
+            PlayerEntity user = (PlayerEntity) entity;
 
-                //i don't feel like this is the best way to do this
+            if (user.getEquippedStack(EquipmentSlot.LEGS) == stack) {
 
-                if(EXOLEGS_JUMP_BOOST_KEY_BIND.isPressed()) {
-                    if (itemStack.getCooldown() == 0) {
-                        Ag4trItemUtils.switchActive(itemStack, playerEntity.getEntityWorld().isClient(), MessageIDs.poweredToolID, "Jump Boost Enabled", "Jump Boost Disabled");
-                        if (!Ag4trItemUtils.isActive(itemStack)){
-                            //playerEntity.playSound(SoundEvents.BLOCK_PISTON_CONTRACT, 1F, 2F);
+                //user.sendMessage(new LiteralText(String.valueOf(Energy.of(stack).getEnergy())), true);
+
+                //jump boost control
+                if (EXOLEGS_JUMP_BOOST_KEY_BIND.isPressed()) {
+                    if (stack.getCooldown() == 0) {
+                        Ag4trItemUtils.switchActive(stack, user.getEntityWorld().isClient(), MessageIDs.poweredToolID, "Jump Boost Enabled", "Jump Boost Disabled");
+                        if (!Ag4trItemUtils.isActive(stack)) {
                         } else {
-                            playerEntity.playSound(SoundEvents.BLOCK_PISTON_EXTEND, 1F, 2F);
+                            user.playSound(SoundEvents.BLOCK_PISTON_EXTEND, 1F, 2F);
                         }
                     }
-                    itemStack.setCooldown(2);
+                    stack.setCooldown(2);
                 }
 
-                if (ItemUtils.isActive(itemStack) && Energy.of(itemStack).use(8)) {
-                     playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 5, 2));
-                 }
-                break;
+                //jump boost... handling?
+                if (ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
+                    user.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 5, 2));
+                }
+
+                //playerEntity.sendMessage(new LiteralText(String.valueOf(playerVelocity2D)), true);
+
+                //TODO fix this
+
+                double playerVelocity2D = Math.sqrt(Math.pow(user.getVelocity().getX(), 2) + Math.pow(user.getVelocity().getZ(), 2));
+                //0.034 is around the minimum velocity the player can normally go, tested
+                boolean playerIsWalking = user.isOnGround() && playerVelocity2D > 0.034 && !user.isSprinting() && !user.isSwimming();
+
+                //sprinting
+                if (user.isSprinting() && Energy.of(stack).use(16)) {
+                }
+
+                //walking
+                if (playerIsWalking && Energy.of(stack).use(4)) {
+                }
+
+                    /*
+                    a passive energy consumption solution, not too cool if you ask me
+                    if (!user.isSprinting() && !user.isSwimming() && !user.isSneaking() && Energy.of(stack).use(4)) {
+
+                    }
+
+                    if (!user.isSprinting() && !user.isSwimming() && user.isSneaking() && Energy.of(stack).use(2)) {
+
+                    }
+                     */
+
+                //swimming
+                if (user.isSwimming()) {
+                    if (Energy.of(stack).use(8)) {
+                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 5, 1));
+                    }
+                }
+            } else { return; }
         }
     }
+
 
     @Override
     public double getDurability(ItemStack stack) {
@@ -105,7 +133,7 @@ public class ExoskeletonArmorPiece extends ArmorItem implements ArmorTickable, E
 
     @Override
     public boolean isEnchantable(ItemStack stack) {
-        return false;
+        return true;
     }
 
     @Override
