@@ -85,8 +85,7 @@ public class ExoskeletonArmorPiece extends ArmorItem implements EnergyHolder, It
 
                 //playerEntity.sendMessage(new LiteralText(String.valueOf(playerVelocity2D)), true);
 
-                //TODO fix this
-
+/*
                 double playerVelocity2D = Math.sqrt(Math.pow(user.getVelocity().getX(), 2) + Math.pow(user.getVelocity().getZ(), 2));
                 //0.034 is around the minimum velocity the player can normally go, tested
                 boolean playerIsWalking = user.isOnGround() && playerVelocity2D > 0.034 && !user.isSprinting() && !user.isSwimming();
@@ -98,9 +97,9 @@ public class ExoskeletonArmorPiece extends ArmorItem implements EnergyHolder, It
                 //walking
                 if (playerIsWalking && Energy.of(stack).use(4)) {
                 }
+*/
 
-                    /*
-                    a passive energy consumption solution, not too cool if you ask me
+                    //a passive energy consumption solution, not too cool if you ask me
                     if (!user.isSprinting() && !user.isSwimming() && !user.isSneaking() && Energy.of(stack).use(4)) {
 
                     }
@@ -108,7 +107,7 @@ public class ExoskeletonArmorPiece extends ArmorItem implements EnergyHolder, It
                     if (!user.isSprinting() && !user.isSwimming() && user.isSneaking() && Energy.of(stack).use(2)) {
 
                     }
-                     */
+
 
                 //swimming
                 if (user.isSwimming()) {
