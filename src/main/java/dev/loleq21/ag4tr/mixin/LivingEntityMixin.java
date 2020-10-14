@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import team.reborn.energy.Energy;
 
+import java.util.Random;
+
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -33,18 +35,30 @@ public abstract class LivingEntityMixin extends Entity {
     private void handleFallDamage(float fallDistance, float damageMultiplier, CallbackInfoReturnable<Boolean> info) {
         if((Object) this instanceof PlayerEntity) {
             PlayerEntity player = ((PlayerEntity) ((Object) this));
-            //TODO make the rubber boots degrade durability... somehow...
             ItemStack equeepedBootsItmStck = player.getEquippedStack(EquipmentSlot.FEET);
             Item equpeedBoots = equeepedBootsItmStck.getItem();
             if (equpeedBoots == Ag4trContent.RUBBER_BOOTS) {
                 if(!world.isClient && !isSneaking()) {
                     StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
                     float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
-                    int aye = MathHelper.ceil((fallDistance - 4.0F - f) * damageMultiplier);
-                    if (aye>0){
-                        this.damage(DamageSource.FALL, (float)aye);
+                    int vanillaPlayerDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
+                    int userDamage = MathHelper.ceil(vanillaPlayerDamage/2);
+                    int bootDamage = MathHelper.ceil(vanillaPlayerDamage*2);
+                    int bootDurability = equeepedBootsItmStck.getMaxDamage()-equeepedBootsItmStck.getDamage();
+                    if (bootDamage>bootDurability){
+                        this.damage(DamageSource.FALL, (float)vanillaPlayerDamage);
+                        equeepedBootsItmStck.decrement(1);
+                        player.addCritParticles(player);
                     }
-                    info.cancel();
+                    if (bootDamage>0){
+                        equeepedBootsItmStck.damage(bootDamage, new Random((long)Math.random()), null);
+                    }
+                    if (userDamage>0){
+                        this.damage(DamageSource.FALL, (float)userDamage);
+                    }
+                    if (!world.isClient) {
+                        info.cancel();
+                    }
                 }
             }
             if (equpeedBoots == Ag4trContent.FDR_BOOTS) {
@@ -64,6 +78,7 @@ public abstract class LivingEntityMixin extends Entity {
                         Energy.of(equeepedBootsItmStck).use(Energy.of(equeepedBootsItmStck).getEnergy());
                         float damageThatTheBootsWerentAbleToNullify = howMuchMoreEnergyBootsShouldve2NullDmgCompletely/32;
                         this.damage(DamageSource.FALL, damageThatTheBootsWerentAbleToNullify);
+                        player.addCritParticles(player);
                         if (!world.isClient) {
                             info.cancel();
                         }

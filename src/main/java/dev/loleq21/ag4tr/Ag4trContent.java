@@ -28,7 +28,7 @@ public class Ag4trContent {
     public static final Item COMPOSITE_CHESTPLATE = addItem("composite_chestplate",new CompositeArmorPiece(COMPOSITE_ARMOR_MATERIAL, EquipmentSlot.CHEST));
 
     public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
-    public static final Item EXOLEGS = addItem("exolegs_leggings", new ExoskeletonArmorPiece(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.LEGS));
+    //public static final Item EXOLEGS = addItem("exolegs_leggings", new ExoskeletonArmorPiece(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.LEGS));
     public static final Item REBREATHER = addItem("rebreather", new DivingArmorPiece(DIVING_ARMOR_MATERIAL, EquipmentSlot.HEAD));
     public static final Item FDR_BOOTS = addItem("fdr_boots", new FdrBootsArmorPiece(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.FEET));
 
