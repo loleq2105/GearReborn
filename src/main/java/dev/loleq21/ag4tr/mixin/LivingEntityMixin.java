@@ -46,7 +46,7 @@ public abstract class LivingEntityMixin extends Entity {
                     int bootDamage = Math.round(vanillaPlayerDamage*2);
                     int bootDurability = equeepedBootsItmStck.getMaxDamage()-equeepedBootsItmStck.getDamage();
                     if (bootDamage>bootDurability){
-                        this.damage(DamageSource.FALL, (float)vanillaPlayerDamage);
+                        this.damage(DamageSource.FALL, (float)Math.round(vanillaPlayerDamage-(bootDurability/2)));
                         equeepedBootsItmStck.decrement(1);
                         player.addCritParticles(player);
                     }
