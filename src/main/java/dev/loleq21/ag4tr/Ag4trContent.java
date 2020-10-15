@@ -31,7 +31,7 @@ public class Ag4trContent {
     //public static final Item EXOLEGS = addItem("exolegs_leggings", new ExoskeletonArmorPiece(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.LEGS));
     public static final Item REBREATHER = addItem("rebreather", new DivingArmorPiece(DIVING_ARMOR_MATERIAL, EquipmentSlot.HEAD));
     public static final Item FDR_BOOTS = addItem("fdr_boots", new FdrBootsArmorPiece(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.FEET));
-    public static final Item COMPOSITE_SHIELD = addItem("composite_armor_shield", new Ag4trShieldItem(200, 512, Ag4trContent.COMPOSITE_ARMOR_PLATE));
+    public static final Item COMPOSITE_SHIELD = addItem("composite_armor_shield", new Ag4trShieldItem(50, 512, Ag4trContent.COMPOSITE_ARMOR_PLATE));
 
     private static <I extends Item> I addItem(String name, I item) {
         AG4TRITEMS.put(new Identifier(Ag4tr.MOD_ID, name), item);
