@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "#S#",
+        "BBB"
+    ],
+    "key": {
+        "#": {
+            "item": "ag4tr:composite_armor_plate"
+        },
+        "S": {
+            "item": "minecraft:shield"
+        },
+        "B": {
+            "item": "techreborn:rubber"
+        }
+    },
+    "result": {"item": "ag4tr:composite_armor_shield"},
+    "count": 1
+}

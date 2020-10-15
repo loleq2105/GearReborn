@@ -1,0 +1,14 @@
+{
+  "parent":"fabricshieldlib:item/template_shield",
+  "textures":{
+    "shield":"ag4tr:item/composite_armor_shield"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "ag4tr:item/composite_armor_shield_blocking"
+    }
+  ]
+}

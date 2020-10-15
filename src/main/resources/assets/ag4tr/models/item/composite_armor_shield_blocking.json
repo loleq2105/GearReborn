@@ -1,0 +1,6 @@
+{
+  "parent":"fabricshieldlib:item/template_shield_blocking",
+  "textures":{
+    "shield":"ag4tr:item/composite_armor_shield"
+  }
+}
