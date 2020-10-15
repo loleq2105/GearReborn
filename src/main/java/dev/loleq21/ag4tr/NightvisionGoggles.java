@@ -64,7 +64,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
             }
 
                         if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
-                            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5, 1));
+                            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5, 1, false, false ,false));
                         }
 
 

@@ -42,8 +42,8 @@ public abstract class LivingEntityMixin extends Entity {
                     StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
                     float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
                     int vanillaPlayerDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
-                    int userDamage = MathHelper.ceil(vanillaPlayerDamage/2);
-                    int bootDamage = MathHelper.ceil(vanillaPlayerDamage*2);
+                    int userDamage = Math.round(vanillaPlayerDamage/2);
+                    int bootDamage = Math.round(vanillaPlayerDamage*2);
                     int bootDurability = equeepedBootsItmStck.getMaxDamage()-equeepedBootsItmStck.getDamage();
                     if (bootDamage>bootDurability){
                         this.damage(DamageSource.FALL, (float)vanillaPlayerDamage);
@@ -65,29 +65,24 @@ public abstract class LivingEntityMixin extends Entity {
                 if(!world.isClient && !isSneaking()) {
                     StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
                     float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
-                    int ayeer = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
-                    int powerRequiredToNullDmg = ayeer*32;
-                    if (ayeer>0 && Energy.of(equeepedBootsItmStck).getEnergy()>=powerRequiredToNullDmg) {
-                        Energy.of(equeepedBootsItmStck).use(powerRequiredToNullDmg);
+                    int vanillaFallDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
+                    int powerRequiredToNullDmg = vanillaFallDamage*32;
+                    if (vanillaFallDamage>0 && Energy.of(equeepedBootsItmStck).use(powerRequiredToNullDmg)) {
                         if (!world.isClient) {
                             info.cancel();
                         }
                     }
-                    if (ayeer>0 && Energy.of(equeepedBootsItmStck).getEnergy()<powerRequiredToNullDmg) {
+                    if (vanillaFallDamage>0 && Energy.of(equeepedBootsItmStck).getEnergy()<powerRequiredToNullDmg) {
                         int howMuchMoreEnergyBootsShouldve2NullDmgCompletely = powerRequiredToNullDmg-(int)Energy.of(equeepedBootsItmStck).getEnergy();
                         Energy.of(equeepedBootsItmStck).use(Energy.of(equeepedBootsItmStck).getEnergy());
-                        float damageThatTheBootsWerentAbleToNullify = howMuchMoreEnergyBootsShouldve2NullDmgCompletely/32;
+                        float damageThatTheBootsWerentAbleToNullify = Math.round(howMuchMoreEnergyBootsShouldve2NullDmgCompletely/32);
                         this.damage(DamageSource.FALL, damageThatTheBootsWerentAbleToNullify);
                         player.addCritParticles(player);
                         if (!world.isClient) {
                             info.cancel();
                         }
                     }
-                    //this doesn't work for some reason...
-                    //this.playSound(SoundEvents.BLOCK_ANVIL_LAND, 1f, 1f);
-
                 }
-
             }
         }
     }
