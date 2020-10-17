@@ -20,11 +20,11 @@ public enum Ag4trArmorMaterials implements ArmorMaterial {
     RUBBER(6, new int[]{1, 3, 3, 2}, 10, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, 0F, () -> {
         return Ingredient.ofItems(TRContent.Parts.RUBBER.asItem());
     }),
-    DIVING(25, new int[]{1, 3, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_TURTLE, 0.0F, 0.0F, () -> {
-        return Ingredient.ofItems(Items.SCUTE);
-    }),
     MISCGEAR(15, new int[]{1, 3, 4, 1}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> {
         return Ingredient.ofItems(TRContent.Ingots.REFINED_IRON);
+    }),
+    RHM(15, new int[]{2, 3, 4, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> {
+        return Ingredient.ofItems(Ag4trContent.HAZMAT_PLATING);
     })
     ;
 

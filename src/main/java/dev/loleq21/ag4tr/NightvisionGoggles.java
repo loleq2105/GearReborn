@@ -34,7 +34,7 @@ import static dev.loleq21.ag4tr.client.Ag4trClient.NV_KEY_BIND;
 public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions {
 
     public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(ItemGroup.COMBAT).maxCount(1).maxDamage(-1));
+        super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).maxDamage(-1));
     }
 
     @Override

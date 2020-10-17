@@ -14,6 +14,7 @@
 
     "key.ag4tr.toggle_nv": "Toggle Night Vision Goggles",
    "key.ag4tr.toggle_jb": "Toggle Jump Boost (Exolegs)",
-   "category.ag4tr.title": "Additional Gear For Tech Reborn"
+   "category.ag4tr.title": "Additional Gear For Tech Reborn",
+   "itemGroup.ag4tr.items": "Ag4tr"
 
  }
