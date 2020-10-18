@@ -11,8 +11,12 @@
    "item.ag4tr.nv_goggles": "Night Vision Goggles",
    "item.ag4tr.exolegs_leggings": "Exolegs",
    "item.ag4tr.composite_armor_shield": "Composite Shield",
-
-    "key.ag4tr.toggle_nv": "Toggle Night Vision Goggles",
+   "item.ag4tr.rhm_helmet": "RHM Helmet",
+   "item.ag4tr.rhm_chestplate": "RHM Chestpiece",
+   "item.ag4tr.rhm_leggings": "RHM Leggings",
+    "item.ag4tr.refrigeration_unit": "Portable Refrigeration Unit",
+    "item.ag4tr.flame_retardant": "Flame Retardant",
+   "key.ag4tr.toggle_nv": "Toggle Night Vision Goggles",
    "key.ag4tr.toggle_jb": "Toggle Jump Boost (Exolegs)",
    "category.ag4tr.title": "Additional Gear For Tech Reborn",
    "itemGroup.ag4tr.items": "Ag4tr"
