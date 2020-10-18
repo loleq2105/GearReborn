@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#K#",
+        "FBC",
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "ag4tr:hazmat_plate"
+        },
+        "K": {
+            "item": "techreborn:advanced_circuit"
+        },
+        "F": {
+            "item": "ag4tr:refrigeration_unit"
+        },
+        "B": {
+            "item": "techreborn:cell"
+        },
+        "C": {
+            "item": "techreborn:rubber"
+        }
+    },
+    "result": {
+        "item": "minecraft:rhm_chestplate",
+        "count": 1
+    }
+}

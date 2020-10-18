@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#C#",
+        "#G#"
+    ],
+    "key": {
+        "#": {
+            "item": "ag4tr:hazmat_plate"
+        },
+        "C": {
+            "item": "techreborn:rubber"
+        },
+        "G": {
+            "item": "techreborn:reinforced_glass"
+        }
+    },
+    "result": {
+        "item": "ag4tr:rhm_helmet",
+        "count": 1
+    }
+}

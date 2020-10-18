@@ -51,7 +51,7 @@ public abstract class LivingEntityMixin extends Entity {
                         player.addCritParticles(player);
                     }
                     if (bootDamage>0){
-                        equeepedBootsItmStck.damage(bootDamage, new Random((long)Math.random()), null);
+                        equeepedBootsItmStck.damage(vanillaPlayerDamage-1, new Random((long)Math.random()), null);
                     }
                     if (userDamage>0){
                         this.damage(DamageSource.FALL, (float)userDamage);

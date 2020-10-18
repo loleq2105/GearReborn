@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "# #",
+        "C C"
+    ],
+    "key": {
+        "#": {
+            "item": "ag4tr:hazmat_plate"
+        },
+        "C": {
+            "item": "techreborn:rubber"
+        }
+    },
+    "result": {
+        "item": "ag4tr:rhm_leggings",
+        "count": 1
+    }
+}

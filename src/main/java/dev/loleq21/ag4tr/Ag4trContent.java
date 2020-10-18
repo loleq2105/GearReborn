@@ -24,7 +24,7 @@ public class Ag4trContent {
     public static final Item RUBBER_LEGGINGS = addItem("rubber_leggings",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.LEGS));
     public static final Item RUBBER_HELMET = addItem("rubber_helmet",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.HEAD));
 
-    public static final Item RHM_CHESTPLATE = addItem("rhm_chestplate",new RHMChestPiece(RHM_ARMOR_MATERIAL, EquipmentSlot.CHEST));
+    public static final Item RHM_CHESTPLATE = addItem("rhm_chestplate",new RHMChestPiece(RHM_ARMOR_MATERIAL, EquipmentSlot.CHEST, 256));
     public static final Item RHM_LEGGINGS = addItem("rhm_leggings",new RHMPeripheralsLol(RHM_ARMOR_MATERIAL, EquipmentSlot.LEGS));
     public static final Item RHM_HELMET = addItem("rhm_helmet",new RHMPeripheralsLol(RHM_ARMOR_MATERIAL, EquipmentSlot.HEAD));
 
