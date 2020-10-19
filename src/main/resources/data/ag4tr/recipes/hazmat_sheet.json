@@ -8,8 +8,11 @@
             "item": "ag4tr:flame_retardant"
         },
         {
-            "item": "techreborn:refined_iron_plate"
+            "item": "minecraft:yellow_dye"
         }
     ],
-    "result": {}
+    "result": {
+        "item": "ag4tr:hazmat_sheet",
+        "count": 1
+    }
 }

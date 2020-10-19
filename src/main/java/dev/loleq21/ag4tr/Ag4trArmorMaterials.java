@@ -2,7 +2,6 @@ package dev.loleq21.ag4tr;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -24,7 +23,7 @@ public enum Ag4trArmorMaterials implements ArmorMaterial {
         return Ingredient.ofItems(TRContent.Ingots.REFINED_IRON);
     }),
     RHM(15, new int[]{2, 3, 4, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> {
-        return Ingredient.ofItems(Ag4trContent.HAZMAT_PLATING);
+        return Ingredient.ofItems(Ag4trContent.HAZMAT_SHEET);
     })
     ;
 

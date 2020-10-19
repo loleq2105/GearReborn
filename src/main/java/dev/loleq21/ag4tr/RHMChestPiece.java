@@ -46,12 +46,12 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
         boolean canFireFight = playerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == Ag4trContent.RHM_HELMET && playerEntity.getEquippedStack(EquipmentSlot.CHEST).getItem() == Ag4trContent.RHM_CHESTPLATE && playerEntity.getEquippedStack(EquipmentSlot.LEGS).getItem() == Ag4trContent.RHM_LEGGINGS;
         boolean canWaterFight = playerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == Ag4trContent.RHM_HELMET && playerEntity.getEquippedStack(EquipmentSlot.CHEST).getItem() == Ag4trContent.RHM_CHESTPLATE;
 
-        if (canFireFight) {
+        if (HazmatSuitUtils.playerIsWearingFullHazmat(playerEntity)) {
             if (!playerEntity.isInLava()) {
                 playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 1, false, false, false));
             } else {
                 if (this.slot == EquipmentSlot.CHEST) {
-                    if (Energy.of(itemStack).use(32)) {
+                    if (Energy.of(itemStack).use(16)) {
                         playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 1, false, false, false));
                     }
                 }
@@ -77,12 +77,13 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
                     }
                 }
             }
-            if (!playerEntity.isSubmergedInWater()) {
+            if (playerEntity.isSubmergedInWater()) {
+                /*
                 if (!(getStoredAir(itemStack) == AIR_CAPACITY) && Energy.of(itemStack).use(2)) {
                     setStoredAir(itemStack, getStoredAir(itemStack) + 1);
                 }
-            } else {
-                if (canWaterFight) {
+            } else {*/
+                if (HazmatSuitUtils.playerIsWearingChestAndHelm(playerEntity)) {
                     if (!(getStoredAir(itemStack) == 0)) {
                         playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 5, 1, false, false, false));
                         setStoredAir(itemStack, getStoredAir(itemStack) - 1);
@@ -93,14 +94,19 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
     }
 
     public int getStoredAir(ItemStack stack) {
-        validateAirNBTTag(stack);
-        return stack.getTag().getInt("air");
+        if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
+            validateAirNBTTag(stack);
+            return stack.getTag().getInt("air");
+        } else {
+            return 0;
+        }
     }
 
     public void setStoredAir(ItemStack stack, int amount) {
-        validateAirNBTTag(stack);
-        stack.getTag().putInt("air", amount);
-
+        if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
+            validateAirNBTTag(stack);
+            stack.getTag().putInt("air", amount);
+        }
     }
 
     public int getAirCapacity() { return AIR_CAPACITY; }
@@ -158,7 +164,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
         line1.append(String.valueOf(AIR_CAPACITY));
         line1.append(" ");
         line1.append("Air");
-        line1.formatted(Formatting.GRAY);
+        line1.formatted(Formatting.GOLD);
         tooltip.add(1, line1);
     }
 

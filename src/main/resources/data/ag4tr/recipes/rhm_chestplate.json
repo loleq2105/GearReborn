@@ -7,10 +7,10 @@
     ],
     "key": {
         "#": {
-            "item": "ag4tr:hazmat_plate"
+            "item": "ag4tr:hazmat_sheet"
         },
         "K": {
-            "item": "techreborn:advanced_circuit"
+            "item": "techreborn:electronic_circuit"
         },
         "F": {
             "item": "ag4tr:refrigeration_unit"
@@ -23,7 +23,7 @@
         }
     },
     "result": {
-        "item": "minecraft:rhm_chestplate",
+        "item": "ag4tr:rhm_chestplate",
         "count": 1
     }
 }
