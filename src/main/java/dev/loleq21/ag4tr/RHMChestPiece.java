@@ -109,6 +109,34 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
         }
     }
 
+    public boolean useStoredAir(ItemStack stack, int amount) {
+        if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
+            validateAirNBTTag(stack);
+        if(getStoredAir(stack)>=amount) {
+            return false;
+        } else {
+            setStoredAir(stack, getStoredAir(stack)-amount);
+            return true;
+        }
+        } else {
+            return  false;
+        }
+    }
+
+    public boolean addStoredAir(ItemStack stack, int amount) {
+        if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
+            validateAirNBTTag(stack);
+            if(getStoredAir(stack)+amount>AIR_CAPACITY) {
+                return false;
+            } else {
+                setStoredAir(stack, getStoredAir(stack)+amount);
+                return true;
+            }
+        } else {
+            return  false;
+        }
+    }
+
     public int getAirCapacity() { return AIR_CAPACITY; }
 
     private void validateAirNBTTag(ItemStack stack) {
