@@ -113,10 +113,10 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
         if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
             validateAirNBTTag(stack);
         if(getStoredAir(stack)>=amount) {
-            return false;
-        } else {
             setStoredAir(stack, getStoredAir(stack)-amount);
             return true;
+        } else {
+            return false;
         }
         } else {
             return  false;
