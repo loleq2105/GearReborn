@@ -3,7 +3,6 @@ package dev.loleq21.ag4tr;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -15,7 +14,7 @@ public class Ag4trContent {
     public static final ArmorMaterial COMPOSITE_ARMOR_MATERIAL = Ag4trArmorMaterials.COMPOSITE;
     public static final ArmorMaterial RUBBER_ARMOR_MATERIAL = Ag4trArmorMaterials.RUBBER;
     public static final ArmorMaterial MISCGEAR_ARMOR_MATERIAL = Ag4trArmorMaterials.MISCGEAR;
-    public static final ArmorMaterial RHM_ARMOR_MATERIAL = Ag4trArmorMaterials.RHM;
+    public static final ArmorMaterial HAZMAT_ARMOR_MATERIAL = Ag4trArmorMaterials.HAZMAT;
 
     private static final Map<Identifier, Item> AG4TRITEMS = new LinkedHashMap<>();
 
@@ -24,9 +23,9 @@ public class Ag4trContent {
     public static final Item RUBBER_LEGGINGS = addItem("rubber_leggings",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.LEGS));
     public static final Item RUBBER_HELMET = addItem("rubber_helmet",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.HEAD));
 
-    public static final Item RHM_CHESTPLATE = addItem("rhm_chestplate",new RHMChestPiece(RHM_ARMOR_MATERIAL, EquipmentSlot.CHEST, 512));
-    public static final Item RHM_LEGGINGS = addItem("rhm_leggings",new RHMPeripheralsLol(RHM_ARMOR_MATERIAL, EquipmentSlot.LEGS));
-    public static final Item RHM_HELMET = addItem("rhm_helmet",new RHMPeripheralsLol(RHM_ARMOR_MATERIAL, EquipmentSlot.HEAD));
+    public static final Item RHM_CHESTPLATE = addItem("rhm_chestplate",new RHMChestPiece(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.CHEST, 512));
+    public static final Item RHM_LEGGINGS = addItem("rhm_leggings",new RHMPeripheralsLol(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.LEGS));
+    public static final Item RHM_HELMET = addItem("rhm_helmet",new RHMPeripheralsLol(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.HEAD));
 
     public static final Item COMPOSITE_ARMOR_PLATE = addItem("composite_armor_plate",new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));
     public static final Item HAZMAT_SHEET = addItem("hazmat_sheet",new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));

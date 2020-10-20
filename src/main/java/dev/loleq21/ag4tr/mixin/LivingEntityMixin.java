@@ -66,7 +66,7 @@ public abstract class LivingEntityMixin extends Entity {
                     StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
                     float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
                     int vanillaFallDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
-                    int powerRequiredToNullDmg = vanillaFallDamage*32;
+                    int powerRequiredToNullDmg = vanillaFallDamage*64;
                     if (vanillaFallDamage>0 && Energy.of(equeepedBootsItmStck).use(powerRequiredToNullDmg)) {
                         if (!world.isClient) {
                             info.cancel();
