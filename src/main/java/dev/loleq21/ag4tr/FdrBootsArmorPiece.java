@@ -48,7 +48,7 @@ public class FdrBootsArmorPiece extends ArmorItem implements EnergyHolder, ItemD
 
     @Override
     public double getMaxStoredPower() {
-        return 20000;
+        return 10000;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package dev.loleq21.ag4tr.mixin;
 
+import dev.loleq21.ag4tr.Ag4tr;
 import dev.loleq21.ag4tr.Ag4trContent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -43,7 +44,7 @@ public abstract class LivingEntityMixin extends Entity {
                     float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
                     int vanillaPlayerDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
                     int userDamage = Math.round(vanillaPlayerDamage/2);
-                    int bootDamage = Math.round(vanillaPlayerDamage*2);
+                    int bootDamage = Math.round(vanillaPlayerDamage-1);
                     int bootDurability = equeepedBootsItmStck.getMaxDamage()-equeepedBootsItmStck.getDamage();
                     if (bootDamage>bootDurability){
                         this.damage(DamageSource.FALL, (float)Math.round(vanillaPlayerDamage-(bootDurability/2)));
@@ -51,7 +52,7 @@ public abstract class LivingEntityMixin extends Entity {
                         player.addCritParticles(player);
                     }
                     if (bootDamage>0){
-                        equeepedBootsItmStck.damage(vanillaPlayerDamage-1, new Random((long)Math.random()), null);
+                        equeepedBootsItmStck.damage(bootDamage, new Random(), null);
                     }
                     if (userDamage>0){
                         this.damage(DamageSource.FALL, (float)userDamage);
@@ -66,18 +67,23 @@ public abstract class LivingEntityMixin extends Entity {
                     StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
                     float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
                     int vanillaFallDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
-                    int powerRequiredToNullDmg = vanillaFallDamage*64;
+                    int damagePostReduction = vanillaFallDamage-13;
+                    int powerRequiredToNullDmg = vanillaFallDamage* Ag4tr.EFDRB_EPB;
                     if (vanillaFallDamage>0 && Energy.of(equeepedBootsItmStck).use(powerRequiredToNullDmg)) {
+                        if (damagePostReduction>0) {
+                            this.damage(DamageSource.FALL, (float)damagePostReduction);
+                        }
                         if (!world.isClient) {
                             info.cancel();
                         }
                     }
                     if (vanillaFallDamage>0 && Energy.of(equeepedBootsItmStck).getEnergy()<powerRequiredToNullDmg) {
-                        int howMuchMoreEnergyBootsShouldve2NullDmgCompletely = powerRequiredToNullDmg-(int)Energy.of(equeepedBootsItmStck).getEnergy();
-                        Energy.of(equeepedBootsItmStck).use(Energy.of(equeepedBootsItmStck).getEnergy());
-                        float damageThatTheBootsWerentAbleToNullify = Math.round(howMuchMoreEnergyBootsShouldve2NullDmgCompletely/32);
-                        this.damage(DamageSource.FALL, damageThatTheBootsWerentAbleToNullify);
-                        player.addCritParticles(player);
+                        int fubar = (int)Energy.of(equeepedBootsItmStck).getEnergy()/Ag4tr.EFDRB_EPB;
+                        if ( fubar>16) {
+                            fubar = 16;
+                        }
+                        this.damage(DamageSource.FALL, vanillaFallDamage - fubar);
+                        Energy.of(equeepedBootsItmStck).set(0);
                         if (!world.isClient) {
                             info.cancel();
                         }

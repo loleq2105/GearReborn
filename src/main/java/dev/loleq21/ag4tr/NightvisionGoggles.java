@@ -13,9 +13,10 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.common.powerSystem.PowerSystem;
@@ -62,9 +63,15 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                 }
                 stack.setCooldown(2);
             }
-
+        BlockPos playerPos = entity.getBlockPos();
+            int lightLevel = serverworld.getLightLevel(LightType.SKY, playerPos) - serverworld.getAmbientDarkness();
+                boolean pizzaTime = serverworld.getDimension().hasSkyLight() && lightLevel>9 && serverworld.isSkyVisible(playerPos);
                         if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
-                            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5, 1, false, false ,false));
+                            if (pizzaTime) {
+                                user.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 1, false, false, false));
+                            } else {
+                                user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5, 1, false, false, false));
+                            }
                         }
 
 

@@ -9,13 +9,13 @@
             "item": "techreborn:advanced_circuit"
         },
         "B": {
-            "item": "techreborn:carbon_plate"
+            "item": "techreborn:rubber"
         },
         "S": {
             "item": "techreborn:red_cell_battery"
         },
         "G": {
-            "item": "minecraft:green_stained_glass_pane"
+            "item": "techreborn:reinforced_glass"
         }
     },
     "result": {

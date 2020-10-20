@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 
 public class Ag4tr implements ModInitializer {
 
+    public static final int EFDRB_EPB = 64;
     public static final String MOD_ID = "ag4tr";
     public static final ItemGroup AG4TR_GROUP = FabricItemGroupBuilder.create(new Identifier(MOD_ID, "items")).icon(() -> new ItemStack(Ag4trContent.RHM_HELMET)).build();
 

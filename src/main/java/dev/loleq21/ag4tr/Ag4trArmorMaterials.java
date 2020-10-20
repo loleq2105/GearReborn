@@ -13,9 +13,6 @@ import java.util.function.Supplier;
 
 public enum Ag4trArmorMaterials implements ArmorMaterial {
 
-    COMPOSITE(64, new int[]{4, 8, 8, 4}, 8, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2.0F, 0.1F, () -> {
-        return Ingredient.ofItems(Ag4trContent.COMPOSITE_ARMOR_PLATE);
-    }),
     RUBBER(6, new int[]{1, 3, 3, 2}, 10, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, 0F, () -> {
         return Ingredient.ofItems(TRContent.Parts.RUBBER.asItem());
     }),
