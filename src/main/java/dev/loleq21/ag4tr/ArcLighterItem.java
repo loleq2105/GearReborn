@@ -7,6 +7,7 @@ import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -58,7 +59,7 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
         BlockPos blockPos = context.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         ItemStack stack = context.getStack();
-        if (ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
+        if (ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=1) {
         if (CampfireBlock.method_30035(blockState)) {
             world.playSound(playerEntity, blockPos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, RANDOM.nextFloat() * 0.4F + 0.8F);
             world.setBlockState(blockPos, (BlockState) blockState.with(Properties.LIT, true), 11);
@@ -77,6 +78,20 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
     }
         else {
             return ActionResult.FAIL;
+        }
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+
+        if (ItemUtils.isActive(stack)) {
+            if (entity instanceof PlayerEntity) {
+                PlayerEntity user = (PlayerEntity) entity;
+
+                if (Energy.of(stack).use(1) && !(user.getMainHandStack() == stack || user.getOffHandStack() == stack)) {
+                    user.setOnFireFor(1);
+                }
+            }
         }
     }
 
