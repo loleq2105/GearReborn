@@ -32,6 +32,14 @@ public class Ag4trItemUtils {
         }
 
     }
+    public static void switchActiveNoMsg(ItemStack stack, boolean isClient) {
+        if (!isActive(stack)) {
+            stack.getOrCreateTag().putBoolean("isActive", true);
+        } else {
+            stack.getOrCreateTag().putBoolean("isActive", false);
+        }
+
+    }
     public static void buildActiveTooltip(ItemStack stack, List<Text> tooltip, String onToolTip, String offToolTip) {
         if (!isActive(stack)) {
             tooltip.add((new LiteralText(offToolTip).formatted(Formatting.GRAY)));

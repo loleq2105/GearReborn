@@ -17,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +41,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
     }
 
     private final int AIR_CAPACITY;
+
 
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {

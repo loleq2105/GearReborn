@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ag4tr:item/arc_lighter_off"
+  }
+}

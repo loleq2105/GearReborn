@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ag4tr:item/arc_lighter_on"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "ag4tr:inactive": 1
+      },
+      "model": "ag4tr:item/arc_lighter_inactive"
+    }
+  ]
+}
