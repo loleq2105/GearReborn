@@ -8,6 +8,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -34,13 +38,18 @@ import team.reborn.energy.EnergyTier;
 import techreborn.utils.InitUtils;
 
 
+import javax.swing.*;
 import java.util.List;
+import java.util.Random;
 
 public class ArcLighterItem extends Item implements EnergyHolder, ItemDurabilityExtensions {
 
-    public ArcLighterItem(Settings settings) {
+    public ArcLighterItem(Settings settings, int igniteCost) {
         super(settings);
+        this.igniteCost = igniteCost;
     }
+
+    private final int igniteCost;
 
     @Override
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
@@ -59,7 +68,7 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
         BlockPos blockPos = context.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         ItemStack stack = context.getStack();
-        if (ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=1) {
+        if (ItemUtils.isActive(stack) && Energy.of(stack).use(igniteCost)) {
         if (CampfireBlock.method_30035(blockState)) {
             world.playSound(playerEntity, blockPos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, RANDOM.nextFloat() * 0.4F + 0.8F);
             world.setBlockState(blockPos, (BlockState) blockState.with(Properties.LIT, true), 11);
@@ -82,14 +91,42 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
     }
 
     @Override
+    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+        if (entity.getType() == EntityType.CREEPER) {
+            if (entity instanceof CreeperEntity) {
+                CreeperEntity creeperAwMan = (CreeperEntity) entity;
+                if (ItemUtils.isActive(stack) && Energy.of(stack).use(igniteCost)) {
+                    creeperAwMan.ignite();
+                    entity.playSound(SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, 1.0F);
+                    return ActionResult.SUCCESS;
+                } else {
+                    return ActionResult.FAIL;
+                }
+            } else {
+                return ActionResult.FAIL;
+            }
+        } else {
+            if (ItemUtils.isActive(stack) && Energy.of(stack).use(igniteCost)) {
+                entity.playSound(SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, 1.0F);
+                entity.setOnFireFor(4);
+                return ActionResult.SUCCESS;
+            } else {
+                return ActionResult.FAIL;
+            }
+        }
+    }
+
+    @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
         if (ItemUtils.isActive(stack)) {
             if (entity instanceof PlayerEntity) {
                 PlayerEntity user = (PlayerEntity) entity;
 
-                if (Energy.of(stack).use(1) && !(user.getMainHandStack() == stack || user.getOffHandStack() == stack)) {
-                    user.setOnFireFor(1);
+                if (!(user.getMainHandStack() == stack || user.getOffHandStack() == stack)) {
+                    if (Energy.of(stack).use(1)) {
+                        user.setOnFireFor(1);
+                    }
                 }
             }
         }
@@ -128,7 +165,7 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        Ag4trItemUtils.buildActiveTooltip(stack, tooltip, "On!", "Off");
+        Ag4trItemUtils.buildActiveTooltip(stack, tooltip, "On", "Off");
     }
 
     @Environment(EnvType.CLIENT)

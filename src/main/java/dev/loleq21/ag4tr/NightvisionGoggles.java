@@ -63,11 +63,9 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                 }
                 stack.setCooldown(2);
             }
-        BlockPos playerPos = entity.getBlockPos();
-            int lightLevel = serverworld.getLightLevel(LightType.SKY, playerPos) - serverworld.getAmbientDarkness();
-                boolean pizzaTime = serverworld.getDimension().hasSkyLight() && lightLevel>9 && serverworld.isSkyVisible(playerPos);
+            int lightLevel = serverworld.getLightLevel(entity.getBlockPos());
                         if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
-                            if (pizzaTime) {
+                            if (lightLevel>11) {
                                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 1, false, false, false));
                             } else {
                                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5, 1, false, false, false));

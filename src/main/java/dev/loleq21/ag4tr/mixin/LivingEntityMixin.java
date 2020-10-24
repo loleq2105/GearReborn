@@ -43,7 +43,7 @@ public abstract class LivingEntityMixin extends Entity {
                     StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
                     float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
                     int vanillaPlayerDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
-                    int userDamage = Math.round(vanillaPlayerDamage/2);
+                    int userDamage = MathHelper.ceil(vanillaPlayerDamage/2);
                     int bootDamage = Math.round(vanillaPlayerDamage-1);
                     int bootDurability = equeepedBootsItmStck.getMaxDamage()-equeepedBootsItmStck.getDamage();
                     if (bootDamage>bootDurability){
