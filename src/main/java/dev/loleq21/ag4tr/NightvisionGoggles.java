@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
@@ -32,7 +33,7 @@ import java.util.List;
 
 import static dev.loleq21.ag4tr.client.Ag4trClient.NV_KEY_BIND;
 
-public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions {
+public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
     public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).maxDamage(-1));
@@ -43,31 +44,36 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
         return false;
     }
 
-    private PlayerEntity user;
-
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
-
             if (entity instanceof PlayerEntity) {
-                user = (PlayerEntity) entity;
-            }
+                PlayerEntity user = (PlayerEntity) entity;
 
-            if (NV_KEY_BIND.isPressed()) {
-                if (stack.getCooldown() == 0) {
-                    Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Night Vision Enabled", "Night Vision Disabled");
-                    StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
-                    if (statusEffectInstance!=null) {
-                        user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
+                if (NV_KEY_BIND.isPressed()) {
+                    if (stack.getCooldown() == 0) {
+                        Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Night Vision Enabled", "Night Vision Disabled");
+                        StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
+                        if (statusEffectInstance != null) {
+                            user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
+                        }
                     }
+                    stack.setCooldown(2);
                 }
-                stack.setCooldown(2);
-            }
 
-            if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
+                if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
                     user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 1, false, false, false));
+                }
             }
+    }
+
+    @Override
+    public void onRemoved(PlayerEntity user) {
+        StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
+        if (statusEffectInstance!=null) {
+            user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
+        }
     }
 
     @Override
