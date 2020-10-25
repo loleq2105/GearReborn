@@ -27,8 +27,8 @@ public class Ag4trContent {
     public static final Item HAZMAT_SHEET = addItem("hazmat_sheet",new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));
     public static final Item REFRIGERATION_UNIT = addItem("refrigeration_unit",new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));
     public static final Item FLAME_RETARDANT = addItem("flame_retardant",new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));
-    public static final Item ARC_LIGHTER = addItem("arc_lighter",new ArcLighterItem(16));
-    public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
+    public static final Item ARC_LIGHTER = addItem("arc_lighter",new ArcLighterItem(32));
+    public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD, 8));
 
     private static <I extends Item> I addItem(String name, I item) {
         AG4TRITEMS.put(new Identifier(Ag4tr.MOD_ID, name), item);
