@@ -35,9 +35,12 @@ import static dev.loleq21.ag4tr.client.Ag4trClient.NV_KEY_BIND;
 
 public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
-    public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
+    public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot, int energyPerTickConsumption) {
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).maxDamage(-1));
+        this.energyPerTickConsumption = energyPerTickConsumption;
     }
+
+    public final int energyPerTickConsumption;
 
     @Override
     public boolean isDamageable() {
@@ -51,19 +54,29 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
             if (entity instanceof PlayerEntity) {
                 PlayerEntity user = (PlayerEntity) entity;
 
-                if (NV_KEY_BIND.isPressed()) {
-                    if (stack.getCooldown() == 0) {
-                        Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Night Vision Enabled", "Night Vision Disabled");
+                if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
+
+                    if (NV_KEY_BIND.isPressed()) {
+                        if (stack.getCooldown() == 0) {
+                            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Night Vision Enabled", "Night Vision Disabled");
+                            StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
+                            if (statusEffectInstance != null) {
+                                user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
+                            }
+                        }
+                        stack.setCooldown(2);
+                    }
+
+                    if (Energy.of(stack).getEnergy()<energyPerTickConsumption) {
                         StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
                         if (statusEffectInstance != null) {
                             user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
                         }
                     }
-                    stack.setCooldown(2);
-                }
 
-                if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
-                    user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 1, false, false, false));
+                    if (ItemUtils.isActive(stack) && Energy.of(stack).use(energyPerTickConsumption)) {
+                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 1, false, false, false));
+                    }
                 }
             }
     }
