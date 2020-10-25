@@ -44,32 +44,36 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     }
 
     private PlayerEntity user;
-    private ServerWorld serverworld;
 
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
-                if (entity instanceof PlayerEntity) {
-                    user = (PlayerEntity) entity;
-                }
+        if (!world.isClient()) {
 
-            if(NV_KEY_BIND.isPressed()) {
+            if (entity instanceof PlayerEntity) {
+                user = (PlayerEntity) entity;
+            }
+
+            if (NV_KEY_BIND.isPressed()) {
                 if (stack.getCooldown() == 0) {
                     Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Night Vision Enabled", "Night Vision Disabled");
                 }
                 stack.setCooldown(2);
             }
-            int lightLevel = world.getLightLevel(entity.getBlockPos());
-                        if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
-                            if (lightLevel>11) {
-                                user.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 1, false, false, false));
-                            } else {
-                                user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5, 1, false, false, false));
-                            }
-                        }
 
+            BlockPos playerPos = entity.getBlockPos();
+            int lightLevel = world.getLightLevel(LightType.SKY, playerPos) - world.getAmbientDarkness();
+            boolean playerBlinded = world.getDimension().hasSkyLight() && lightLevel>9 && world.isSkyVisible(playerPos);
+            if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
+                if (playerBlinded) {
+                    user.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 1, false, false, false));
+                } else {
+                    user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5, 1, false, false, false));
+                }
+            }
 
+        }
     }
 
     @Override
