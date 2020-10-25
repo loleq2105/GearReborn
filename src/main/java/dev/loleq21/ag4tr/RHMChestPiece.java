@@ -178,7 +178,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
 
     @Override
     public double getMaxStoredPower() {
-        return 20000;
+        return 10000;
     }
 
     @Override
