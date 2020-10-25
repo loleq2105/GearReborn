@@ -1,6 +1,5 @@
  {
 
-    "item.ag4tr.composite_chestplate": "Composite Vest",
    "item.ag4tr.rubber_helmet": "Rubber Cap",
    "item.ag4tr.rubber_chestplate": "Rubber Tunic",
    "item.ag4tr.rubber_leggings": "Rubber Leggings",
@@ -16,6 +15,7 @@
     "item.ag4tr.refrigeration_unit": "Compact Refrigeration Unit",
     "item.ag4tr.flame_retardant": "Flame Retardant",
     "item.ag4tr.hazmat_sheet": "Hazmat Sheet",
+   "item.ag4tr.arc_lighter": "Electric Lighter",
    "key.ag4tr.toggle_nv": "Toggle Night Vision Goggles",
    "key.ag4tr.toggle_jb": "Toggle Jump Boost (Exolegs)",
    "category.ag4tr.title": "Additional Gear For Tech Reborn",

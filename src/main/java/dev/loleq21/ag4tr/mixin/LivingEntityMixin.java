@@ -12,6 +12,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -34,59 +35,34 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)
     private void handleFallDamage(float fallDistance, float damageMultiplier, CallbackInfoReturnable<Boolean> info) {
-        if((Object) this instanceof PlayerEntity) {
-            PlayerEntity player = ((PlayerEntity) ((Object) this));
-            ItemStack equeepedBootsItmStck = player.getEquippedStack(EquipmentSlot.FEET);
-            Item equpeedBoots = equeepedBootsItmStck.getItem();
-            if (equpeedBoots == Ag4trContent.RUBBER_BOOTS) {
+        if((Object) this instanceof ServerPlayerEntity) {
+            ServerPlayerEntity player = ((ServerPlayerEntity) ((Object) this));
+            ItemStack equippedBootsSlotItemStack = player.getEquippedStack(EquipmentSlot.FEET);
+            Item equippedBoots = equippedBootsSlotItemStack.getItem();
+            if (equippedBoots == Ag4trContent.RUBBER_BOOTS) {
                 if(!world.isClient && !isSneaking()) {
                     StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
                     float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
                     int vanillaPlayerDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
-                    int userDamage = MathHelper.ceil(vanillaPlayerDamage/2);
-                    int bootDamage = Math.round(vanillaPlayerDamage-1);
-                    int bootDurability = equeepedBootsItmStck.getMaxDamage()-equeepedBootsItmStck.getDamage();
+                    int userDamage = Math.round(vanillaPlayerDamage/8);
+                    int bootDamage = (int) Math.round(vanillaPlayerDamage*0.4375);
+                    int bootDurability = equippedBootsSlotItemStack.getMaxDamage()-equippedBootsSlotItemStack.getDamage();
                     if (bootDamage>bootDurability){
-                        this.damage(DamageSource.FALL, (float)Math.round(vanillaPlayerDamage-(bootDurability/2)));
-                        equeepedBootsItmStck.decrement(1);
-                        player.addCritParticles(player);
+                        this.damage(DamageSource.FALL, (float)vanillaPlayerDamage);
+                        equippedBootsSlotItemStack.decrement(1);
+                        player.playSound(SoundEvents.BLOCK_WOOL_BREAK, 1.0F, 1.0F);
+                        //player.addCritParticles(player);
+                        player.sendEquipmentBreakStatus(EquipmentSlot.FEET);
+
                     }
                     if (bootDamage>0){
-                        equeepedBootsItmStck.damage(bootDamage, new Random(), null);
+                        equippedBootsSlotItemStack.damage(bootDamage, new Random(), player);
                     }
                     if (userDamage>0){
                         this.damage(DamageSource.FALL, (float)userDamage);
                     }
                     if (!world.isClient) {
                         info.cancel();
-                    }
-                }
-            }
-            if (equpeedBoots == Ag4trContent.FDR_BOOTS) {
-                if(!world.isClient && !isSneaking()) {
-                    StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
-                    float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
-                    int vanillaFallDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
-                    int damagePostReduction = vanillaFallDamage-13;
-                    int powerRequiredToNullDmg = vanillaFallDamage* Ag4tr.EFDRB_EPB;
-                    if (vanillaFallDamage>0 && Energy.of(equeepedBootsItmStck).use(powerRequiredToNullDmg)) {
-                        if (damagePostReduction>0) {
-                            this.damage(DamageSource.FALL, (float)damagePostReduction);
-                        }
-                        if (!world.isClient) {
-                            info.cancel();
-                        }
-                    }
-                    if (vanillaFallDamage>0 && Energy.of(equeepedBootsItmStck).getEnergy()<powerRequiredToNullDmg) {
-                        int fubar = (int)Energy.of(equeepedBootsItmStck).getEnergy()/Ag4tr.EFDRB_EPB;
-                        if ( fubar>16) {
-                            fubar = 16;
-                        }
-                        this.damage(DamageSource.FALL, vanillaFallDamage - fubar);
-                        Energy.of(equeepedBootsItmStck).set(0);
-                        if (!world.isClient) {
-                            info.cancel();
-                        }
                     }
                 }
             }

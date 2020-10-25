@@ -50,9 +50,6 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
-        if (world instanceof ServerWorld) {
-            serverworld = (ServerWorld) world;
-        }
                 if (entity instanceof PlayerEntity) {
                     user = (PlayerEntity) entity;
                 }
@@ -63,7 +60,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                 }
                 stack.setCooldown(2);
             }
-            int lightLevel = serverworld.getLightLevel(entity.getBlockPos());
+            int lightLevel = world.getLightLevel(entity.getBlockPos());
                         if ((user.getEquippedStack(EquipmentSlot.HEAD) == stack) && ItemUtils.isActive(stack) && Energy.of(stack).use(8)) {
                             if (lightLevel>11) {
                                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 1, false, false, false));

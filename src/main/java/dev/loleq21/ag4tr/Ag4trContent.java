@@ -21,22 +21,14 @@ public class Ag4trContent {
     public static final Item RUBBER_CHESTPLATE = addItem("rubber_chestplate",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.CHEST));
     public static final Item RUBBER_LEGGINGS = addItem("rubber_leggings",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.LEGS));
     public static final Item RUBBER_HELMET = addItem("rubber_helmet",new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.HEAD));
-
     public static final Item RHM_CHESTPLATE = addItem("rhm_chestplate",new RHMChestPiece(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.CHEST, 512));
     public static final Item RHM_LEGGINGS = addItem("rhm_leggings",new RHMPeripheralsLol(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.LEGS));
     public static final Item RHM_HELMET = addItem("rhm_helmet",new RHMPeripheralsLol(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.HEAD));
-
-    //public static final Item COMPOSITE_ARMOR_PLATE = addItem("composite_armor_plate",new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));
     public static final Item HAZMAT_SHEET = addItem("hazmat_sheet",new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));
     public static final Item REFRIGERATION_UNIT = addItem("refrigeration_unit",new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));
     public static final Item FLAME_RETARDANT = addItem("flame_retardant",new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));
-    public static final Item ARC_LIGHTER = addItem("arc_lighter",new ArcLighterItem(new Item.Settings().group(Ag4tr.AG4TR_GROUP), 16));
-
-    //public static final Item COMPOSITE_CHESTPLATE = addItem("composite_chestplate",new CompositeArmorPiece(COMPOSITE_ARMOR_MATERIAL, EquipmentSlot.CHEST));
+    public static final Item ARC_LIGHTER = addItem("arc_lighter",new ArcLighterItem(16));
     public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
-    //public static final Item EXOLEGS = addItem("exolegs_leggings", new ExoskeletonArmorPiece(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.LEGS));
-    public static final Item FDR_BOOTS = addItem("fdr_boots", new FdrBootsArmorPiece(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.FEET));
-    //public static final Item COMPOSITE_SHIELD = addItem("composite_armor_shield", new Ag4trShieldItem(50, 512, Ag4trContent.COMPOSITE_ARMOR_PLATE));
 
     private static <I extends Item> I addItem(String name, I item) {
         AG4TRITEMS.put(new Identifier(Ag4tr.MOD_ID, name), item);

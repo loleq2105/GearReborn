@@ -2,7 +2,6 @@ package dev.loleq21.ag4tr;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
@@ -11,13 +10,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -38,18 +35,16 @@ import team.reborn.energy.EnergyTier;
 import techreborn.utils.InitUtils;
 
 
-import javax.swing.*;
 import java.util.List;
-import java.util.Random;
 
 public class ArcLighterItem extends Item implements EnergyHolder, ItemDurabilityExtensions {
 
-    public ArcLighterItem(Settings settings, int igniteCost) {
-        super(settings);
-        this.igniteCost = igniteCost;
+    public ArcLighterItem(int IGNITE_COST) {
+        super(new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1));
+        this.IGNITE_COST = IGNITE_COST;
     }
 
-    private final int igniteCost;
+    public static int IGNITE_COST;
 
     @Override
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
@@ -68,7 +63,7 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
         BlockPos blockPos = context.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         ItemStack stack = context.getStack();
-        if (ItemUtils.isActive(stack) && Energy.of(stack).use(igniteCost)) {
+        if (ItemUtils.isActive(stack) && Energy.of(stack).use(IGNITE_COST)) {
         if (CampfireBlock.method_30035(blockState)) {
             world.playSound(playerEntity, blockPos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, RANDOM.nextFloat() * 0.4F + 0.8F);
             world.setBlockState(blockPos, (BlockState) blockState.with(Properties.LIT, true), 11);
@@ -92,10 +87,10 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        if (entity.getType() == EntityType.CREEPER) {
-            if (entity instanceof CreeperEntity) {
-                CreeperEntity creeperAwMan = (CreeperEntity) entity;
-                if (ItemUtils.isActive(stack) && Energy.of(stack).use(igniteCost)) {
+        if (ItemUtils.isActive(stack) && Energy.of(stack).use(IGNITE_COST)) {
+            if (entity.getType() == EntityType.CREEPER) {
+                if (entity instanceof CreeperEntity) {
+                    CreeperEntity creeperAwMan = (CreeperEntity) entity;
                     creeperAwMan.ignite();
                     entity.playSound(SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, 1.0F);
                     return ActionResult.SUCCESS;
@@ -103,16 +98,16 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
                     return ActionResult.FAIL;
                 }
             } else {
-                return ActionResult.FAIL;
+                if (ItemUtils.isActive(stack) && Energy.of(stack).use(IGNITE_COST)) {
+                    entity.playSound(SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, 1.0F);
+                    entity.setOnFireFor(4);
+                    return ActionResult.SUCCESS;
+                } else {
+                    return ActionResult.FAIL;
+                }
             }
         } else {
-            if (ItemUtils.isActive(stack) && Energy.of(stack).use(igniteCost)) {
-                entity.playSound(SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, 1.0F);
-                entity.setOnFireFor(4);
-                return ActionResult.SUCCESS;
-            } else {
-                return ActionResult.FAIL;
-            }
+            return ActionResult.FAIL;
         }
     }
 

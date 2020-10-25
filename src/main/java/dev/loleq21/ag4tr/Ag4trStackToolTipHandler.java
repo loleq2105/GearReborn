@@ -36,9 +36,9 @@ public class Ag4trStackToolTipHandler implements ItemTooltipCallback {
             return;
 
             if (itemStack.getItem() instanceof EnergyHolder) {
-            LiteralText line1 = new LiteralText(PowerSystem.getLocalizedPowerNoSuffix(Energy.of(itemStack).getEnergy()));
+            LiteralText line1 = new LiteralText(PowerSystem.getLocaliszedPowerFormattedNoSuffix(Energy.of(itemStack).getEnergy()));
             line1.append("/");
-            line1.append(PowerSystem.getLocalizedPowerNoSuffix(Energy.of(itemStack).getMaxStored()));
+            line1.append(PowerSystem.getLocaliszedPowerFormattedNoSuffix(Energy.of(itemStack).getMaxStored()));
             line1.append(" ");
             line1.append(PowerSystem.getDisplayPower().abbreviation);
             line1.formatted(Formatting.GOLD);
@@ -50,7 +50,7 @@ public class Ag4trStackToolTipHandler implements ItemTooltipCallback {
                 Formatting color = StringUtils.getPercentageColour(percentage);
                 list.add(2, new LiteralText(color + "" + percentage + "%" + Formatting.GRAY + " Charged"));
                 // TODO: show both input and output rates
-                list.add(3, new LiteralText(Formatting.GRAY + "I/O Rate: " + Formatting.GOLD + PowerSystem.getLocalizedPower(((EnergyHolder) item).getMaxInput(EnergySide.UNKNOWN))));
+                list.add(3, new LiteralText(Formatting.GRAY + "I/O Rate: " + Formatting.GOLD + PowerSystem.getLocaliszedPowerFormatted(((EnergyHolder) item).getMaxInput(EnergySide.UNKNOWN))));
             }
         }
         }

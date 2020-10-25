@@ -1,13 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "   ",
     "R R",
-    "R R"
+    "R R",
+    "RWR"
   ],
   "key": {
     "R": {
       "item": "techreborn:rubber"
+    },
+    "W": {
+      "tag": "minecraft:wool"
     }
   },
   "result": {

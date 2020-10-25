@@ -29,23 +29,16 @@ import techreborn.TechRebornClient;
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_N,
             "category.ag4tr.title");
-    /*public static final KeyBinding EXOLEGS_JUMP_BOOST_KEY_BIND = new KeyBinding("key.ag4tr.toggle_jb",
-            InputUtil.Type.KEYSYM,
-            GLFW.GLFW_KEY_B,
-            "category.ag4tr.title");
-
-     */
 
     @Override
     public void onInitializeClient() {
         Ag4trStackToolTipHandler.setup();
         KeyBindingHelper.registerKeyBinding(NV_KEY_BIND);
-        //KeyBindingHelper.registerKeyBinding(EXOLEGS_JUMP_BOOST_KEY_BIND);
         registerPredicateProvider(
                 ArcLighterItem.class,
                 new Identifier("ag4tr:inactive"),
                 (item, stack, world, entity) -> {
-                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=8) {
+                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=1) {
                         return 1.0F;
                     }
                     return 0.0F;
