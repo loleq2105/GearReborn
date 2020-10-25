@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#K#",
+        " B ",
+        " W "
+    ],
+    "key": {
+        "#": {
+            "item": "techreborn:lead_nugget"
+        },
+        "K": {
+            "item": "techreborn:electronic_circuit"
+        },
+        "B": {
+            "item": "techreborn:red_cell_battery"
+        },
+        "W": {
+            "item": "techreborn:refined_iron_plate"
+        }
+    },
+    "result": {
+        "item": "ag4tr:arc_lighter",
+        "count": 1
+    }
+}
