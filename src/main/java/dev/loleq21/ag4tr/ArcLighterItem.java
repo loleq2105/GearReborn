@@ -9,7 +9,10 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -32,6 +35,7 @@ import reborncore.common.util.ItemUtils;
 import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
+import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
 
 
@@ -92,19 +96,18 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
                 if (entity instanceof CreeperEntity) {
                     CreeperEntity creeperAwMan = (CreeperEntity) entity;
                     creeperAwMan.ignite();
-                    entity.playSound(SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, 1.0F);
+                    entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
                     return ActionResult.SUCCESS;
                 } else {
                     return ActionResult.FAIL;
                 }
             } else {
-                if (ItemUtils.isActive(stack) && Energy.of(stack).use(IGNITE_COST)) {
-                    entity.playSound(SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, 1.0F);
-                    entity.setOnFireFor(4);
+                    entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
+                    entity.setOnFireFor(2);
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 50, 2, false, false, false));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 50, 2, false, false, false));
+
                     return ActionResult.SUCCESS;
-                } else {
-                    return ActionResult.FAIL;
-                }
             }
         } else {
             return ActionResult.FAIL;
@@ -114,13 +117,17 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
-        if (ItemUtils.isActive(stack)) {
+        if (ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=IGNITE_COST) {
+            entity.playSound(ModSounds.CABLE_SHOCK, 0.2F, 1.0F);
             if (entity instanceof PlayerEntity) {
                 PlayerEntity user = (PlayerEntity) entity;
 
                 if (!(user.getMainHandStack() == stack || user.getOffHandStack() == stack)) {
-                    if (Energy.of(stack).use(1)) {
+                    if (Energy.of(stack).use(IGNITE_COST/4)) {
                         user.setOnFireFor(1);
+                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 25, 2, false, false, false));
+                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 25, 2, false, false, false));
+
                     }
                 }
             }

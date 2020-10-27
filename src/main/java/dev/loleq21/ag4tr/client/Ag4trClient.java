@@ -38,7 +38,7 @@ import techreborn.TechRebornClient;
                 ArcLighterItem.class,
                 new Identifier("ag4tr:inactive"),
                 (item, stack, world, entity) -> {
-                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=1) {
+                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=ArcLighterItem.IGNITE_COST) {
                         return 1.0F;
                     }
                     return 0.0F;
