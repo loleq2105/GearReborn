@@ -18,16 +18,16 @@ public class Ag4trItemUtils {
         return !stack.isEmpty() && stack.getTag() != null && stack.getTag().getBoolean("isActive");
     }
 
-    public static void switchActive(ItemStack stack, boolean isClient, int messageId, String onMessage, String offMessage) {
+    public static void switchActive(ItemStack stack, boolean isClient, int messageId, String message) {
         if (!isActive(stack)) {
             stack.getOrCreateTag().putBoolean("isActive", true);
             if (isClient) {
-                ChatUtils.sendNoSpamMessages(messageId, (new LiteralText(onMessage)));
+                ChatUtils.sendNoSpamMessages(messageId, (new LiteralText(message).formatted(Formatting.GRAY).append(" ").append(new LiteralText("On").formatted(Formatting.GOLD))));
             }
         } else {
             stack.getOrCreateTag().putBoolean("isActive", false);
             if (isClient) {
-                ChatUtils.sendNoSpamMessages(messageId, (new LiteralText(offMessage)));
+                ChatUtils.sendNoSpamMessages(messageId, (new LiteralText(message).formatted(Formatting.GRAY).append(" ").append(new LiteralText("Off").formatted(Formatting.GOLD))));
             }
         }
 

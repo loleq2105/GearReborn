@@ -2,9 +2,6 @@ package dev.loleq21.ag4tr;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CampfireBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -12,21 +9,15 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.common.powerSystem.PowerSystem;
@@ -39,99 +30,110 @@ import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
 
-
 import java.util.List;
 
-public class ArcLighterItem extends Item implements EnergyHolder, ItemDurabilityExtensions {
+public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExtensions {
 
-    public ArcLighterItem(int IGNITE_COST) {
+    public TaserItem(int ZAP_COST) {
         super(new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1));
-        this.IGNITE_COST = IGNITE_COST;
+        this.ZAP_COST = ZAP_COST;
     }
 
-    public static int IGNITE_COST;
+    public static int ZAP_COST;
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if (ItemUtils.isActive(stack)) {
+            if (getCapacitorCharge(stack) < 64 && Energy.of(stack).use(2)) {
+                setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
+                entity.playSound(ModSounds.CABLE_SHOCK, 0.4F, 1.0F);
+            }
+        }
+    }
 
     @Override
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
         final ItemStack stack = player.getStackInHand(hand);
         if (player.isSneaking()) {
-            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Lighter");
+            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Taser");
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
     }
 
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        PlayerEntity playerEntity = context.getPlayer();
-        World world = context.getWorld();
-        BlockPos blockPos = context.getBlockPos();
-        BlockState blockState = world.getBlockState(blockPos);
-        ItemStack stack = context.getStack();
-        if (ItemUtils.isActive(stack) && Energy.of(stack).use(IGNITE_COST)) {
-        if (CampfireBlock.method_30035(blockState)) {
-            world.playSound(playerEntity, blockPos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, RANDOM.nextFloat() * 0.4F + 0.8F);
-            world.setBlockState(blockPos, (BlockState) blockState.with(Properties.LIT, true), 11);
-            return ActionResult.success(world.isClient());
-        } else {
-            BlockPos blockPos2 = blockPos.offset(context.getSide());
-            if (AbstractFireBlock.method_30032(world, blockPos2, context.getPlayerFacing())) {
-                world.playSound(playerEntity, blockPos2, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, RANDOM.nextFloat() * 0.4F + 0.8F);
-                BlockState blockState2 = AbstractFireBlock.getState(world, blockPos2);
-                world.setBlockState(blockPos2, blockState2, 11);
-                return ActionResult.success(world.isClient());
-            } else {
-                return ActionResult.FAIL;
-            }
-        }
-    }
-        else {
-            return ActionResult.FAIL;
-        }
-    }
-
+   /*
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        if (ItemUtils.isActive(stack) && Energy.of(stack).use(IGNITE_COST)) {
+        if (ItemUtils.isActive(stack) && getCapacitorCharge(stack)==64) {
             if (entity.getType() == EntityType.CREEPER) {
                 if (entity instanceof CreeperEntity) {
                     CreeperEntity creeperAwMan = (CreeperEntity) entity;
                     creeperAwMan.ignite();
                     entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
+                    setCapacitorCharge(stack, 0);
                     return ActionResult.SUCCESS;
                 } else {
                     return ActionResult.FAIL;
                 }
             } else {
-                    entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
-                    entity.setOnFireFor(2);
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 50, 2, false, false, false));
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 50, 2, false, false, false));
-
-                    return ActionResult.SUCCESS;
+                entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
+                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 5, 1, false, false, false));
+                entity.animateDamage();
+                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 3, false, false, false));
+                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
+                setCapacitorCharge(stack, 0);
+                return ActionResult.SUCCESS;
             }
         } else {
             return ActionResult.FAIL;
         }
     }
-
+    */
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-
-        if (ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=IGNITE_COST) {
-            entity.playSound(ModSounds.CABLE_SHOCK, 0.2F, 1.0F);
-            if (entity instanceof PlayerEntity) {
-                PlayerEntity user = (PlayerEntity) entity;
-
-                if (!(user.getMainHandStack() == stack || user.getOffHandStack() == stack)) {
-                    if (Energy.of(stack).use(IGNITE_COST/4)) {
-                        user.setOnFireFor(1);
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 25, 2, false, false, false));
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 25, 2, false, false, false));
-
-                    }
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (ItemUtils.isActive(stack) && getCapacitorCharge(stack) == 64) {
+            if (target.getType() == EntityType.CREEPER) {
+                if (target instanceof CreeperEntity) {
+                    CreeperEntity creeperAwMan = (CreeperEntity) target;
+                    creeperAwMan.ignite();
+                    target.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
+                    setCapacitorCharge(stack, 0);
+                    return true;
+                } else {
+                    return false;
                 }
+            } else {
+                target.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 5, 1, false, false, false));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 3, false, false, false));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
+                setCapacitorCharge(stack, 0);
+                return true;
             }
+        } else {
+            return false;
+        }
+    }
+
+    public static int getCapacitorCharge(ItemStack stack) {
+        if (stack.getItem() == Ag4trContent.TASER) {
+            validateAirNBTTag(stack);
+            return stack.getTag().getInt("capcharge");
+        } else {
+            return 0;
+        }
+    }
+
+    public static void setCapacitorCharge(ItemStack stack, int amount) {
+        if (stack.getItem() == Ag4trContent.TASER) {
+            validateAirNBTTag(stack);
+            stack.getTag().putInt("capcharge", amount);
+        }
+    }
+
+    private static void validateAirNBTTag(ItemStack stack) {
+        if (!stack.getTag().contains("capcharge", 3)){
+            stack.getTag().putInt("capcharge", 0);
         }
     }
 
@@ -179,7 +181,6 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
         }
         InitUtils.initPoweredItems(this, itemList);
     }
-
 
 
 

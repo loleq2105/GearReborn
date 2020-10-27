@@ -2,6 +2,7 @@ package dev.loleq21.ag4tr.client;
 
 import dev.loleq21.ag4tr.Ag4trStackToolTipHandler;
 import dev.loleq21.ag4tr.ArcLighterItem;
+import dev.loleq21.ag4tr.TaserItem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,6 +40,16 @@ import techreborn.TechRebornClient;
                 new Identifier("ag4tr:inactive"),
                 (item, stack, world, entity) -> {
                     if (!stack.isEmpty() && ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=ArcLighterItem.IGNITE_COST) {
+                        return 1.0F;
+                    }
+                    return 0.0F;
+                }
+        );
+        registerPredicateProvider(
+                TaserItem.class,
+                new Identifier("ag4tr:inactive"),
+                (item, stack, world, entity) -> {
+                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && TaserItem.getCapacitorCharge(stack)==64) {
                         return 1.0F;
                     }
                     return 0.0F;

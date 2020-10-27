@@ -58,7 +58,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
                     if (NV_KEY_BIND.isPressed()) {
                         if (stack.getCooldown() == 0) {
-                            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Night Vision Enabled", "Night Vision Disabled");
+                            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Night Vision");
                             StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
                             if (statusEffectInstance != null) {
                                 user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
