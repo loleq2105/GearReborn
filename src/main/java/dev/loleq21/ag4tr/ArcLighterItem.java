@@ -104,9 +104,9 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
                 }
             } else {
                     entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
-                    entity.setOnFireFor(2);
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 50, 2, false, false, false));
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 50, 2, false, false, false));
+                    entity.setOnFireFor(4);
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 15, 2, false, false, false));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 15, 2, false, false, false));
 
                     return ActionResult.SUCCESS;
             }
@@ -119,15 +119,15 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
         if (ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=IGNITE_COST) {
-            entity.playSound(ModSounds.CABLE_SHOCK, 0.2F, 1.0F);
+            entity.playSound(ModSounds.CABLE_SHOCK, 0.1F, 2.0F);
             if (entity instanceof PlayerEntity) {
                 PlayerEntity user = (PlayerEntity) entity;
 
                 if (!(user.getMainHandStack() == stack || user.getOffHandStack() == stack)) {
                     if (Energy.of(stack).use(IGNITE_COST/4)) {
                         user.setOnFireFor(1);
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 25, 2, false, false, false));
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 25, 2, false, false, false));
+                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 15, 2, false, false, false));
+                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 15, 2, false, false, false));
 
                     }
                 }

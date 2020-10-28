@@ -13,8 +13,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
@@ -44,7 +46,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (ItemUtils.isActive(stack)) {
-            if (getCapacitorCharge(stack) < 64 && Energy.of(stack).use(2)) {
+            if (getCapacitorCharge(stack) < 64 && Energy.of(stack).use(ZAP_COST)) {
                 setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
                 entity.playSound(ModSounds.CABLE_SHOCK, 0.4F, 1.0F);
             }
@@ -117,7 +119,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
 
     public static int getCapacitorCharge(ItemStack stack) {
         if (stack.getItem() == Ag4trContent.TASER) {
-            validateAirNBTTag(stack);
+            validateCapChargeNBTTag(stack);
             return stack.getTag().getInt("capcharge");
         } else {
             return 0;
@@ -126,14 +128,23 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
 
     public static void setCapacitorCharge(ItemStack stack, int amount) {
         if (stack.getItem() == Ag4trContent.TASER) {
-            validateAirNBTTag(stack);
+            validateCapChargeNBTTag(stack);
             stack.getTag().putInt("capcharge", amount);
         }
     }
 
-    private static void validateAirNBTTag(ItemStack stack) {
+    private static void validateCapChargeNBTTag(ItemStack stack) {
         if (!stack.getTag().contains("capcharge", 3)){
             stack.getTag().putInt("capcharge", 0);
+        }
+    }
+
+    public int getCapCharge4ToolTip(ItemStack stack) {
+        if (stack.hasTag()) {
+            return stack.getTag().getInt("capcharge");
+        }
+        else {
+            return 0;
         }
     }
 
@@ -171,6 +182,11 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         Ag4trItemUtils.buildActiveTooltip(stack, tooltip, "On", "Off");
+        if (getCapCharge4ToolTip(stack)!=64) {
+            tooltip.add((new LiteralText("Capacitors Uncharged").formatted(Formatting.GRAY)));
+        } else {
+            tooltip.add((new LiteralText("Capacitors Charged").formatted(Formatting.GRAY)));
+        }
     }
 
     @Environment(EnvType.CLIENT)
