@@ -4,8 +4,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
@@ -31,6 +33,7 @@ import team.reborn.energy.EnergyTier;
 import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
+
 
 import java.util.List;
 
@@ -63,59 +66,46 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
         return new TypedActionResult<>(ActionResult.PASS, stack);
     }
 
-   /*
-    @Override
-    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        if (ItemUtils.isActive(stack) && getCapacitorCharge(stack)==64) {
-            if (entity.getType() == EntityType.CREEPER) {
-                if (entity instanceof CreeperEntity) {
-                    CreeperEntity creeperAwMan = (CreeperEntity) entity;
-                    creeperAwMan.ignite();
-                    entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
-                    setCapacitorCharge(stack, 0);
-                    return ActionResult.SUCCESS;
-                } else {
-                    return ActionResult.FAIL;
-                }
-            } else {
-                entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 5, 1, false, false, false));
-                entity.animateDamage();
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 3, false, false, false));
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
-                setCapacitorCharge(stack, 0);
-                return ActionResult.SUCCESS;
-            }
-        } else {
-            return ActionResult.FAIL;
-        }
-    }
-    */
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (ItemUtils.isActive(stack) && getCapacitorCharge(stack) == 64) {
             if (target.getType() == EntityType.CREEPER) {
                 if (target instanceof CreeperEntity) {
-                    CreeperEntity creeperAwMan = (CreeperEntity) target;
-                    creeperAwMan.ignite();
+                    CreeperEntity creeper = (CreeperEntity) target;
+                    creeper.ignite();
                     target.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
                     setCapacitorCharge(stack, 0);
                     return true;
                 } else {
                     return false;
                 }
+            } else if (target.getGroup() == EntityGroup.ARTHROPOD) {
+                target.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 3, 1, false, false, false));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 4, false, true, false));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
+                setCapacitorCharge(stack, 0);
+                if (attacker instanceof PlayerEntity) {
+                    target.damage(DamageSource.player((PlayerEntity) attacker), 8);
+                    return true;
+                } else {
+                    return false;
+                }
+
             } else {
                 target.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 5, 1, false, false, false));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 3, false, false, false));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 3, 1, false, false, false));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 4, false, true, false));
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
                 setCapacitorCharge(stack, 0);
                 return true;
             }
+
         } else {
             return false;
         }
     }
+
 
     public static int getCapacitorCharge(ItemStack stack) {
         if (stack.getItem() == Ag4trContent.TASER) {
