@@ -46,7 +46,7 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
 
     public ArcLighterItem(int IGNITE_COST) {
         super(new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1));
-        this.IGNITE_COST = IGNITE_COST;
+        ArcLighterItem.IGNITE_COST = IGNITE_COST;
     }
 
     public static int IGNITE_COST;
@@ -179,8 +179,5 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
         }
         InitUtils.initPoweredItems(this, itemList);
     }
-
-
-
 
 }

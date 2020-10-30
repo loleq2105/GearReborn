@@ -33,22 +33,24 @@ import techreborn.utils.InitUtils;
 
 import java.util.List;
 
+import static dev.loleq21.ag4tr.HazmatSuitUtils.*;
+
 public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions {
 
-    public RHMChestPiece(ArmorMaterial material, EquipmentSlot slot, int airCapacity) {
+    public RHMChestPiece(ArmorMaterial material, EquipmentSlot slot, int airCapacity, int energyCapacity) {
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).maxDamage(-1).fireproof());
         AIR_CAPACITY = airCapacity;
+        ENERGY_CAPACITY = energyCapacity;
     }
 
-    private final int AIR_CAPACITY;
+    public final int AIR_CAPACITY;
+    public final int ENERGY_CAPACITY;
 
 
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
-        boolean canFireFight = playerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == Ag4trContent.RHM_HELMET && playerEntity.getEquippedStack(EquipmentSlot.CHEST).getItem() == Ag4trContent.RHM_CHESTPLATE && playerEntity.getEquippedStack(EquipmentSlot.LEGS).getItem() == Ag4trContent.RHM_LEGGINGS;
-        boolean canWaterFight = playerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == Ag4trContent.RHM_HELMET && playerEntity.getEquippedStack(EquipmentSlot.CHEST).getItem() == Ag4trContent.RHM_CHESTPLATE;
 
-        if (HazmatSuitUtils.playerIsWearingFullHazmat(playerEntity)) {
+        if (playerIsWearingFullHazmat(playerEntity)) {
             if (!playerEntity.isInLava()) {
                 playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 1, false, false, false));
             } else {
@@ -80,15 +82,10 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
                 }
             }
             if (playerEntity.isSubmergedInWater()) {
-                /*
-                if (!(getStoredAir(itemStack) == AIR_CAPACITY) && Energy.of(itemStack).use(2)) {
-                    setStoredAir(itemStack, getStoredAir(itemStack) + 1);
-                }
-            } else {*/
-                if (HazmatSuitUtils.playerIsWearingChestAndHelm(playerEntity)) {
-                    if (!(getStoredAir(itemStack) == 0)) {
+
+                if (playerIsWearingChestAndHelm(playerEntity)) {
+                    if (useStoredAir(itemStack, 1)) {
                         playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 5, 1, false, false, false));
-                        setStoredAir(itemStack, getStoredAir(itemStack) - 1);
                     }
                 }
             }

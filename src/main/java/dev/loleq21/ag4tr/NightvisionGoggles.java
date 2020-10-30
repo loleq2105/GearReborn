@@ -12,11 +12,8 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorRemoveHandler;
@@ -37,10 +34,10 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
     public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot, int energyPerTickConsumption) {
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).maxDamage(-1));
-        this.energyPerTickConsumption = energyPerTickConsumption;
+        EPT_CONSUMPTION = energyPerTickConsumption;
     }
 
-    public final int energyPerTickConsumption;
+    public static int EPT_CONSUMPTION;
 
     @Override
     public boolean isDamageable() {
@@ -67,14 +64,14 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                         stack.setCooldown(2);
                     }
 
-                    if (Energy.of(stack).getEnergy()<energyPerTickConsumption) {
+                    if (Energy.of(stack).getEnergy()< EPT_CONSUMPTION) {
                         StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
                         if (statusEffectInstance != null) {
                             user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
                         }
                     }
 
-                    if (ItemUtils.isActive(stack) && Energy.of(stack).use(energyPerTickConsumption)) {
+                    if (ItemUtils.isActive(stack) && Energy.of(stack).use(EPT_CONSUMPTION)) {
                         user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 1, false, false, false));
                     }
                 }

@@ -44,7 +44,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
         this.ZAP_COST = ZAP_COST;
     }
 
-    public static int ZAP_COST;
+    public final int ZAP_COST;
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
