@@ -97,6 +97,7 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
                 if (entity instanceof CreeperEntity) {
                     CreeperEntity creeperAwMan = (CreeperEntity) entity;
                     creeperAwMan.ignite();
+                    entity.playSound(SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, RANDOM.nextFloat() * 0.4F + 0.8F);
                     entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
                     return ActionResult.SUCCESS;
                 } else {
@@ -104,9 +105,10 @@ public class ArcLighterItem extends Item implements EnergyHolder, ItemDurability
                 }
             } else {
                     entity.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
+                    entity.playSound(SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, RANDOM.nextFloat() * 0.4F + 0.8F);
                     entity.setOnFireFor(4);
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 15, 2, false, false, false));
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 15, 2, false, false, false));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 5, 2, false, false, false));
+                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 5, 2, false, false, false));
 
                     return ActionResult.SUCCESS;
             }
