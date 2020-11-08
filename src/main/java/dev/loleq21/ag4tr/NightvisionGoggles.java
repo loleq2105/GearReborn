@@ -108,7 +108,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
     @Override
     public double getMaxStoredPower() {
-        return 10000;
+        return 80000;
     }
 
     @Override

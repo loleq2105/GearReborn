@@ -36,7 +36,7 @@ public class Ag4trContent {
             .alwaysEdible()
             .build()
     )));
-    public static final Item TASER = addItem("taser", new TaserItem(2));
+    public static final Item TASER = addItem("taser", new TaserItem(4));
     public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD, 8));
 
     private static <I extends Item> I addItem(String name, I item) {

@@ -158,7 +158,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
 
     @Override
     public double getMaxStoredPower() {
-        return 10000;
+        return 40000;
     }
 
     @Override

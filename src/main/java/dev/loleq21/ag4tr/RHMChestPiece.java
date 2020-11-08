@@ -73,7 +73,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
                 for (int i = 0; i < playerEntity.inventory.size(); i++) {
                     ItemStack iteratedStack = playerEntity.inventory.getStack(i);
                     if (iteratedStack.getItem() == TRContent.CELL) {
-                        if (TRContent.CELL.getFluid(iteratedStack) == (Fluid)Registry.FLUID.get(new Identifier("techreborn:compressed_air"))) {
+                        if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid)Registry.FLUID.get(new Identifier("techreborn:compressed_air")))&&Energy.of(itemStack).use(64)) {
                             iteratedStack.decrement(1);
                             ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
                             playerEntity.giveItemStack(emptyCell);
@@ -176,7 +176,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
 
     @Override
     public double getMaxStoredPower() {
-        return 10000;
+        return 160000;
     }
 
     @Override
