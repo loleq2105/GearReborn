@@ -92,6 +92,9 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
                 }
 
             } else {
+                if (target instanceof PlayerEntity) {
+                    return false;
+                }
                 target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 0.8F);
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 5, false, true, false));
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 4, false, false, false));
@@ -171,9 +174,9 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         Ag4trItemUtils.buildActiveTooltip(stack, tooltip, "On", "Off");
         if (getCapCharge4ToolTip(stack)!=64) {
-            tooltip.add((new LiteralText("Capacitors Uncharged").formatted(Formatting.GRAY)));
+            tooltip.add((new LiteralText("Capacitors Uncharged").formatted(Formatting.RED)));
         } else {
-            tooltip.add((new LiteralText("Capacitors Charged").formatted(Formatting.GRAY)));
+            tooltip.add((new LiteralText("Capacitors Charged").formatted(Formatting.GREEN)));
         }
     }
 

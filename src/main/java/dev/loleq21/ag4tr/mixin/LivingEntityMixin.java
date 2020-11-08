@@ -50,8 +50,6 @@ public abstract class LivingEntityMixin extends Entity {
                     if (bootDamage>bootDurability){
                         this.damage(DamageSource.FALL, (float)vanillaPlayerDamage);
                         equippedBootsSlotItemStack.decrement(1);
-                        player.playSound(SoundEvents.BLOCK_WOOL_BREAK, 1.0F, 1.0F);
-                        //player.addCritParticles(player);
                         player.sendEquipmentBreakStatus(EquipmentSlot.FEET);
 
                     }
