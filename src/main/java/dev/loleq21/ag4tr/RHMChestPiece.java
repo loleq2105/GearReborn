@@ -17,7 +17,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +32,8 @@ import techreborn.utils.InitUtils;
 
 import java.util.List;
 
-import static dev.loleq21.ag4tr.HazmatSuitUtils.*;
+import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingChestAndHelm;
+import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingFullHazmat;
 
 public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions {
 
@@ -52,11 +52,12 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
 
         if (playerIsWearingFullHazmat(playerEntity)) {
             if (!playerEntity.isInLava()) {
-                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 1, false, false, false));
+                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
             } else {
                 if (this.slot == EquipmentSlot.CHEST) {
                     if (Energy.of(itemStack).use(16)) {
-                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 1, false, false, false));
+                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0,
+                                false, false, false));
                     }
                 }
             }
@@ -66,7 +67,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
             }
         }
 
-
+        //quality code 11/10
         if (this.slot == EquipmentSlot.CHEST) {
             if ((getStoredAir(itemStack) == 0)) {
                 for (int i = 0; i < playerEntity.inventory.size(); i++) {

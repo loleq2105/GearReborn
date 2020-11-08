@@ -4,9 +4,11 @@ import com.google.common.collect.Maps;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.Registry;
@@ -28,31 +30,55 @@ public class Ag4trStackToolTipHandler implements ItemTooltipCallback {
     }
 
     @Override
-    public void getTooltip(ItemStack itemStack, TooltipContext tooltipContext, List<Text> list) {
+    public void getTooltip(ItemStack itemStack, TooltipContext tooltipContext, List<Text> tooltipLines) {
 
         Item item = itemStack.getItem();
 
         if (!ITEM_ID.computeIfAbsent(item, this::isAg4trItem))
             return;
 
-            if (itemStack.getItem() instanceof EnergyHolder) {
-            LiteralText line1 = new LiteralText(PowerSystem.getLocaliszedPowerFormattedNoSuffix(Energy.of(itemStack).getEnergy()));
+        if (item instanceof EnergyHolder) {
+            LiteralText line1 = new LiteralText(PowerSystem.getLocalizedPowerNoSuffix(Energy.of(itemStack).getEnergy()));
             line1.append("/");
-            line1.append(PowerSystem.getLocaliszedPowerFormattedNoSuffix(Energy.of(itemStack).getMaxStored()));
-            line1.append(" ");
-            line1.append(PowerSystem.getDisplayPower().abbreviation);
+            line1.append(PowerSystem.getLocalizedPower(Energy.of(itemStack).getMaxStored()));
             line1.formatted(Formatting.GOLD);
 
-            list.add(1, line1);
+            tooltipLines.add(1, line1);
 
             if (Screen.hasShiftDown()) {
                 int percentage = percentage(Energy.of(itemStack).getMaxStored(), Energy.of(itemStack).getEnergy());
-                Formatting color = StringUtils.getPercentageColour(percentage);
-                list.add(2, new LiteralText(color + "" + percentage + "%" + Formatting.GRAY + " Charged"));
-                // TODO: show both input and output rates
-                list.add(3, new LiteralText(Formatting.GRAY + "I/O Rate: " + Formatting.GOLD + PowerSystem.getLocaliszedPowerFormatted(((EnergyHolder) item).getMaxInput(EnergySide.UNKNOWN))));
+                MutableText line2 = StringUtils.getPercentageText(percentage);
+                line2.append(" ");
+                line2.formatted(Formatting.GRAY);
+                line2.append(I18n.translate("reborncore.gui.tooltip.power_charged"));
+                tooltipLines.add(2, line2);
+
+                double inputRate = ((EnergyHolder) item).getMaxInput(EnergySide.UNKNOWN);
+                double outputRate = ((EnergyHolder) item).getMaxOutput(EnergySide.UNKNOWN);
+                LiteralText line3 = new LiteralText("");
+                if (inputRate != 0 && inputRate == outputRate) {
+                    line3.append(I18n.translate("techreborn.tooltip.transferRate"));
+                    line3.append(" : ");
+                    line3.formatted(Formatting.GRAY);
+                    line3.append(PowerSystem.getLocalizedPower(inputRate));
+                    line3.formatted(Formatting.GOLD);
+                } else if (inputRate != 0) {
+                    line3.append(I18n.translate("reborncore.tooltip.energy.inputRate"));
+                    line3.append(" : ");
+                    line3.formatted(Formatting.GRAY);
+                    line3.append(PowerSystem.getLocalizedPower(inputRate));
+                    line3.formatted(Formatting.GOLD);
+                } else if (outputRate != 0) {
+                    line3.append(I18n.translate("reborncore.tooltip.energy.outputRate"));
+                    line3.append(" : ");
+                    line3.formatted(Formatting.GRAY);
+                    line3.append(PowerSystem.getLocalizedPower(outputRate));
+                    line3.formatted(Formatting.GOLD);
+                }
+                tooltipLines.add(3, line3);
             }
         }
+
         }
 
     private boolean isAg4trItem(Item item) {

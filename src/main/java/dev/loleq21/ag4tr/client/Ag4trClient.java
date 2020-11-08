@@ -1,7 +1,6 @@
 package dev.loleq21.ag4tr.client;
 
 import dev.loleq21.ag4tr.Ag4trStackToolTipHandler;
-import dev.loleq21.ag4tr.ArcLighterItem;
 import dev.loleq21.ag4tr.TaserItem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -20,8 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import reborncore.common.util.ItemUtils;
 import reborncore.mixin.client.AccessorModelPredicateProviderRegistry;
-import team.reborn.energy.Energy;
-import techreborn.TechRebornClient;
 
 @Environment(EnvType.CLIENT)
     public class Ag4trClient implements ClientModInitializer {
@@ -33,21 +30,14 @@ import techreborn.TechRebornClient;
 
     @Override
     public void onInitializeClient() {
+
         Ag4trStackToolTipHandler.setup();
+        //keybinds
         KeyBindingHelper.registerKeyBinding(NV_KEY_BIND);
-        registerPredicateProvider(
-                ArcLighterItem.class,
-                new Identifier("ag4tr:inactive"),
-                (item, stack, world, entity) -> {
-                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && Energy.of(stack).getEnergy()>=ArcLighterItem.IGNITE_COST) {
-                        return 1.0F;
-                    }
-                    return 0.0F;
-                }
-        );
+        //predicates for animated textures
         registerPredicateProvider(
                 TaserItem.class,
-                new Identifier("ag4tr:inactive"),
+                new Identifier("ag4tr:active"),
                 (item, stack, world, entity) -> {
                     if (!stack.isEmpty() && ItemUtils.isActive(stack) && TaserItem.getCapacitorCharge(stack)==64) {
                         return 1.0F;
@@ -57,15 +47,12 @@ import techreborn.TechRebornClient;
         );
     }
 
-   //whatever this does
-
     private static <T extends Item> void registerPredicateProvider(Class<T> itemClass, Identifier identifier, ItemModelPredicateProvider<T> modelPredicateProvider) {
         Registry.ITEM.stream()
                 .filter(item -> item.getClass().isAssignableFrom(itemClass))
                 .forEach(item -> AccessorModelPredicateProviderRegistry.callRegister(item, identifier, modelPredicateProvider));
     }
 
-    //Need the item instance in a few places, this makes it easier
     private interface ItemModelPredicateProvider<T extends Item> extends ModelPredicateProvider {
 
         float call(T item, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity);

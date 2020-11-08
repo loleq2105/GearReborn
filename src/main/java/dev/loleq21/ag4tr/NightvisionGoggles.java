@@ -72,7 +72,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                     }
 
                     if (ItemUtils.isActive(stack) && Energy.of(stack).use(EPT_CONSUMPTION)) {
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 1, false, false, false));
+                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 0, false, false, false));
                     }
                 }
             }
@@ -108,7 +108,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
     @Override
     public double getMaxStoredPower() {
-        return 20000;
+        return 10000;
     }
 
     @Override

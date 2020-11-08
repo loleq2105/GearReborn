@@ -2,18 +2,15 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "#K#",
-        "FBC",
-        "###"
+        "#B#",
+        "#C#"
     ],
     "key": {
         "#": {
             "item": "ag4tr:hazmat_sheet"
         },
         "K": {
-            "item": "techreborn:electronic_circuit"
-        },
-        "F": {
-            "item": "ag4tr:refrigeration_unit"
+            "item": "techreborn:advanced_circuit"
         },
         "B": {
             "item": "techreborn:cell"

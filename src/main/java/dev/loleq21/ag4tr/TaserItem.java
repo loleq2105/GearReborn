@@ -73,30 +73,28 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
                 if (target instanceof CreeperEntity) {
                     CreeperEntity creeper = (CreeperEntity) target;
                     creeper.ignite();
-                    target.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
+                    target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
                     setCapacitorCharge(stack, 0);
                     return true;
                 } else {
                     return false;
                 }
             } else if (target.getGroup() == EntityGroup.ARTHROPOD) {
-                target.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 3, 1, false, false, false));
+                target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 4, false, true, false));
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
                 setCapacitorCharge(stack, 0);
                 if (attacker instanceof PlayerEntity) {
-                    target.damage(DamageSource.player((PlayerEntity) attacker), 8);
+                    target.damage(DamageSource.player((PlayerEntity) attacker), 16);
                     return true;
                 } else {
                     return false;
                 }
 
             } else {
-                target.playSound(ModSounds.CABLE_SHOCK, 1.0F, 1.0F);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 3, 1, false, false, false));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 4, false, true, false));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
+                target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 0.8F);
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 5, false, true, false));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 4, false, false, false));
                 setCapacitorCharge(stack, 0);
                 return true;
             }
