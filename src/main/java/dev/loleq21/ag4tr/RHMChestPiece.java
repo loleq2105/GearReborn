@@ -55,7 +55,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
                 playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
             } else {
                 if (this.slot == EquipmentSlot.CHEST) {
-                    if (Energy.of(itemStack).use(16)) {
+                    if (Energy.of(itemStack).use(32)) {
                         playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0,
                                 false, false, false));
                     }
@@ -86,7 +86,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
 
                 if (playerIsWearingChestAndHelm(playerEntity)) {
                     if (useStoredAir(itemStack, 1)) {
-                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 5, 1, false, false, false));
+                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 5, 0, false, false, false));
                     }
                 }
             }
