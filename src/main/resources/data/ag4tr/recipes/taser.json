@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " #N",
+        "Ki#",
+        "B  "
+    ],
+    "key": {
+        "#": {
+            "item": "techreborn:tin_nugget"
+        },
+        "N": {
+            "item": "techreborn:copper_ingot"
+        },
+        "K": {
+            "item": "techreborn:electronic_circuit"
+        },
+        "i": {
+            "item": "techreborn:refined_iron_ingot"
+        },
+        "B": {
+            "item": "techreborn:red_cell_battery"
+        }
+    },
+    "result": {
+        "item": "ag4tr:taser",
+        "count": 1
+    }
+}
