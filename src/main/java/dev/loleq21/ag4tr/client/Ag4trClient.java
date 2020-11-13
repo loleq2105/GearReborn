@@ -31,7 +31,7 @@ import reborncore.mixin.client.AccessorModelPredicateProviderRegistry;
     @Override
     public void onInitializeClient() {
 
-        Ag4trStackToolTipHandler.setup();
+        //Ag4trStackToolTipHandler.setup();
         //keybinds
         KeyBindingHelper.registerKeyBinding(NV_KEY_BIND);
         //predicates for animated textures

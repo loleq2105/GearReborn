@@ -13,10 +13,12 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -60,7 +62,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
         final ItemStack stack = player.getStackInHand(hand);
         if (player.isSneaking()) {
-            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Taser");
+            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "ag4tr.misc.shortenedtasername4switchchatmessage");
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
@@ -172,11 +174,11 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        Ag4trItemUtils.buildActiveTooltip(stack, tooltip, "On", "Off");
+        Ag4trItemUtils.buildActiveTooltip(stack, tooltip);
         if (getCapCharge4ToolTip(stack)!=64) {
-            tooltip.add((new LiteralText("Capacitors Uncharged").formatted(Formatting.RED)));
+            tooltip.add((new TranslatableText("ag4tr.misc.tasertooltipcapacitorsuncharged").formatted(Formatting.RED)));
         } else {
-            tooltip.add((new LiteralText("Capacitors Charged").formatted(Formatting.GREEN)));
+            tooltip.add((new TranslatableText("ag4tr.misc.tasertooltipcapacitorscharged").formatted(Formatting.GREEN)));
         }
     }
 

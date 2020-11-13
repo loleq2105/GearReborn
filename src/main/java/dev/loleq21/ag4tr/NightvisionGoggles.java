@@ -55,7 +55,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
                     if (NV_KEY_BIND.isPressed()) {
                         if (stack.getCooldown() == 0) {
-                            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "Night Vision");
+                            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "ag4tr.misc.shortenednvgname4switchchatmessage");
                             StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
                             if (statusEffectInstance != null) {
                                 user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
@@ -119,7 +119,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        Ag4trItemUtils.buildActiveTooltip(stack, tooltip, "Night Vision Enabled", "Night Vision Disabled");
+        Ag4trItemUtils.buildActiveTooltip(stack, tooltip);
     }
 
     @Environment(EnvType.CLIENT)

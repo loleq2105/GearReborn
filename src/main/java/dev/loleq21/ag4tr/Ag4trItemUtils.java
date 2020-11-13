@@ -1,5 +1,6 @@
 package dev.loleq21.ag4tr;
 
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -18,16 +19,16 @@ public class Ag4trItemUtils {
         return !stack.isEmpty() && stack.getTag() != null && stack.getTag().getBoolean("isActive");
     }
 
-    public static void switchActive(ItemStack stack, boolean isClient, int messageId, String message) {
+    public static void switchActive(ItemStack stack, boolean isClient, int messageId, String messageTranslationKey) {
         if (!isActive(stack)) {
             stack.getOrCreateTag().putBoolean("isActive", true);
             if (isClient) {
-                ChatUtils.sendNoSpamMessages(messageId, (new LiteralText(message).formatted(Formatting.GRAY).append(" ").append(new LiteralText("On").formatted(Formatting.GOLD))));
+                ChatUtils.sendNoSpamMessages(messageId, (new TranslatableText(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(new TranslatableText("ag4tr.misc.deviceon").formatted(Formatting.GOLD))));
             }
         } else {
             stack.getOrCreateTag().putBoolean("isActive", false);
             if (isClient) {
-                ChatUtils.sendNoSpamMessages(messageId, (new LiteralText(message).formatted(Formatting.GRAY).append(" ").append(new LiteralText("Off").formatted(Formatting.GOLD))));
+                ChatUtils.sendNoSpamMessages(messageId, (new TranslatableText(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(new TranslatableText("ag4tr.misc.deviceoff").formatted(Formatting.GOLD))));
             }
         }
 
@@ -40,11 +41,11 @@ public class Ag4trItemUtils {
         }
 
     }
-    public static void buildActiveTooltip(ItemStack stack, List<Text> tooltip, String onToolTip, String offToolTip) {
+    public static void buildActiveTooltip(ItemStack stack, List<Text> tooltip) {
         if (!isActive(stack)) {
-            tooltip.add((new LiteralText(offToolTip).formatted(Formatting.GRAY)));
+            tooltip.add((new TranslatableText("ag4tr.misc.deviceoff").formatted(Formatting.RED)));
         } else {
-            tooltip.add((new LiteralText(onToolTip).formatted(Formatting.GRAY)));
+            tooltip.add((new TranslatableText("ag4tr.misc.deviceon").formatted(Formatting.GREEN)));
         }
 
     }

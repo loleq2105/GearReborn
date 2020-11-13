@@ -8,13 +8,21 @@
    "item.ag4tr.rhm_helmet": "Hazmat Helmet",
    "item.ag4tr.rhm_chestplate": "Hazmat Chestpiece",
    "item.ag4tr.rhm_leggings": "Hazmat Bottoms",
-    "item.ag4tr.refrigeration_unit": "Compact Refrigeration Unit",
-    "item.ag4tr.flame_retardant": "Flame Retardant",
-    "item.ag4tr.hazmat_sheet": "Hazmat Sheet",
+   "item.ag4tr.refrigeration_unit": "Compact Refrigeration Unit",
+   "item.ag4tr.flame_retardant": "Flame Retardant",
+   "item.ag4tr.hazmat_sheet": "Hazmat Sheet",
    "item.ag4tr.arc_lighter": "Electric Lighter",
    "item.ag4tr.taser": "Electric Taser",
    "key.ag4tr.toggle_nv": "Toggle Night Vision Goggles",
    "category.ag4tr.title": "Additional Gear For Tech Reborn",
-   "itemGroup.ag4tr.items": "Ag4tr"
+   "itemGroup.ag4tr.items": "Ag4tr",
+   "ag4tr.misc.deviceoff": "Off",
+   "ag4tr.misc.deviceon": "On",
+   "ag4tr.misc.tasertooltipcapacitorscharged": "Capacitors Charged",
+   "ag4tr.misc.tasertooltipcapacitorsuncharged": "Capacitors Uncharged",
+   "ag4tr.misc.shortenednvgname4switchchatmessage": "Night Vision Goggles",
+   "ag4tr.misc.shortenedtasername4switchchatmessage": "Taser"
+
+
 
  }

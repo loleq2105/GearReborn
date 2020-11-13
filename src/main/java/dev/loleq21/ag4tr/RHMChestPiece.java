@@ -29,6 +29,7 @@ import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
 import techreborn.init.TRContent;
 import techreborn.utils.InitUtils;
+import techreborn.utils.damageSources.ElectrialShockSource;
 
 import java.util.List;
 
