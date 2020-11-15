@@ -32,18 +32,17 @@ import static dev.loleq21.ag4tr.client.Ag4trClient.NV_KEY_BIND;
 
 public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
-    public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot, int energyPerTickConsumption) {
+    public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).maxDamage(-1));
-        EPT_CONSUMPTION = energyPerTickConsumption;
     }
 
-    public static int EPT_CONSUMPTION;
+    public final double energyPerTickCost = ModValues.nvgActiveEPTC;
+    public final double energyCapacity = ModValues.nvgEnergyCapacity;
 
     @Override
     public boolean isDamageable() {
         return false;
     }
-
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
@@ -64,14 +63,14 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                         stack.setCooldown(2);
                     }
 
-                    if (Energy.of(stack).getEnergy()< EPT_CONSUMPTION) {
+                    if (Energy.of(stack).getEnergy()< energyPerTickCost) {
                         StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
                         if (statusEffectInstance != null) {
                             user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
                         }
                     }
 
-                    if (ItemUtils.isActive(stack) && Energy.of(stack).use(EPT_CONSUMPTION)) {
+                    if (ItemUtils.isActive(stack) && Energy.of(stack).use(energyPerTickCost)) {
                         user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 0, false, false, false));
                     }
                 }
@@ -108,12 +107,12 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
     @Override
     public double getMaxStoredPower() {
-        return 80000;
+        return energyCapacity;
     }
 
     @Override
     public EnergyTier getTier() {
-        return EnergyTier.LOW;
+        return EnergyTier.MEDIUM;
     }
 
     @Environment(EnvType.CLIENT)

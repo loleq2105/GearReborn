@@ -1,7 +1,14 @@
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "ag4tr:item/rhm_chestplate"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "ag4tr:charged": 1
+      },
+      "model": "ag4tr:item/rhm_chestplate_charged"
+    }
+  ]
 }
-

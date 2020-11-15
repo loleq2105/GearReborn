@@ -1,5 +1,7 @@
 package dev.loleq21.ag4tr.client;
 
+import dev.loleq21.ag4tr.ModValues;
+import dev.loleq21.ag4tr.RHMChestPiece;
 import dev.loleq21.ag4tr.TaserItem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -18,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import reborncore.common.util.ItemUtils;
 import reborncore.mixin.client.AccessorModelPredicateProviderRegistry;
+import team.reborn.energy.Energy;
 
 @Environment(EnvType.CLIENT)
     public class Ag4trClient implements ClientModInitializer {
@@ -38,7 +41,17 @@ import reborncore.mixin.client.AccessorModelPredicateProviderRegistry;
                 TaserItem.class,
                 new Identifier("ag4tr:active"),
                 (item, stack, world, entity) -> {
-                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && TaserItem.getCapacitorCharge(stack)==64) {
+                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && TaserItem.getCapacitorCharge(stack)==ModValues.taserCapacitorChargeUnits) {
+                        return 1.0F;
+                    }
+                    return 0.0F;
+                }
+        );
+        registerPredicateProvider(
+                RHMChestPiece.class,
+                new Identifier("ag4tr:charged"),
+                (item, stack, world, entity) -> {
+                    if (!stack.isEmpty() && Energy.of(stack).getEnergy()>=ModValues.rhmChestCoolingEPTC*2) {
                         return 1.0F;
                     }
                     return 0.0F;

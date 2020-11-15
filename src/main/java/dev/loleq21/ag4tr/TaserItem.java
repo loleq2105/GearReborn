@@ -13,10 +13,8 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -36,22 +34,22 @@ import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
 
-
 import java.util.List;
 
 public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExtensions {
 
-    public TaserItem(int ZAP_COST) {
+    public TaserItem() {
         super(new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1));
-        this.ZAP_COST = ZAP_COST;
     }
 
-    public final int ZAP_COST;
+    public final double zapEnergyCost = ModValues.taserOneCapacitorChargeUnitEnergyCost;
+    public final double energyCapacity = ModValues.taserEnergyCapacity;
+    public final int capacitorChargeUnits = ModValues.taserCapacitorChargeUnits;
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (ItemUtils.isActive(stack)) {
-            if (getCapacitorCharge(stack) < 64 && Energy.of(stack).use(ZAP_COST)) {
+            if (getCapacitorCharge(stack) < capacitorChargeUnits && Energy.of(stack).use(zapEnergyCost)) {
                 setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
                 entity.playSound(ModSounds.CABLE_SHOCK, 0.4F, 1.0F);
             }
@@ -70,7 +68,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (ItemUtils.isActive(stack) && getCapacitorCharge(stack) == 64) {
+        if (ItemUtils.isActive(stack) && getCapacitorCharge(stack) == capacitorChargeUnits) {
             if (target.getType() == EntityType.CREEPER) {
                 if (target instanceof CreeperEntity) {
                     CreeperEntity creeper = (CreeperEntity) target;
@@ -159,7 +157,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
 
     @Override
     public double getMaxStoredPower() {
-        return 40000;
+        return energyCapacity;
     }
 
     @Override
@@ -171,7 +169,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         Ag4trItemUtils.buildActiveTooltip(stack, tooltip);
-        if (getCapCharge4ToolTip(stack)!=64) {
+        if (getCapCharge4ToolTip(stack)!=capacitorChargeUnits) {
             tooltip.add((new TranslatableText("ag4tr.misc.tasertooltipcapacitorsuncharged").formatted(Formatting.RED)));
         } else {
             tooltip.add((new TranslatableText("ag4tr.misc.tasertooltipcapacitorscharged").formatted(Formatting.GREEN)));

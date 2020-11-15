@@ -7,7 +7,7 @@ import net.minecraft.item.ArmorMaterial;
 public class RHMPeripheralsLol extends ArmorItem {
 
     public RHMPeripheralsLol(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).maxDamage(-1).fireproof());
+        super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).fireproof());
     }
 
 }

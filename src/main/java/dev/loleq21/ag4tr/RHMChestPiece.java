@@ -39,15 +39,14 @@ import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingFullHazmat;
 
 public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions {
 
-    public RHMChestPiece(ArmorMaterial material, EquipmentSlot slot, int airCapacity, int energyCapacity) {
-        super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).maxDamage(-1).fireproof());
-        AIR_CAPACITY = airCapacity;
-        ENERGY_CAPACITY = energyCapacity;
+    public RHMChestPiece(ArmorMaterial material, EquipmentSlot slot) {
+        super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).fireproof());
     }
 
-    public final int AIR_CAPACITY;
-    public final int ENERGY_CAPACITY;
-
+    public final int airCapacity = ModValues.rhmChestAirCapacity;
+    public final double energyCapacity = ModValues.rhmChestEnergyCapacity;
+    public final double coolingEnergyCost = ModValues.rhmChestCoolingEPTC;
+    public final double airCanSwapEnergyCost = ModValues.rhmChestCanisterSwapCost;
 
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
@@ -57,15 +56,15 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
                 playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
             } else {
                 if (this.slot == EquipmentSlot.CHEST) {
-                    if (Energy.of(itemStack).use(32)) {
+                    if (Energy.of(itemStack).use(coolingEnergyCost)) {
                         playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
                     }
                 }
             }
 
-            //if (playerEntity.isOnFire()) {
-            //    playerEntity.extinguish();
-            //}
+            if (playerEntity.isOnFire() && Energy.of(itemStack).getEnergy()>=coolingEnergyCost*2) {
+                playerEntity.extinguish();
+            }
         }
 
         //quality code 11/10
@@ -74,11 +73,11 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
                 for (int i = 0; i < playerEntity.inventory.size(); i++) {
                     ItemStack iteratedStack = playerEntity.inventory.getStack(i);
                     if (iteratedStack.getItem() == TRContent.CELL) {
-                        if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid)Registry.FLUID.get(new Identifier("techreborn:compressed_air")))&&Energy.of(itemStack).use(64)) {
+                        if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid)Registry.FLUID.get(new Identifier("techreborn:compressed_air")))  && Energy.of(itemStack).use(airCanSwapEnergyCost)) {
                             iteratedStack.decrement(1);
                             ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
                             playerEntity.giveItemStack(emptyCell);
-                            setStoredAir(itemStack, AIR_CAPACITY);
+                            setStoredAir(itemStack, airCapacity);
                         }
                     }
                 }
@@ -124,7 +123,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
     public boolean addStoredAir(ItemStack stack, int amount) {
         if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
             validateAirNBTTag(stack);
-            if(getStoredAir(stack)+amount>AIR_CAPACITY) {
+            if(getStoredAir(stack)+amount>airCapacity) {
                 return false;
             } else {
                 setStoredAir(stack, getStoredAir(stack)+amount);
@@ -134,7 +133,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
             return  false;
     }
 
-    public int getAirCapacity() { return AIR_CAPACITY; }
+    public int getAirCapacity() { return airCapacity; }
 
     private void validateAirNBTTag(ItemStack stack) {
         if (!stack.getTag().contains("air", 3)){
@@ -152,28 +151,13 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
     }
 
     @Override
-    public double getDurability(ItemStack stack) {
-        return 1 - ItemUtils.getPowerForDurabilityBar(stack);
-    }
-
-    @Override
-    public boolean showDurability(ItemStack stack) {
-        return true;
-    }
-
-    @Override
     public boolean isEnchantable(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getDurabilityColor(ItemStack stack) {
-        return PowerSystem.getDisplayPower().colour;
-    }
-
-    @Override
     public double getMaxStoredPower() {
-        return 160000;
+        return energyCapacity;
     }
 
     @Override
@@ -186,7 +170,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         LiteralText line1 = new LiteralText(String.valueOf(getStoredAir4ToolTip(stack)));
         line1.append("/");
-        line1.append(String.valueOf(AIR_CAPACITY));
+        line1.append(String.valueOf(airCapacity));
         line1.append(" ");
         line1.append(new TranslatableText("ag4tr.misc.rhmchestplateair"));
         line1.formatted(Formatting.GOLD);
