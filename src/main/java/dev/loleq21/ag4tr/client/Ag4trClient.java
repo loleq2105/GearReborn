@@ -1,6 +1,5 @@
 package dev.loleq21.ag4tr.client;
 
-import dev.loleq21.ag4tr.Ag4trStackToolTipHandler;
 import dev.loleq21.ag4tr.TaserItem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;

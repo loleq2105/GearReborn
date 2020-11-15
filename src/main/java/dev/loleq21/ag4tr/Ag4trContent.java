@@ -27,15 +27,6 @@ public class Ag4trContent {
     public static final Item RHM_CHESTPLATE = addItem("rhm_chestplate", new RHMChestPiece(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.CHEST, 512, 10000));
     public static final Item RHM_LEGGINGS = addItem("rhm_leggings", new RHMPeripheralsLol(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.LEGS));
     public static final Item RHM_HELMET = addItem("rhm_helmet", new RHMPeripheralsLol(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.HEAD));
-    public static final Item HAZMAT_SHEET = addItem("hazmat_sheet", new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP)));
-    public static final Item FLAME_RETARDANT = addItem("flame_retardant", new Item(new Item.Settings().group(Ag4tr.AG4TR_GROUP).food(new FoodComponent.Builder()
-            .saturationModifier(0.0F)
-            .statusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 160, 1), 0.8F)
-            .statusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 320, 2), 1.0F)
-            .statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 320, 1), 1.0F)
-            .alwaysEdible()
-            .build()
-    )));
     public static final Item TASER = addItem("taser", new TaserItem(4));
     public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD, 8));
 

@@ -20,7 +20,7 @@ public enum Ag4trArmorMaterials implements ArmorMaterial {
         return Ingredient.ofItems(TRContent.Ingots.REFINED_IRON);
     }),
     HAZMAT(15, new int[]{2, 3, 4, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, 0.0F, () -> {
-        return Ingredient.ofItems(Ag4trContent.HAZMAT_SHEET);
+        return Ingredient.ofItems(TRContent.Parts.RUBBER.asItem());
     })
     ;
 

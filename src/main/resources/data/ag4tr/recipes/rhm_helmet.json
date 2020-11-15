@@ -6,10 +6,10 @@
     ],
     "key": {
         "#": {
-            "item": "ag4tr:hazmat_sheet"
+            "item": "techreborn:rubber"
         },
         "C": {
-            "item": "techreborn:rubber"
+            "item": "minecraft:yellow_dye"
         },
         "G": {
             "item": "techreborn:reinforced_glass"

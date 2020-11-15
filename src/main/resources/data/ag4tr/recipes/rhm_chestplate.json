@@ -1,13 +1,13 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "#K#",
+        "YKY",
         "#B#",
         "#C#"
     ],
     "key": {
         "#": {
-            "item": "ag4tr:hazmat_sheet"
+            "item": "techreborn:rubber"
         },
         "K": {
             "item": "techreborn:advanced_circuit"
@@ -17,6 +17,9 @@
         },
         "C": {
             "item": "techreborn:red_cell_battery"
+        },
+        "Y": {
+            "item": "minecraft:yellow_dye"
         }
     },
     "result": {
