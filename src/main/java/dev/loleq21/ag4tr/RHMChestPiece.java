@@ -14,6 +14,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -57,15 +58,14 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
             } else {
                 if (this.slot == EquipmentSlot.CHEST) {
                     if (Energy.of(itemStack).use(32)) {
-                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0,
-                                false, false, false));
+                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
                     }
                 }
             }
 
-            if (playerEntity.isOnFire()) {
-                playerEntity.extinguish();
-            }
+            //if (playerEntity.isOnFire()) {
+            //    playerEntity.extinguish();
+            //}
         }
 
         //quality code 11/10
@@ -98,9 +98,8 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
         if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
             validateAirNBTTag(stack);
             return stack.getTag().getInt("air");
-        } else {
-            return 0;
         }
+            return 0;
     }
 
     public void setStoredAir(ItemStack stack, int amount) {
@@ -116,12 +115,10 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
         if(getStoredAir(stack)>=amount) {
             setStoredAir(stack, getStoredAir(stack)-amount);
             return true;
-        } else {
+        }
             return false;
         }
-        } else {
             return  false;
-        }
     }
 
     public boolean addStoredAir(ItemStack stack, int amount) {
@@ -133,9 +130,8 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
                 setStoredAir(stack, getStoredAir(stack)+amount);
                 return true;
             }
-        } else {
-            return  false;
         }
+            return  false;
     }
 
     public int getAirCapacity() { return AIR_CAPACITY; }
@@ -192,7 +188,7 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
         line1.append("/");
         line1.append(String.valueOf(AIR_CAPACITY));
         line1.append(" ");
-        line1.append("Air");
+        line1.append(new TranslatableText("ag4tr.misc.rhmchestplateair"));
         line1.formatted(Formatting.GOLD);
         tooltip.add(1, line1);
     }

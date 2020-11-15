@@ -78,9 +78,8 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
                     target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
                     setCapacitorCharge(stack, 0);
                     return true;
-                } else {
-                    return false;
                 }
+                return false;
             } else if (target.getGroup() == EntityGroup.ARTHROPOD) {
                 target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 4, false, true, false));
@@ -89,13 +88,14 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
                 if (attacker instanceof PlayerEntity) {
                     target.damage(DamageSource.player((PlayerEntity) attacker), 16);
                     return true;
-                } else {
-                    return false;
                 }
+                return false;
 
             } else {
                 if (target instanceof PlayerEntity) {
-                    return false;
+                    if (HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity)target)) {
+                        return false;
+                    }
                 }
                 target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 0.8F);
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 5, false, true, false));
@@ -103,10 +103,8 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
                 setCapacitorCharge(stack, 0);
                 return true;
             }
-
-        } else {
-            return false;
         }
+            return false;
     }
 
 
@@ -114,10 +112,10 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
         if (stack.getItem() == Ag4trContent.TASER) {
             validateCapChargeNBTTag(stack);
             return stack.getTag().getInt("capcharge");
-        } else {
-            return 0;
         }
+        return 0;
     }
+
 
     public static void setCapacitorCharge(ItemStack stack, int amount) {
         if (stack.getItem() == Ag4trContent.TASER) {
@@ -136,9 +134,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
         if (stack.hasTag()) {
             return stack.getTag().getInt("capcharge");
         }
-        else {
             return 0;
-        }
     }
 
     @Override
