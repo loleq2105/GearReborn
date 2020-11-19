@@ -16,7 +16,7 @@ public class Ag4tr implements ModInitializer {
     @Override
     public void onInitialize() {
         Ag4trContent.registerAg4trContent();
-        CableElectrocutionEvent.EVENT.register((livingEntity, cableType, blockPos, world, cableBlockEntity) -> {
+        /*CableElectrocutionEvent.EVENT.register((livingEntity, cableType, blockPos, world, cableBlockEntity) -> {
             if(livingEntity instanceof PlayerEntity) {
                 PlayerEntity player = (PlayerEntity) livingEntity;
                 if (HazmatSuitUtils.playerIsWearingFullHazmat(player)) {
@@ -24,7 +24,7 @@ public class Ag4tr implements ModInitializer {
                 }
             }
                 return true;
-        });
+        });*/
     }
 }
 
