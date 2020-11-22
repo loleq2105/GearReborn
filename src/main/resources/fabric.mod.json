@@ -9,6 +9,7 @@
   ],
   "contact": {},
   "license": "MIT",
+  "icon": "assets/ag4tr/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
