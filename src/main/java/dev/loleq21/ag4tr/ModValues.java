@@ -10,7 +10,7 @@ public class ModValues {
     // EPTC stands for Energy Per Tick Cost
 
     public static int rhmChestEnergyCapacity = 120000;
-    public static int rhmChestAirCapacity = 512;
+    public static int rhmChestAirCapacity = 524;
     public static int rhmChestCoolingEPTC = 32;
     public static int rhmChestCanisterSwapCost = 128;
 

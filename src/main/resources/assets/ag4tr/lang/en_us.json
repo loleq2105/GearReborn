@@ -8,7 +8,7 @@
    "item.ag4tr.rhm_helmet": "Hazmat Helmet",
    "item.ag4tr.rhm_chestplate": "Hazmat Chestpiece",
    "item.ag4tr.rhm_leggings": "Hazmat Bottoms",
-   "item.ag4tr.taser": "Electric Taser",
+   "item.ag4tr.taser": "Stun Gun",
    "key.ag4tr.toggle_nv": "Toggle Night Vision Goggles",
    "category.ag4tr.title": "Additional Gear For Tech Reborn",
    "itemGroup.ag4tr.items": "Ag4tr",
@@ -17,8 +17,8 @@
    "ag4tr.misc.tasertooltipcapacitorscharged": "Capacitors Charged",
    "ag4tr.misc.tasertooltipcapacitorsuncharged": "Capacitors Uncharged",
    "ag4tr.misc.shortenednvgname4switchchatmessage": "Night Vision Goggles",
-   "ag4tr.misc.rhmchestplateair": "Air",
-   "ag4tr.misc.shortenedtasername4switchchatmessage": "Taser"
+   "ag4tr.misc.rhmchestplateairpressure": "Air Pressure",
+   "ag4tr.misc.shortenedtasername4switchchatmessage": "Stun Gun"
 
 
 
