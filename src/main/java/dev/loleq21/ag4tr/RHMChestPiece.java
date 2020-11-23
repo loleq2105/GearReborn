@@ -18,6 +18,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -168,11 +169,11 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        LiteralText line1 = new LiteralText(String.valueOf(getStoredAir4ToolTip(stack)));
-        line1.append("/");
-        line1.append(String.valueOf(airCapacity));
+        TranslatableText line1 = new TranslatableText("ag4tr.misc.rhmchestplateairpressure");
         line1.append(" ");
-        line1.append(new TranslatableText("ag4tr.misc.rhmchestplateair"));
+        line1.append(String.valueOf((double)MathHelper.floor((double)getStoredAir4ToolTip(stack)/10)/10));
+        line1.append("/");
+        line1.append(String.valueOf((double)MathHelper.floor((double)airCapacity/10)/10));
         line1.formatted(Formatting.GOLD);
         tooltip.add(1, line1);
     }
