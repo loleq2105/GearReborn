@@ -169,11 +169,10 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        LiteralText line1 = new LiteralText(String.valueOf((double)MathHelper.floor((double)getStoredAir4ToolTip(stack)/10)/10));
-        line1.append("/");
-        line1.append(String.valueOf((double)MathHelper.floor((double)airCapacity/10)/10));
+        TranslatableText line1 = new TranslatableText("ag4tr.misc.rhmchestplateairpressure");
         line1.append(" ");
-        line1.append(new TranslatableText("ag4tr.misc.rhmchestplateairpressure"));
+        line1.append(String.valueOf((getStoredAir4ToolTip(stack)*100)/airCapacity));
+        line1.append("%");
         line1.formatted(Formatting.GOLD);
         tooltip.add(1, line1);
     }

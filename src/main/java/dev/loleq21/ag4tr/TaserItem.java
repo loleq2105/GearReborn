@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -169,11 +170,19 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         Ag4trItemUtils.buildActiveTooltip(stack, tooltip);
-        if (getCapCharge4ToolTip(stack)!=capacitorChargeUnits) {
-            tooltip.add((new TranslatableText("ag4tr.misc.tasertooltipcapacitorsuncharged").formatted(Formatting.RED)));
+        TranslatableText line1 = new TranslatableText("ag4tr.misc.tasertooltipcapacitors");
+        line1.append(" [");
+        line1.formatted(Formatting.GRAY);
+        if (getCapCharge4ToolTip(stack)==capacitorChargeUnits) {
+            line1.append(new LiteralText("■").formatted(Formatting.GREEN));
+        } else if (getCapCharge4ToolTip(stack)==0){
+            line1.append(new LiteralText("■").formatted(Formatting.DARK_GRAY));
         } else {
-            tooltip.add((new TranslatableText("ag4tr.misc.tasertooltipcapacitorscharged").formatted(Formatting.GREEN)));
+            line1.append(new LiteralText("■").formatted(Formatting.YELLOW));
         }
+        line1.append("]");
+        line1.formatted(Formatting.GRAY);
+        tooltip.add(line1);
     }
 
     @Environment(EnvType.CLIENT)

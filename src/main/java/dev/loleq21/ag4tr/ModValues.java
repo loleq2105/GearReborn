@@ -14,7 +14,7 @@ public class ModValues {
     public static int rhmChestCoolingEPTC = 32;
     public static int rhmChestCanisterSwapCost = 128;
 
-    public static int nvgActiveEPTC = 32;
+    public static int nvgActiveEPTC = 16;
     public static int nvgEnergyCapacity = 80000;
 
     public static int taserOneCapacitorChargeUnitEnergyCost = 4;
