@@ -1,8 +1,6 @@
-package dev.loleq21.ag4tr.client;
+package dev.loleq21.ag4tr;
 
-import dev.loleq21.ag4tr.ModValues;
-import dev.loleq21.ag4tr.RHMChestPiece;
-import dev.loleq21.ag4tr.TaserItem;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,11 +35,12 @@ import team.reborn.energy.Energy;
         //keybinds
         KeyBindingHelper.registerKeyBinding(NV_KEY_BIND);
         //predicates for animated textures
+        Ag4trConfig config = AutoConfig.getConfigHolder(Ag4trConfig.class).getConfig();
         registerPredicateProvider(
                 TaserItem.class,
                 new Identifier("ag4tr:active"),
                 (item, stack, world, entity) -> {
-                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && TaserItem.getCapacitorCharge(stack)==ModValues.taserCapacitorChargeUnits) {
+                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && TaserItem.getCapacitorCharge(stack)==config.taserHowManyClicksItTakesForTheCapacitorsToFullyCharge) {
                         return 1.0F;
                     }
                     return 0.0F;
@@ -51,7 +50,7 @@ import team.reborn.energy.Energy;
                 RHMChestPiece.class,
                 new Identifier("ag4tr:charged"),
                 (item, stack, world, entity) -> {
-                    if (!stack.isEmpty() && Energy.of(stack).getEnergy()>=ModValues.rhmChestCoolingEPTC*2) {
+                    if (!stack.isEmpty() && Energy.of(stack).getEnergy()>=config.hazmatChestpieceInLavaCoolingEnergyPerTickCost*2) {
                         return 1.0F;
                     }
                     return 0.0F;

@@ -1,5 +1,6 @@
 package dev.loleq21.ag4tr;
 
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -43,9 +44,12 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
         super(new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1));
     }
 
-    public final double zapEnergyCost = ModValues.taserOneCapacitorChargeUnitEnergyCost;
-    public final double energyCapacity = ModValues.taserEnergyCapacity;
-    public final int capacitorChargeUnits = ModValues.taserCapacitorChargeUnits;
+    Ag4trConfig config = AutoConfig.getConfigHolder(Ag4trConfig.class).getConfig();
+
+
+    public final double zapEnergyCost = config.taserOneClickEnergyCost;
+    public final double energyCapacity = config.taserEnergyCapacity;
+    public final int capacitorChargeUnits = config.taserHowManyClicksItTakesForTheCapacitorsToFullyCharge;
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
@@ -124,9 +128,15 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     }
 
     private static void validateCapChargeNBTTag(ItemStack stack) {
+        Ag4trConfig config = AutoConfig.getConfigHolder(Ag4trConfig.class).getConfig();
         if (!stack.getTag().contains("capcharge", 3)){
             stack.getTag().putInt("capcharge", 0);
+            return;
         }
+        if (stack.getTag().getInt("capcharge")>config.taserHowManyClicksItTakesForTheCapacitorsToFullyCharge) {
+            stack.getTag().putInt("capcharge", config.taserHowManyClicksItTakesForTheCapacitorsToFullyCharge);
+        }
+
     }
 
     public int getCapCharge4ToolTip(ItemStack stack) {

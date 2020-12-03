@@ -1,5 +1,6 @@
 package dev.loleq21.ag4tr;
 
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -44,10 +45,12 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).fireproof());
     }
 
-    public final int airCapacity = ModValues.rhmChestAirCapacity;
-    public final double energyCapacity = ModValues.rhmChestEnergyCapacity;
-    public final double coolingEnergyCost = ModValues.rhmChestCoolingEPTC;
-    public final double airCanSwapEnergyCost = ModValues.rhmChestCanisterSwapCost;
+    Ag4trConfig config = AutoConfig.getConfigHolder(Ag4trConfig.class).getConfig();
+
+    public final int airCapacity = config.hazmatChestpieceAirTicksCapacity;
+    public final double energyCapacity = config.hazmatChestpieceEnergyCapacity;
+    public final double coolingEnergyCost = config.hazmatChestpieceInLavaCoolingEnergyPerTickCost;
+    public final double airCanSwapEnergyCost = config.hazmatChestpieceCompressedAirCellSwapEnergyCost;
 
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
@@ -137,8 +140,13 @@ public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHol
     public int getAirCapacity() { return airCapacity; }
 
     private void validateAirNBTTag(ItemStack stack) {
+        Ag4trConfig config = AutoConfig.getConfigHolder(Ag4trConfig.class).getConfig();
         if (!stack.getTag().contains("air", 3)){
             stack.getTag().putInt("air", 0);
+            return;
+        }
+        if (stack.getTag().getInt("air")>config.hazmatChestpieceAirTicksCapacity) {
+            stack.getTag().putInt("air", config.hazmatChestpieceAirTicksCapacity);
         }
     }
 

@@ -23,11 +23,12 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api"
         exclude group: "RebornCore"
     }
-
     modApi ("RebornCore:RebornCore-1.16:4.6.1+build.99") {
         exclude group: "net.fabricmc.fabric-api"
     }
-
+    modApi("me.sargunvohra.mcmods:autoconfig1u:3.3.1") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
 
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.

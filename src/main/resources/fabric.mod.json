@@ -13,7 +13,7 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "dev.loleq21.ag4tr.client.Ag4trClient"
+      "dev.loleq21.ag4tr.Ag4trClient"
     ],
     "main": [
       "dev.loleq21.ag4tr.Ag4tr"

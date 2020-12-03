@@ -1,5 +1,6 @@
 package dev.loleq21.ag4tr;
 
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -28,7 +29,7 @@ import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
-import static dev.loleq21.ag4tr.client.Ag4trClient.NV_KEY_BIND;
+import static dev.loleq21.ag4tr.Ag4trClient.NV_KEY_BIND;
 
 public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
@@ -36,8 +37,10 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).maxDamage(-1));
     }
 
-    public final double energyPerTickCost = ModValues.nvgActiveEPTC;
-    public final double energyCapacity = ModValues.nvgEnergyCapacity;
+    Ag4trConfig config = AutoConfig.getConfigHolder(Ag4trConfig.class).getConfig();
+
+    public final double energyPerTickCost = config.nvgActiveEnergyPerTickCost;
+    public final double energyCapacity = config.nvgEnergyCapacity;
 
     @Override
     public boolean isDamageable() {
