@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-//import techreborn.api.events.CableElectrocutionEvent;
+import techreborn.api.events.CableElectrocutionEvent;
 
 public class Ag4tr implements ModInitializer {
 
@@ -19,7 +19,7 @@ public class Ag4tr implements ModInitializer {
     public void onInitialize() {
         AutoConfig.register(Ag4trConfig.class, GsonConfigSerializer::new);
         Ag4trContent.registerAg4trContent();
-        /*CableElectrocutionEvent.EVENT.register((livingEntity, cableType, blockPos, world, cableBlockEntity) -> {
+        CableElectrocutionEvent.EVENT.register((livingEntity, cableType, blockPos, world, cableBlockEntity) -> {
             if(livingEntity instanceof PlayerEntity) {
                 PlayerEntity player = (PlayerEntity) livingEntity;
                 if (HazmatSuitUtils.playerIsWearingFullHazmat(player)) {
@@ -27,7 +27,7 @@ public class Ag4tr implements ModInitializer {
                 }
             }
                 return true;
-        });*/
+        });
     }
 }
 
