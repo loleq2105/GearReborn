@@ -17,7 +17,6 @@ public class Ag4tr implements ModInitializer {
     public void onInitialize() {
         AutoConfig.register(Ag4trConfig.class, GsonConfigSerializer::new);
         Ag4trContent.registerAg4trContent();
-        Ag4trStackToolTipHandler.setup();
 
     }
 }
