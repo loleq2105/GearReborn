@@ -15,5 +15,10 @@ public class Ag4trConfig implements ConfigData {
     int taserOneClickEnergyCost = 4;
     int taserEnergyCapacity = 20000;
     int taserHowManyClicksItTakesForTheCapacitorsToFullyCharge = 64;
+    int taserHowManyTicksOfSlownessAreInflictedOnChargedHit = 100;
+    int taserHowManyTicksOfWeaknessAreInflictedOnChargedHit = 100;
+    int taserDamageDealtToArthropodsOnChargedHit = 16;
+    boolean taserShouldChargedHitsIgniteCreepers = true;
+    boolean taserShouldStunBossMobs = false;
 
 }
