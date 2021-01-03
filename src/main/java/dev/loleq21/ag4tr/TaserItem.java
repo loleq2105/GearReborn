@@ -197,8 +197,9 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         Ag4trItemUtils.buildActiveTooltip(stack, tooltip);
-        TranslatableText line1 = new TranslatableText("ag4tr.misc.tasertooltipcapacitors");
-        line1.append(" [");
+        //TranslatableText line1 = new TranslatableText("ag4tr.misc.tasertooltipcapacitors");
+        LiteralText line1 = new LiteralText("[");
+        //line1.append(" [");
         line1.formatted(Formatting.GRAY);
         if (getCapCharge4ToolTip(stack)==capacitorChargeUnits) {
             line1.append(new LiteralText("■").formatted(Formatting.GREEN));

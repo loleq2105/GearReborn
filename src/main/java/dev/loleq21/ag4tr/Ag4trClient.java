@@ -31,7 +31,6 @@ import team.reborn.energy.Energy;
     @Override
     public void onInitializeClient() {
 
-        Ag4trStackToolTipHandler.setup();
         //keybinds
         KeyBindingHelper.registerKeyBinding(NV_KEY_BIND);
         //predicates for animated textures
