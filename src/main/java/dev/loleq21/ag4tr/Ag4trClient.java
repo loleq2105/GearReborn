@@ -21,7 +21,7 @@ import reborncore.mixin.client.AccessorModelPredicateProviderRegistry;
 import team.reborn.energy.Energy;
 
 @Environment(EnvType.CLIENT)
-    public class Ag4trClient implements ClientModInitializer {
+public class Ag4trClient implements ClientModInitializer {
 
     public static final KeyBinding NV_KEY_BIND = new KeyBinding("key.ag4tr.toggle_nv",
             InputUtil.Type.KEYSYM,
