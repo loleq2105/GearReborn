@@ -36,7 +36,10 @@ import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExtensions {
 
@@ -50,6 +53,12 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     public final double zapEnergyCost = config.taserOneClickEnergyCost;
     public final double energyCapacity = config.taserEnergyCapacity;
     public final int capacitorChargeUnits = config.taserHowManyClicksItTakesForTheCapacitorsToFullyCharge;
+    public final int slownessTicks = config.taserHowManyTicksOfSlownessAreInflictedOnChargedHit;
+    public final int weaknessTicks = config.taserHowManyTicksOfWeaknessAreInflictedOnChargedHit;
+    public final int arthropodDamage = config.taserDamageDealtToArthropodsOnChargedHit;
+    public final boolean igniteCreeper = config.taserShouldChargedHitsIgniteCreepers;
+    public final boolean stunBosses = config.taserShouldStunBossMobs;
+
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
@@ -74,35 +83,43 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (ItemUtils.isActive(stack) && getCapacitorCharge(stack) == capacitorChargeUnits) {
-            if (target.getType() == EntityType.CREEPER) {
-                if (target instanceof CreeperEntity) {
-                    CreeperEntity creeper = (CreeperEntity) target;
+
+            if (target instanceof CreeperEntity) {
+                CreeperEntity creeper = (CreeperEntity) target;
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 4, false, true, true));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 2, false, true, true));
+                if (igniteCreeper) {
                     creeper.ignite();
-                    target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
-                    setCapacitorCharge(stack, 0);
-                    return true;
                 }
-                return false;
-            } else if (target.getGroup() == EntityGroup.ARTHROPOD) {
                 target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 4, false, true, false));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 2, false, false, false));
+                setCapacitorCharge(stack, 0);
+                return true;
+            }
+            else if (target.getGroup() == EntityGroup.ARTHROPOD) {
+                target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 4, false, true, true));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 2, false, true, true));
                 setCapacitorCharge(stack, 0);
                 if (attacker instanceof PlayerEntity) {
-                    target.damage(DamageSource.player((PlayerEntity) attacker), 16);
+                    target.damage(DamageSource.player((PlayerEntity) attacker), arthropodDamage);
                     return true;
                 }
                 return false;
-
-            } else {
+            }
+            else if (Ag4tr.bossMobs.contains(target.getType()) && !stunBosses){
+                target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
+                setCapacitorCharge(stack, 0);
+                return false;
+            }
+            else {
                 if (target instanceof PlayerEntity) {
                     if (HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity)target)) {
                         return false;
                     }
                 }
                 target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 0.8F);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 5, false, true, false));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 4, false, false, false));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 5, false, true, true));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 4, false, true, true));
                 setCapacitorCharge(stack, 0);
                 return true;
             }
@@ -180,8 +197,9 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         Ag4trItemUtils.buildActiveTooltip(stack, tooltip);
-        TranslatableText line1 = new TranslatableText("ag4tr.misc.tasertooltipcapacitors");
-        line1.append(" [");
+        //TranslatableText line1 = new TranslatableText("ag4tr.misc.tasertooltipcapacitors");
+        LiteralText line1 = new LiteralText("[");
+        //line1.append(" [");
         line1.formatted(Formatting.GRAY);
         if (getCapCharge4ToolTip(stack)==capacitorChargeUnits) {
             line1.append(new LiteralText("■").formatted(Formatting.GREEN));
