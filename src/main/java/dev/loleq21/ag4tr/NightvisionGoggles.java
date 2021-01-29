@@ -55,8 +55,8 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
                 if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
 
-                    if (NV_KEY_BIND.isPressed()) {
-                        if (stack.getCooldown() == 0) {
+                    if (stack.getCooldown() == 0) {
+                        if (world.isClient && NV_KEY_BIND.isPressed()) {
                             Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "ag4tr.misc.shortenednvgname4switchchatmessage");
                             StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
                             if (statusEffectInstance != null) {
