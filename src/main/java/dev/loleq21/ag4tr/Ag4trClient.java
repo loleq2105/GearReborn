@@ -23,16 +23,16 @@ import team.reborn.energy.Energy;
 @Environment(EnvType.CLIENT)
 public class Ag4trClient implements ClientModInitializer {
 
-    public static final KeyBinding NV_KEY_BIND = new KeyBinding("key.ag4tr.toggle_nv",
+    /*public static final KeyBinding NV_KEY_BIND = new KeyBinding("key.ag4tr.toggle_nv",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_N,
             "category.ag4tr.title");
+     */
 
     @Override
     public void onInitializeClient() {
 
-        //keybinds
-        KeyBindingHelper.registerKeyBinding(NV_KEY_BIND);
+        //KeyBindingHelper.registerKeyBinding(NV_KEY_BIND);
         //predicates for animated textures
         Ag4trConfig config = AutoConfig.getConfigHolder(Ag4trConfig.class).getConfig();
         registerPredicateProvider(

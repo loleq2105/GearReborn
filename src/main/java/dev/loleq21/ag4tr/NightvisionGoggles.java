@@ -14,6 +14,9 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +32,7 @@ import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
-import static dev.loleq21.ag4tr.Ag4trClient.NV_KEY_BIND;
+//import static dev.loleq21.ag4tr.Ag4trClient.NV_KEY_BIND;
 
 public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
@@ -48,23 +51,27 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     }
 
     @Override
+    public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
+        final ItemStack stack = player.getStackInHand(hand);
+
+            if (player.isSneaking()) {
+                Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "ag4tr.misc.shortenednvgname4switchchatmessage");
+                StatusEffectInstance nightVisionEffectInstance = player.getStatusEffect(StatusEffects.NIGHT_VISION);
+                if (nightVisionEffectInstance != null) {
+                    player.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
+                }
+                return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+            }
+        return new TypedActionResult<>(ActionResult.PASS, stack);
+    }
+
+    @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
             if (entity instanceof PlayerEntity) {
                 PlayerEntity user = (PlayerEntity) entity;
 
                 if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
-
-                    if (stack.getCooldown() == 0) {
-                        if (world.isClient && NV_KEY_BIND.isPressed()) {
-                            Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "ag4tr.misc.shortenednvgname4switchchatmessage");
-                            StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
-                            if (statusEffectInstance != null) {
-                                user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
-                            }
-                        }
-                        stack.setCooldown(2);
-                    }
 
                     if (Energy.of(stack).getEnergy()< energyPerTickCost) {
                         StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);

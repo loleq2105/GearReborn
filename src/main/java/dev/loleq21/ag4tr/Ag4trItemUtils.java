@@ -43,9 +43,9 @@ public class Ag4trItemUtils {
     }
     public static void buildActiveTooltip(ItemStack stack, List<Text> tooltip) {
         if (!isActive(stack)) {
-            tooltip.add((new TranslatableText("ag4tr.misc.deviceoff").formatted(Formatting.GRAY)));
+            tooltip.add((new TranslatableText("ag4tr.misc.deviceoff").formatted(Formatting.RED)));
         } else {
-            tooltip.add((new TranslatableText("ag4tr.misc.deviceon").formatted(Formatting.GRAY)));
+            tooltip.add((new TranslatableText("ag4tr.misc.deviceon").formatted(Formatting.GREEN)));
         }
 
     }
