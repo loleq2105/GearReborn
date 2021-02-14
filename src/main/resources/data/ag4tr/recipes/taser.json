@@ -7,16 +7,16 @@
     ],
     "key": {
         "#": {
-            "item": "techreborn:tin_nugget"
+            "item": "c:tin_nuggets"
         },
         "N": {
-            "item": "techreborn:copper_ingot"
+            "item": "c:copper_ingots"
         },
         "K": {
             "item": "techreborn:electronic_circuit"
         },
         "i": {
-            "item": "techreborn:refined_iron_ingot"
+            "item": "c:refined_iron_ingots"
         },
         "B": {
             "item": "techreborn:red_cell_battery"
