@@ -4,10 +4,7 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.item.ModelPredicateProvider;
-import net.minecraft.client.options.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -15,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 import reborncore.common.util.ItemUtils;
 import reborncore.mixin.client.AccessorModelPredicateProviderRegistry;
 import team.reborn.energy.Energy;
@@ -46,7 +42,7 @@ public class Ag4trClient implements ClientModInitializer {
                 }
         );
         registerPredicateProvider(
-                RHMChestPiece.class,
+                HazmatChestPiece.class,
                 new Identifier("ag4tr:charged"),
                 (item, stack, world, entity) -> {
                     if (!stack.isEmpty() && Energy.of(stack).getEnergy()>=config.hazmatChestpieceInLavaCoolingEnergyPerTickCost*2) {

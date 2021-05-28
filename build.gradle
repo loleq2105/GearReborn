@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.5-SNAPSHOT'
+    id 'fabric-loom' version '0.6-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -10,6 +10,10 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+repositories {
+    maven { url "https://maven.shedaniel.me/" }
+}
+
 dependencies {
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -18,20 +22,12 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-    modApi ("TechReborn:TechReborn-1.16:3.7.3+build.192") {
-        exclude group: "net.fabricmc.fabric-api"
-        exclude group: "RebornCore"
-    }
-
-    modApi ("RebornCore:RebornCore-1.16:4.6.3+build.110") {
-        exclude group: "net.fabricmc.fabric-api"
-    }
+    modApi ("TechReborn:TechReborn-${project.tr_version}") { exclude group: "net.fabricmc.fabric-api" exclude group: "RebornCore"}
+    modApi ("RebornCore:RebornCore-${project.rc_version}") { exclude group: "net.fabricmc.fabric-api"}
 
     modApi("me.sargunvohra.mcmods:autoconfig1u:3.3.1") {
         exclude(group: "net.fabricmc.fabric-api")
     }
-
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.

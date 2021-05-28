@@ -32,8 +32,6 @@ import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
-//import static dev.loleq21.ag4tr.Ag4trClient.NV_KEY_BIND;
-
 public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
     public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
@@ -67,24 +65,26 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-
+        if (!world.isClient()) {
             if (entity instanceof PlayerEntity) {
                 PlayerEntity user = (PlayerEntity) entity;
 
                 if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
 
-                    if (Energy.of(stack).getEnergy()< energyPerTickCost) {
+                    if (Energy.of(stack).getEnergy() < energyPerTickCost) {
                         StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
                         if (statusEffectInstance != null) {
                             user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
                         }
                     }
 
-                    if (ItemUtils.isActive(stack) && Energy.of(stack).use(energyPerTickCost)) {
+                    if (ItemUtils.isActive(stack) && Energy.of(stack).getEnergy() >= energyPerTickCost) {
+                        Energy.of(stack).use(energyPerTickCost);
                         user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 0, false, false, false));
                     }
                 }
             }
+        }
     }
 
     @Override

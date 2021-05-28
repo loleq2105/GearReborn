@@ -39,9 +39,9 @@ import java.util.List;
 import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingChestAndHelm;
 import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingFullHazmat;
 
-public class RHMChestPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions {
+public class HazmatChestPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions {
 
-    public RHMChestPiece(ArmorMaterial material, EquipmentSlot slot) {
+    public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).fireproof());
     }
 
