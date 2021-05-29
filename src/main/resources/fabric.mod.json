@@ -26,6 +26,7 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": ">=1.16.3",
-    "techreborn": ">=3.7.3+build.192"
+    "techreborn": ">=3.7.3+build.192",
+    "autoconfig1u": ">=3.3.1"
   }
 }
