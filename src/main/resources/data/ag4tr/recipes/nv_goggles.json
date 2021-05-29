@@ -1,14 +1,16 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "#BS",
-        "BGB"
+        "ASA",
+        "BGB",
+        "R#R"
+
     ],
     "key": {
         "#": {
             "item": "techreborn:advanced_circuit"
         },
-        "B": {
+        "R": {
             "item": "techreborn:rubber"
         },
         "S": {
@@ -16,6 +18,12 @@
         },
         "G": {
             "item": "techreborn:reinforced_glass"
+        },
+        "B": {
+            "item": "techreborn:lamp_led"
+        },
+        "A": {
+            "item": "techreborn:electronic_circuit"
         }
     },
     "result": {

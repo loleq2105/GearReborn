@@ -35,12 +35,13 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)
     private void handleFallDamage(float fallDistance, float damageMultiplier, CallbackInfoReturnable<Boolean> info) {
+        if (!world.isClient) {
         if((Object) this instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = ((ServerPlayerEntity) ((Object) this));
             ItemStack equippedBootsSlotItemStack = player.getEquippedStack(EquipmentSlot.FEET);
             Item equippedBoots = equippedBootsSlotItemStack.getItem();
             if (equippedBoots == Ag4trContent.RUBBER_BOOTS) {
-                if(!world.isClient && !isSneaking()) {
+                if(!isSneaking()) {
                     StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
                     float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
                     int vanillaPlayerDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
@@ -51,7 +52,6 @@ public abstract class LivingEntityMixin extends Entity {
                         this.damage(DamageSource.FALL, (float)vanillaPlayerDamage);
                         equippedBootsSlotItemStack.decrement(1);
                         player.sendEquipmentBreakStatus(EquipmentSlot.FEET);
-
                     }
                     if (bootDamage>0){
                         equippedBootsSlotItemStack.damage(bootDamage, new Random(), player);
@@ -59,7 +59,6 @@ public abstract class LivingEntityMixin extends Entity {
                     if (userDamage>0){
                         this.damage(DamageSource.FALL, (float)userDamage);
                     }
-                    if (!world.isClient) {
                         info.cancel();
                     }
                 }

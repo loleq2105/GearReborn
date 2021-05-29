@@ -19,20 +19,16 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorTickable;
-import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.util.ItemDurabilityExtensions;
-import reborncore.common.util.ItemUtils;
 import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
 import techreborn.init.TRContent;
 import techreborn.utils.InitUtils;
-import techreborn.utils.damageSources.ElectrialShockSource;
 
 import java.util.List;
 
@@ -49,48 +45,48 @@ public class HazmatChestPiece extends ArmorItem implements ArmorTickable, Energy
 
     public final int airCapacity = config.hazmatChestpieceAirTicksCapacity;
     public final double energyCapacity = config.hazmatChestpieceEnergyCapacity;
-    public final double coolingEnergyCost = config.hazmatChestpieceInLavaCoolingEnergyPerTickCost;
-    public final double airCanSwapEnergyCost = config.hazmatChestpieceCompressedAirCellSwapEnergyCost;
+    public final double coolingEnergyCost = config.hazmatChestpieceLavaCoolingEnergyCost;
+    public final double airCanSwapEnergyCost = config.hazmatChestpieceCellSwapEnergyCost;
 
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
-
-        if (playerIsWearingFullHazmat(playerEntity)) {
-            if (!playerEntity.isInLava()) {
-                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
-            } else {
-                if (this.slot == EquipmentSlot.CHEST) {
-                    if (Energy.of(itemStack).use(coolingEnergyCost)) {
-                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
-                    }
-                }
-            }
-
-            if (playerEntity.isOnFire() && Energy.of(itemStack).getEnergy()>=coolingEnergyCost*2) {
-                playerEntity.extinguish();
-            }
-        }
-
-        //quality code 11/10
-        if (this.slot == EquipmentSlot.CHEST) {
-            if ((getStoredAir(itemStack) == 0)) {
-                for (int i = 0; i < playerEntity.inventory.size(); i++) {
-                    ItemStack iteratedStack = playerEntity.inventory.getStack(i);
-                    if (iteratedStack.getItem() == TRContent.CELL) {
-                        if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid)Registry.FLUID.get(new Identifier("techreborn:compressed_air")))  && Energy.of(itemStack).use(airCanSwapEnergyCost)) {
-                            iteratedStack.decrement(1);
-                            ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
-                            playerEntity.giveItemStack(emptyCell);
-                            setStoredAir(itemStack, airCapacity);
+        if(!playerEntity.getEntityWorld().isClient()) {
+            if (playerIsWearingFullHazmat(playerEntity)) {
+                if (!playerEntity.isInLava()) {
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
+                } else {
+                    if (this.slot == EquipmentSlot.CHEST) {
+                        if (Energy.of(itemStack).use(coolingEnergyCost)) {
+                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
                         }
                     }
                 }
-            }
-            if (playerEntity.isSubmergedInWater()) {
 
-                if (playerIsWearingChestAndHelm(playerEntity)) {
-                    if (useStoredAir(itemStack, 1)) {
-                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 5, 0, false, false, false));
+                if (playerEntity.isOnFire() && Energy.of(itemStack).getEnergy() >= coolingEnergyCost * 2) {
+                    playerEntity.extinguish();
+                }
+            }
+
+            if (this.slot == EquipmentSlot.CHEST) {
+                if ((getStoredAir(itemStack) == 0)) {
+                    for (int i = 0; i < playerEntity.inventory.size(); i++) {
+                        ItemStack iteratedStack = playerEntity.inventory.getStack(i);
+                        if (iteratedStack.getItem() == TRContent.CELL) {
+                            if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air"))) && Energy.of(itemStack).use(airCanSwapEnergyCost)) {
+                                iteratedStack.decrement(1);
+                                ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
+                                playerEntity.giveItemStack(emptyCell);
+                                setStoredAir(itemStack, airCapacity);
+                            }
+                        }
+                    }
+                }
+                if (playerEntity.isSubmergedInWater()) {
+
+                    if (playerIsWearingChestAndHelm(playerEntity)) {
+                        if (useStoredAir(itemStack, 1)) {
+                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 5, 0, false, false, false));
+                        }
                     }
                 }
             }

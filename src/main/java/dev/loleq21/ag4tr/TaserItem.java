@@ -6,7 +6,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -18,7 +17,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -36,10 +34,7 @@ import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExtensions {
 
@@ -50,14 +45,14 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
     Ag4trConfig config = AutoConfig.getConfigHolder(Ag4trConfig.class).getConfig();
 
 
-    public final double zapEnergyCost = config.taserOneClickEnergyCost;
-    public final double energyCapacity = config.taserEnergyCapacity;
-    public final int capacitorChargeUnits = config.taserHowManyClicksItTakesForTheCapacitorsToFullyCharge;
-    public final int slownessTicks = config.taserHowManyTicksOfSlownessAreInflictedOnChargedHit;
-    public final int weaknessTicks = config.taserHowManyTicksOfWeaknessAreInflictedOnChargedHit;
-    public final int arthropodDamage = config.taserDamageDealtToArthropodsOnChargedHit;
-    public final boolean igniteCreeper = config.taserShouldChargedHitsIgniteCreepers;
-    public final boolean stunBosses = config.taserShouldStunBossMobs;
+    public final double zapEnergyCost = config.stungunOneClickEnergyCost;
+    public final double energyCapacity = config.stungunEnergyCapacity;
+    public final int capacitorChargeUnits = config.stungunChargeTicks;
+    public final int slownessTicks = config.stungunSlownessTicks;
+    public final int weaknessTicks = config.stungunWeaknessTicks;
+    public final int arthropodDamage = config.stungunDamageDealtToArthropodsOnChargedHit;
+    public final boolean igniteCreeper = config.stungunShouldChargedHitsIgniteCreepers;
+    public final boolean stunBosses = config.stungunShouldStunBossMobs;
 
 
     @Override
@@ -150,8 +145,8 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
             stack.getTag().putInt("capcharge", 0);
             return;
         }
-        if (stack.getTag().getInt("capcharge")>config.taserHowManyClicksItTakesForTheCapacitorsToFullyCharge) {
-            stack.getTag().putInt("capcharge", config.taserHowManyClicksItTakesForTheCapacitorsToFullyCharge);
+        if (stack.getTag().getInt("capcharge")>config.stungunChargeTicks) {
+            stack.getTag().putInt("capcharge", config.stungunChargeTicks);
         }
 
     }

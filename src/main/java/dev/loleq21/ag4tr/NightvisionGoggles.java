@@ -68,18 +68,14 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
         if (!world.isClient()) {
             if (entity instanceof PlayerEntity) {
                 PlayerEntity user = (PlayerEntity) entity;
-
                 if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
-
                     if (Energy.of(stack).getEnergy() < energyPerTickCost) {
                         StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
                         if (statusEffectInstance != null) {
                             user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
                         }
                     }
-
-                    if (ItemUtils.isActive(stack) && Energy.of(stack).getEnergy() >= energyPerTickCost) {
-                        Energy.of(stack).use(energyPerTickCost);
+                    if (ItemUtils.isActive(stack) && Energy.of(stack).use(energyPerTickCost)) {
                         user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 0, false, false, false));
                     }
                 }

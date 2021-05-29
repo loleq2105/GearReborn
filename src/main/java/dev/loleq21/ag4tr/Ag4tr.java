@@ -1,7 +1,7 @@
 package dev.loleq21.ag4tr;
 
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.entity.EntityType;
@@ -25,8 +25,9 @@ public class Ag4tr implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        AutoConfig.register(Ag4trConfig.class, GsonConfigSerializer::new);
+        AutoConfig.register(Ag4trConfig.class, JanksonConfigSerializer::new);
         Ag4trContent.registerAg4trContent();
+
         CableElectrocutionEvent.EVENT.register((livingEntity, cableType, blockPos, world, cableBlockEntity) -> {
             if(livingEntity instanceof PlayerEntity) {
                 PlayerEntity player = (PlayerEntity) livingEntity;
