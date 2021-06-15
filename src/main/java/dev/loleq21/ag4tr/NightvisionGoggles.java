@@ -14,14 +14,19 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.PowerSystem;
+import reborncore.common.util.ChatUtils;
 import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
 import team.reborn.energy.Energy;
@@ -29,8 +34,8 @@ import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
-
 import java.util.List;
+import static dev.loleq21.ag4tr.Ag4trClient.NV_KEY_BIND;
 
 public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
@@ -47,48 +52,77 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     public boolean isDamageable() {
         return false;
     }
-
+    /*
     @Override
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
         final ItemStack stack = player.getStackInHand(hand);
 
             if (player.isSneaking()) {
-                Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "ag4tr.misc.shortenednvgname4switchchatmessage");
+                Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "ag4tr.misc.shortenednvgname");
                 StatusEffectInstance nightVisionEffectInstance = player.getStatusEffect(StatusEffects.NIGHT_VISION);
+                StatusEffectInstance blindnessEffectInstance = player.getStatusEffect(StatusEffects.BLINDNESS);
                 if (nightVisionEffectInstance != null) {
                     player.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
+                }
+                if (blindnessEffectInstance != null) {
+                    player.removeStatusEffectInternal(StatusEffects.BLINDNESS);
                 }
                 return new TypedActionResult<>(ActionResult.SUCCESS, stack);
             }
         return new TypedActionResult<>(ActionResult.PASS, stack);
     }
-
+    */
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (!world.isClient()) {
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) { //start method
             if (entity instanceof PlayerEntity) {
                 PlayerEntity user = (PlayerEntity) entity;
+
                 if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
-                    if (Energy.of(stack).getEnergy() < energyPerTickCost) {
-                        StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
-                        if (statusEffectInstance != null) {
-                            user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
+                    ItemUtils.checkActive(stack, (int)energyPerTickCost, world.isClient(), MessageIDs.poweredToolID);
+                    boolean active = stack.getTag().getBoolean("isActive");
+                    /*yeah*/ if (Energy.of(stack).getEnergy() < energyPerTickCost) { disableNightVision(world, user); }
+                    byte toggleCooldown = stack.getTag().getByte("toggleTimer");
+
+                    if (NV_KEY_BIND.isPressed() && toggleCooldown == 0){
+                        toggleCooldown = 10;
+                        if (!active && Energy.of(stack).getEnergy()>=energyPerTickCost){
+                            active = true;
+                            if (world.isClient) {
+                                ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, (new TranslatableText("ag4tr.misc.shortenednvgname").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("ag4tr.misc.deviceon").formatted(Formatting.GOLD))));
+                            }
+                        } else if (active) {
+                            active = false;
+                            disableNightVision(world, user);
+                            if (world.isClient()) { ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, (new TranslatableText("ag4tr.misc.shortenednvgname").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("ag4tr.misc.deviceoff").formatted(Formatting.GOLD)))); }
                         }
+                        else {
+                            if (world.isClient) { ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, new TranslatableText("reborncore.message.energyError").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("reborncore.message.deactivating").formatted(Formatting.GOLD))); }
+                        }
+                        if(!world.isClient()) { stack.getOrCreateTag().putBoolean("isActive", active); }
                     }
+                    if(!world.isClient()) {
                     if (ItemUtils.isActive(stack) && Energy.of(stack).use(energyPerTickCost)) {
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 0, false, false, false));
+                               user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
+                       }
+                    }
+                    if (!world.isClient() && toggleCooldown>0) {
+                        --toggleCooldown;
+                        stack.getOrCreateTag().putByte("toggleTimer", toggleCooldown);
                     }
                 }
             }
+    } //end method
+
+    private void disableNightVision(World world, PlayerEntity entity) {
+        if (!world.isClient()) {
+            entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
+            entity.removeStatusEffect(StatusEffects.BLINDNESS);
         }
     }
 
     @Override
     public void onRemoved(PlayerEntity user) {
-        StatusEffectInstance statusEffectInstance = user.getStatusEffect(StatusEffects.NIGHT_VISION);
-        if (statusEffectInstance!=null) {
-            user.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
-        }
+        disableNightVision(user.getEntityWorld(), user);
     }
 
     @Override

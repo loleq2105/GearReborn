@@ -57,6 +57,7 @@ public class TaserItem extends Item implements EnergyHolder, ItemDurabilityExten
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, world.isClient(), MessageIDs.poweredToolID);
         if (ItemUtils.isActive(stack)) {
             if (getCapacitorCharge(stack) < capacitorChargeUnits && Energy.of(stack).use(zapEnergyCost)) {
                 setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
