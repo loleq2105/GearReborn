@@ -4,4 +4,5 @@ An addon for Tech Reborn adding Additional Gear. This mod's general premise is t
  
  This mod includes an API for mod makers of sorts, namely the HazmatUtils class, which includes methods that check whether a PlayerEntity is wearing a partial or full (that means: helm, chest, pants and rubber boots) Hazmat suit. The chestpiece's class also includes public methods that allow to set and check the Air level inside its tanks.
 
-Download here: https://www.curseforge.com/minecraft/mc-mods/ag4tr
+[![](http://cf.way2muchnoise.eu/versions/233564_latest.svg)](https://www.curseforge.com/projects/ag4tr)
+
