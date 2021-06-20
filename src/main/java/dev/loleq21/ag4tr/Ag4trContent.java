@@ -26,6 +26,7 @@ public class Ag4trContent {
     public static final Item RHM_CHESTPLATE = addItem("rhm_chestplate", new HazmatChestPiece(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.CHEST));
     public static final Item RHM_LEGGINGS = addItem("rhm_leggings", new HazmatPeripherals(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.LEGS));
 
+    public static final Item MECHA_LEGGINGS = addItem("mechatronic_leggings", new MechaLeggings(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.LEGS));
     public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
     public static final Item TASER = addItem("taser", new TaserItem());
 

@@ -34,5 +34,7 @@ public class Ag4trConfig implements ConfigData {
     int stungunSlownessTicks = 100;
     @Comment("How many ticks of Weakness should the Stun Gun inflict on mobs")
     int stungunWeaknessTicks = 100;
+    int mechLeggingsCapacity = 50_000;
+    int mechLeggingsAccelerationCost = 20;
 
 }

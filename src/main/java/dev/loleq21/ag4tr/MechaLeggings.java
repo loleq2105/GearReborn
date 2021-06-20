@@ -14,6 +14,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -45,20 +47,33 @@ public class MechaLeggings extends TRArmourItem implements EnergyHolder, ItemDur
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (entity instanceof PlayerEntity) {
-            PlayerEntity user = (PlayerEntity) entity;
-            if (user.getEquippedStack(EquipmentSlot.LEGS) == stack) {
-                double playerVelocity = Math.sqrt(Math.pow(Math.abs(user.getVelocity().x), 2) + Math.pow(Math.abs(user.getVelocity().z), 2));
-                stack.getOrCreateTag().putDouble("velocity", playerVelocity);
-                if (!world.isClient() && stack.getOrCreateTag().getDouble("velocity") > 0.1d) {
-                    Energy.of(stack).use(accelCost);
-                }
-
-                if (world.isClient()) {
-                    ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, Text.of(String.valueOf(playerVelocity)));
+            if (entity instanceof PlayerEntity) {
+                PlayerEntity user = (PlayerEntity) entity;
+                if (user.getEquippedStack(EquipmentSlot.LEGS) == stack) {
+                    if (!world.isClient()) {
+                        if (user.isSprinting()/*Math.sqrt(Math.pow(Math.abs(user.getVelocity().x), 2) + Math.pow(Math.abs(user.getVelocity().z), 2)) > 0.1d*/) {
+                            Energy.of(stack).use(accelCost * 2);
+                            user.playSound(SoundEvents.BLOCK_PISTON_CONTRACT, 1F, 1F);
+                        }
+                        if (!user.isSprinting() && !user.isSwimming() && !user.isSneaking() && (user.getVelocity().x != 0 || user.getVelocity().z != 0)) {
+                            Energy.of(stack).use(accelCost);
+                        }
+                    }
+                    /*
+                    if (!user.isSprinting() && !user.isSwimming() && !user.isSneaking() && (user.getVelocity().x !=0 || user.getVelocity().z != 0)){
+                        if (!world.isClient()) {
+                            Energy.of(stack).use(accelCost);
+                        } else {
+                            ChatUtils.sendNoSpamMessages(MessageIDs.fluidPipeID, Text.of("I hate mojang!"));
+                            Energy.of(stack).use(accelCost);
+                        }
+                    }
+                    */
+                    //if (world.isClient()) {
+                    //    ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, Text.of(String.valueOf(Math.sqrt(Math.pow(Math.abs(user.getVelocity().x), 2) + Math.pow(Math.abs(user.getVelocity().z), 2)))));
+                    //}
                 }
             }
-        }
     }
 
 
@@ -69,12 +84,11 @@ public class MechaLeggings extends TRArmourItem implements EnergyHolder, ItemDur
     @Override
     public void getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack, Multimap<EntityAttribute, EntityAttributeModifier> attributes) {
         attributes.removeAll(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-
-        if (this.slot == EquipmentSlot.LEGS && equipmentSlot == EquipmentSlot.LEGS) {
-            if (Energy.of(stack).getEnergy() > accelCost) {
-                attributes.put(EntityAttributes.GENERIC_MOVEMENT_SPEED, new EntityAttributeModifier(MODIFIERS[equipmentSlot.getEntitySlotId()], "Movement Speed", 0.05, EntityAttributeModifier.Operation.ADDITION));
+            if (this.slot == EquipmentSlot.LEGS && equipmentSlot == EquipmentSlot.LEGS) {
+                if (Energy.of(stack).getEnergy() > accelCost) {
+                    attributes.put(EntityAttributes.GENERIC_MOVEMENT_SPEED, new EntityAttributeModifier(MODIFIERS[equipmentSlot.getEntitySlotId()], "Movement Speed", 0.05, EntityAttributeModifier.Operation.ADDITION));
+                }
             }
-        }
     }
 
     @Override
