@@ -52,26 +52,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     public boolean isDamageable() {
         return false;
     }
-    /*
-    @Override
-    public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
-        final ItemStack stack = player.getStackInHand(hand);
 
-            if (player.isSneaking()) {
-                Ag4trItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "ag4tr.misc.shortenednvgname");
-                StatusEffectInstance nightVisionEffectInstance = player.getStatusEffect(StatusEffects.NIGHT_VISION);
-                StatusEffectInstance blindnessEffectInstance = player.getStatusEffect(StatusEffects.BLINDNESS);
-                if (nightVisionEffectInstance != null) {
-                    player.removeStatusEffectInternal(StatusEffects.NIGHT_VISION);
-                }
-                if (blindnessEffectInstance != null) {
-                    player.removeStatusEffectInternal(StatusEffects.BLINDNESS);
-                }
-                return new TypedActionResult<>(ActionResult.SUCCESS, stack);
-            }
-        return new TypedActionResult<>(ActionResult.PASS, stack);
-    }
-    */
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) { //start method
             if (entity instanceof PlayerEntity) {
@@ -80,7 +61,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                 if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
                     ItemUtils.checkActive(stack, (int)energyPerTickCost, world.isClient(), MessageIDs.poweredToolID);
                     boolean active = stack.getTag().getBoolean("isActive");
-                    /*yeah*/ if (Energy.of(stack).getEnergy() < energyPerTickCost) { disableNightVision(world, user); }
+                    if (Energy.of(stack).getEnergy() < energyPerTickCost) { disableNightVision(world, user); }
                     byte toggleCooldown = stack.getTag().getByte("toggleTimer");
 
                     if (NV_KEY_BIND.isPressed() && toggleCooldown == 0){
@@ -101,9 +82,9 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                         if(!world.isClient()) { stack.getOrCreateTag().putBoolean("isActive", active); }
                     }
                     if(!world.isClient()) {
-                    if (ItemUtils.isActive(stack) && Energy.of(stack).use(energyPerTickCost)) {
-                               user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
-                       }
+                        if (ItemUtils.isActive(stack) && Energy.of(stack).use(energyPerTickCost)) {
+                                   user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
+                          }
                     }
                     if (!world.isClient() && toggleCooldown>0) {
                         --toggleCooldown;
@@ -111,12 +92,11 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                     }
                 }
             }
-    } //end method
+    }
 
     private void disableNightVision(World world, PlayerEntity entity) {
         if (!world.isClient()) {
             entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
-            entity.removeStatusEffect(StatusEffects.BLINDNESS);
         }
     }
 

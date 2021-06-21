@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,7 +17,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -28,6 +31,9 @@ import java.util.Random;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
+
+    //@Shadow @Nullable public abstract StatusEffectInstance getStatusEffect(StatusEffect effect);
+    @Shadow protected abstract int computeFallDamage(float fallDistance, float damageMultiplier);
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -42,15 +48,14 @@ public abstract class LivingEntityMixin extends Entity {
             Item equippedBoots = equippedBootsSlotItemStack.getItem();
             if (equippedBoots == Ag4trContent.RUBBER_BOOTS) {
                 if(!isSneaking()) {
-                    StatusEffectInstance statusEffectInstance = player.getStatusEffect(StatusEffects.JUMP_BOOST);
-                    float f = statusEffectInstance == null ? 0.0F : (float)(statusEffectInstance.getAmplifier() + 1);
-                    int vanillaPlayerDamage = MathHelper.ceil((fallDistance - 3.0F - f) * damageMultiplier);
-                    int userDamage = Math.round(vanillaPlayerDamage/8);
+                    int vanillaPlayerDamage = this.computeFallDamage(fallDistance, damageMultiplier);
+                    int userDamage = vanillaPlayerDamage/3;
                     int bootDamage = (int) Math.round(vanillaPlayerDamage*0.4375);
                     int bootDurability = equippedBootsSlotItemStack.getMaxDamage()-equippedBootsSlotItemStack.getDamage();
+
                     if (bootDamage>bootDurability){
                         this.damage(DamageSource.FALL, (float)vanillaPlayerDamage);
-                        equippedBootsSlotItemStack.decrement(1);
+                        equippedBootsSlotItemStack.decrement(1);                //we do a little trolling
                         player.sendEquipmentBreakStatus(EquipmentSlot.FEET);
                     }
                     if (bootDamage>0){

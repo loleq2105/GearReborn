@@ -23,7 +23,9 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorTickable;
+import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.util.ItemDurabilityExtensions;
+import reborncore.common.util.ItemUtils;
 import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
@@ -38,7 +40,7 @@ import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingFullHazmat;
 public class HazmatChestPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).fireproof());
+        super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).fireproof().maxDamage(-1));
     }
 
     Ag4trConfig config = AutoConfig.getConfigHolder(Ag4trConfig.class).getConfig();
@@ -188,6 +190,21 @@ public class HazmatChestPiece extends ArmorItem implements ArmorTickable, Energy
             return;
         }
         InitUtils.initPoweredItems(this, itemList);
+    }
+
+    @Override
+    public double getDurability(ItemStack stack) {
+        return 1 - ItemUtils.getPowerForDurabilityBar(stack);
+    }
+
+    @Override
+    public boolean showDurability(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getDurabilityColor(ItemStack stack) {
+        return PowerSystem.getDisplayPower().colour;
     }
 }
 
