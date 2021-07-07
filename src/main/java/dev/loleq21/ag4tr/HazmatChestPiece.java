@@ -23,6 +23,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
+import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
@@ -37,7 +38,7 @@ import java.util.List;
 import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingChestAndHelm;
 import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingFullHazmat;
 
-public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicker, EnergyHolder, ItemDurabilityExtensions {
+public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicker, EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).fireproof().maxDamage(-1));
@@ -55,21 +56,22 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
         if(!playerEntity.getEntityWorld().isClient()) {
             if (playerIsWearingFullHazmat(playerEntity)) {
                 if (!playerEntity.isInLava()) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
                 } else {
-                    if (this.slot == EquipmentSlot.CHEST) {
                         if (Energy.of(itemStack).use(coolingEnergyCost)) {
-                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
+                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
+                        } else {
+                            disableFireResist(playerEntity);
                         }
-                    }
                 }
 
                 if (playerEntity.isOnFire() && Energy.of(itemStack).getEnergy() >= coolingEnergyCost * 2) {
                     playerEntity.extinguish();
                 }
+            } else {
+                disableFireResist(playerEntity);
             }
 
-            if (this.slot == EquipmentSlot.CHEST) {
                 if ((getStoredAir(itemStack) == 0)) {
                     for (int i = 0; i < playerEntity.getInventory().size(); i++) {
                         ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
@@ -83,18 +85,42 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
                         }
                     }
                 }
-                if (playerEntity.isSubmergedInWater()) {
-
-                    if (playerIsWearingChestAndHelm(playerEntity)) {
+                if (playerIsWearingChestAndHelm(playerEntity)) {
+                    if (playerEntity.isSubmergedInWater()) {
                         if (useStoredAir(itemStack, 1)) {
                             playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, false));
+                        } else {
+                            disableWaterBreathing(playerEntity);
                         }
+                    } else {
+                        disableWaterBreathing(playerEntity);
                     }
                 }
-            }
+                else {
+                    disableWaterBreathing(playerEntity);
+                }
         }
     }
 
+    private void disableFireResist(PlayerEntity playerEntity){
+        if (!playerEntity.getEntityWorld().isClient()) {
+            playerEntity.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
+        }
+    }
+
+    private void disableWaterBreathing(PlayerEntity playerEntity){
+        if (!playerEntity.getEntityWorld().isClient()) {
+            playerEntity.removeStatusEffect(StatusEffects.WATER_BREATHING);
+        }
+    }
+    
+    private void removeEffects(PlayerEntity playerEntity) {
+        if (!playerEntity.getEntityWorld().isClient()) {
+            playerEntity.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
+            playerEntity.removeStatusEffect(StatusEffects.WATER_BREATHING);
+        }
+    }
+    
     public int getStoredAir(ItemStack stack) {
         if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
             validateAirNBTTag(stack);
@@ -205,6 +231,11 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     @Override
     public int getDurabilityColor(ItemStack stack) {
         return PowerSystem.getDisplayPower().colour;
+    }
+
+    @Override
+    public void onRemoved(PlayerEntity playerEntity) {
+        removeEffects(playerEntity);
     }
 }
 
