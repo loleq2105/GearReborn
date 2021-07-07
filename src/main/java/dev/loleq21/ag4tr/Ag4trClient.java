@@ -5,8 +5,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.item.ModelPredicateProvider;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.item.UnclampedModelPredicateProvider;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
@@ -37,7 +37,7 @@ public class Ag4trClient implements ClientModInitializer {
         registerPredicateProvider(
                 TaserItem.class,
                 new Identifier("ag4tr:active"),
-                (item, stack, world, entity) -> {
+                (item, stack, world, entity, seed) -> {
                     if (!stack.isEmpty() && ItemUtils.isActive(stack) && TaserItem.getCapacitorCharge(stack)==config.stungunChargeTicks) {
                         return 1.0F;
                     }
@@ -47,13 +47,14 @@ public class Ag4trClient implements ClientModInitializer {
         registerPredicateProvider(
                 HazmatChestPiece.class,
                 new Identifier("ag4tr:charged"),
-                (item, stack, world, entity) -> {
+                (item, stack, world, entity, seed) -> {
                     if (!stack.isEmpty() && Energy.of(stack).getEnergy()>=config.hazmatChestpieceLavaCoolingEnergyCost *2) {
                         return 1.0F;
                     }
                     return 0.0F;
                 }
         );
+
     }
 
     private static <T extends Item> void registerPredicateProvider(Class<T> itemClass, Identifier identifier, ItemModelPredicateProvider<T> modelPredicateProvider) {
@@ -62,13 +63,13 @@ public class Ag4trClient implements ClientModInitializer {
                 .forEach(item -> AccessorModelPredicateProviderRegistry.callRegister(item, identifier, modelPredicateProvider));
     }
 
-    private interface ItemModelPredicateProvider<T extends Item> extends ModelPredicateProvider {
+    private interface ItemModelPredicateProvider<T extends Item> extends UnclampedModelPredicateProvider {
 
-        float call(T item, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity);
+        float call(T item, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed);
 
         @Override
-        default float call(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
-            return call((T) stack.getItem(), stack, world, entity);
+        default float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
+            return call((T) stack.getItem(), stack, world, entity, seed);
         }
 
     }

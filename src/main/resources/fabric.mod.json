@@ -23,10 +23,11 @@
     "ag4tr.mixins.json"
   ],
   "depends": {
-    "fabricloader": "*",
+    "fabricloader": ">=0.11.3",
     "fabric": "*",
-    "minecraft": ">=1.16.3",
-    "techreborn": ">=3.7.3+build.192",
-    "autoconfig1u": ">=3.3.1"
+    "minecraft": "1.17.x",
+    "java": ">=16",
+    "techreborn": "*",
+    "autoconfig1u": "*"
   }
 }

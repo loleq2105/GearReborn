@@ -22,7 +22,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import reborncore.api.items.ArmorTickable;
+import reborncore.api.items.ArmorBlockEntityTicker;
 import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
@@ -37,7 +37,7 @@ import java.util.List;
 import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingChestAndHelm;
 import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingFullHazmat;
 
-public class HazmatChestPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions {
+public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicker, EnergyHolder, ItemDurabilityExtensions {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).fireproof().maxDamage(-1));
@@ -71,8 +71,8 @@ public class HazmatChestPiece extends ArmorItem implements ArmorTickable, Energy
 
             if (this.slot == EquipmentSlot.CHEST) {
                 if ((getStoredAir(itemStack) == 0)) {
-                    for (int i = 0; i < playerEntity.inventory.size(); i++) {
-                        ItemStack iteratedStack = playerEntity.inventory.getStack(i);
+                    for (int i = 0; i < playerEntity.getInventory().size(); i++) {
+                        ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
                         if (iteratedStack.getItem() == TRContent.CELL) {
                             if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air"))) && Energy.of(itemStack).use(airCanSwapEnergyCost)) {
                                 iteratedStack.decrement(1);
@@ -87,7 +87,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorTickable, Energy
 
                     if (playerIsWearingChestAndHelm(playerEntity)) {
                         if (useStoredAir(itemStack, 1)) {
-                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 5, 0, false, false, false));
+                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, false));
                         }
                     }
                 }

@@ -40,7 +40,7 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)
-    private void handleFallDamage(float fallDistance, float damageMultiplier, CallbackInfoReturnable<Boolean> info) {
+    private void handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> info) {
         if (!world.isClient) {
         if((Object) this instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = ((ServerPlayerEntity) ((Object) this));
