@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "R R",
+    "RRR",
+    "RRR"
+  ],
+  "key": {
+    "R": {
+      "item": "techreborn:rubber"
+    }
+  },
+  "result": {
+    "item": "gearreborn:rubber_chestplate",
+    "count": 1
+  }
+}
+

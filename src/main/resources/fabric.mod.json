@@ -1,26 +1,31 @@
 {
   "schemaVersion": 1,
-  "id": "ag4tr",
+  "id": "gearreborn",
   "version": "${version}",
-  "name": "Ag4tr",
-  "description": "Additional gear for Tech Reborn",
+  "name": "Gear Reborn",
+  "description": "Additional gear for Tech Reborn!",
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/ag4tr",
+    "sources": "https://github.com/loleq21/Ag4tr",
+    "issues": "https://github.com/TechReborn/TechReborn/issues"
+  },
   "authors": [
     "loleq21"
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/ag4tr/icon.png",
+  "icon": "assets/gearreborn/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "dev.loleq21.ag4tr.Ag4trClient"
+      "dev.loleq21.gearreborn.GearRebornClient"
     ],
     "main": [
-      "dev.loleq21.ag4tr.Ag4tr"
+      "dev.loleq21.gearreborn.GearReborn"
     ]
   },
   "mixins": [
-    "ag4tr.mixins.json"
+    "gearreborn.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.3",

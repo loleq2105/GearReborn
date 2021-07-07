@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "YKY",
+        "#B#",
+        "#C#"
+    ],
+    "key": {
+        "#": {
+            "item": "techreborn:rubber"
+        },
+        "K": {
+            "item": "techreborn:advanced_circuit"
+        },
+        "B": {
+            "item": "techreborn:cell"
+        },
+        "C": {
+            "item": "techreborn:red_cell_battery"
+        },
+        "Y": {
+            "item": "minecraft:yellow_dye"
+        }
+    },
+    "result": {
+        "item": "gearreborn:hazmat_chestpiece",
+        "count": 1
+    }
+}
