@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gearreborn:item/rhm_chestplate_charged"
+    "layer0": "gearreborn:item/hazmat_chestpiece_charged"
   }
 }

@@ -27,7 +27,7 @@ public class GRContent {
     public static final Item HAZMAT_LEGGINGS = addItem("hazmat_leggings", new HazmatPeripherals(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.LEGS));
 
     public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
-    public static final Item TASER = addItem("stun_gun", new StunGunItem());
+    public static final Item STUN_GUN = addItem("stun_gun", new StunGunItem());
 
     private static <I extends Item> I addItem(String name, I item) {
         GRITEMS.put(new Identifier(GearReborn.MOD_ID, name), item);

@@ -70,7 +70,7 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
         final ItemStack stack = player.getStackInHand(hand);
         if (player.isSneaking()) {
-            GRItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "gearreborn.misc.shortenedtasername4switchchatmessage");
+            GRItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "gearreborn.misc.shortenedstungunname4switchchatmessage");
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
@@ -125,7 +125,7 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
 
 
     public static int getCapacitorCharge(ItemStack stack) {
-        if (stack.getItem() == GRContent.TASER) {
+        if (stack.getItem() == GRContent.STUN_GUN) {
             validateCapChargeNBTTag(stack);
             return stack.getTag().getInt("capcharge");
         }
@@ -134,7 +134,7 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
 
 
     public static void setCapacitorCharge(ItemStack stack, int amount) {
-        if (stack.getItem() == GRContent.TASER) {
+        if (stack.getItem() == GRContent.STUN_GUN) {
             validateCapChargeNBTTag(stack);
             stack.getTag().putInt("capcharge", amount);
         }
@@ -193,7 +193,7 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         GRItemUtils.buildActiveTooltip(stack, tooltip);
-        //TranslatableText line1 = new TranslatableText("gearreborn.misc.tasertooltipcapacitors");
+        //TranslatableText line1 = new TranslatableText("gearreborn.misc.stunguntooltipcapacitors");
         LiteralText line1 = new LiteralText("[");
         //line1.append(" [");
         line1.formatted(Formatting.GRAY);
