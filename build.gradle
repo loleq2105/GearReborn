@@ -12,10 +12,6 @@ group = project.maven_group
 
 repositories {
     maven { url "https://maven.shedaniel.me/" }
-    maven {
-        name = "Modmuss50"
-        url = "https://maven.modmuss50.me/"
-    }
 }
 
 dependencies {

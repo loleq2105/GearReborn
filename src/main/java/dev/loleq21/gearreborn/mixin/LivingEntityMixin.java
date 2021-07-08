@@ -23,8 +23,9 @@ import java.util.Random;
 public abstract class LivingEntityMixin extends Entity {
 
 
-    //@Shadow @Nullable public abstract StatusEffectInstance getStatusEffect(StatusEffect effect);
     @Shadow protected abstract int computeFallDamage(float fallDistance, float damageMultiplier);
+
+    @Shadow protected abstract void spawnItemParticles(ItemStack stack, int count);
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -40,13 +41,13 @@ public abstract class LivingEntityMixin extends Entity {
             if (equippedBoots == GRContent.RUBBER_BOOTS) {
                 if(!isSneaking()) {
                     int vanillaPlayerDamage = this.computeFallDamage(fallDistance, damageMultiplier);
-                    int userDamage = vanillaPlayerDamage/3;
-                    int bootDamage = (int) Math.round(vanillaPlayerDamage*0.4375);
+                    int userDamage = vanillaPlayerDamage/4;
+                    int bootDamage = Math.round(vanillaPlayerDamage*(7/16)); //inspired by https://wiki.industrial-craft.net/index.php/Rubber_Boots#Technical_Details
                     int bootDurability = equippedBootsSlotItemStack.getMaxDamage()-equippedBootsSlotItemStack.getDamage();
 
                     if (bootDamage>bootDurability){
                         this.damage(DamageSource.FALL, (float)vanillaPlayerDamage);
-                        equippedBootsSlotItemStack.decrement(1);                //we do a little trolling
+                        equippedBootsSlotItemStack.decrement(1);
                         player.sendEquipmentBreakStatus(EquipmentSlot.FEET);
                     }
                     if (bootDamage>0){
