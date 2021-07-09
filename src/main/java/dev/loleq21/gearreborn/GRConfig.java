@@ -19,7 +19,7 @@ public class GRConfig implements ConfigData {
     @Comment("The energy capacity of the NVG, expressed in E")
     int nvgEnergyCapacity = 80000;
     @Comment("How much energy (expressed in E) per tick the stun gun consumes when it's charging its capacitors")
-    int stungunOneClickEnergyCost = 4;
+    int stungunOneClickEnergyCost = 8;
     @Comment("The energy capacity of the stun gun, expressed in E")
     int stungunEnergyCapacity = 10000;
     @Comment("How many ticks it takes for the stun gun's capacitors to fully charge")
