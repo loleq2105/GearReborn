@@ -28,7 +28,7 @@ public class GRConfig implements ConfigData {
     int stungunDamageDealtToArthropodsOnChargedHit = 16;
     @Comment("Should the stun gun ignite Creepers")
     boolean stungunShouldChargedHitsIgniteCreepers = true;
-    @Comment("Should the stun gun stun the Ender Dragon and the Wither")
+    @Comment("Should the stun gun stun vanilla boss mobs")
     boolean stungunShouldStunBossMobs = false;
     @Comment("How many ticks of Slowness should the Stun Gun inflict on mobs")
     int stungunSlownessTicks = 100;
