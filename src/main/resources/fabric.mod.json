@@ -6,13 +6,12 @@
   "description": "Additional gear for Tech Reborn!",
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/gearreborn",
-    "sources": "https://github.com/loleq21/Ag4tr",
-    "issues": "https://github.com/loleq2105/Ag4tr/issues"
+    "sources": "https://github.com/loleq21/GearReborn",
+    "issues": "https://github.com/loleq2105/GearReborn/issues"
   },
   "authors": [
     "loleq21"
   ],
-  "contact": {},
   "license": "MIT",
   "icon": "assets/gearreborn/icon.png",
   "environment": "*",
