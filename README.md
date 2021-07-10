@@ -1,5 +1,6 @@
 # Gear Reborn
 **Prior to 1.17 - Ag4tr**
+
 A Fabric mod for Minecraft Java Edition and an addon for Tech Reborn.
 Gear Reborn introduces an assortment of practical equipment pieces complimenting TR and following its style. Heavily inspired by IC2.
 
