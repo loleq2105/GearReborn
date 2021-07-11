@@ -19,7 +19,7 @@ public class Ag4trConfig implements ConfigData {
     @Comment("The energy capacity of the NVG, expressed in E")
     int nvgEnergyCapacity = 80000;
     @Comment("How much energy (expressed in E) per tick the stun gun consumes when it's charging its capacitors")
-    int stungunOneClickEnergyCost = 4;
+    int stungunOneClickEnergyCost = 8;
     @Comment("The energy capacity of the stun gun, expressed in E")
     int stungunEnergyCapacity = 10000;
     @Comment("How many ticks it takes for the stun gun's capacitors to fully charge")
@@ -28,7 +28,7 @@ public class Ag4trConfig implements ConfigData {
     int stungunDamageDealtToArthropodsOnChargedHit = 16;
     @Comment("Should the stun gun ignite Creepers")
     boolean stungunShouldChargedHitsIgniteCreepers = true;
-    @Comment("Should the stun gun stun the Ender Dragon and the Wither")
+    @Comment("Should the stun gun stun vanilla boss mobs")
     boolean stungunShouldStunBossMobs = false;
     @Comment("How many ticks of Slowness should the Stun Gun inflict on mobs")
     int stungunSlownessTicks = 100;

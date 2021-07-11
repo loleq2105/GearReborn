@@ -7,7 +7,11 @@
   "authors": [
     "loleq21"
   ],
-  "contact": {},
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/gearreborn",
+    "sources": "https://github.com/loleq21/GearReborn",
+    "issues": "https://github.com/loleq2105/GearReborn/issues"
+  },
   "license": "MIT",
   "icon": "assets/ag4tr/icon.png",
   "environment": "*",

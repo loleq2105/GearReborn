@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "ag4tr:item/rhm_chestplate_charged"
+    "layer0": "ag4tr:item/rhm_chestplate",
+    "layer1": "ag4tr:item/rhm_chestplate_overlay_charged"
   }
 }

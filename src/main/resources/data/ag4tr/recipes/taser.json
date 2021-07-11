@@ -3,19 +3,19 @@
     "pattern": [
         " #N",
         "Ki#",
-        "B  "
+        "BK "
     ],
     "key": {
         "#": {
             "item": "techreborn:hv_cable"
         },
-        "N": {
-            "tag": "c:copper_ingots"
+        "i": {
+            "item": "techreborn:insulated_copper_cable"
         },
         "K": {
             "item": "techreborn:electronic_circuit"
         },
-        "i": {
+        "N": {
             "tag": "c:refined_iron_ingots"
         },
         "B": {

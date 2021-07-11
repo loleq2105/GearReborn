@@ -22,6 +22,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.api.items.ArmorTickable;
 import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.util.ItemDurabilityExtensions;
@@ -37,7 +38,7 @@ import java.util.List;
 import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingChestAndHelm;
 import static dev.loleq21.ag4tr.HazmatSuitUtils.playerIsWearingFullHazmat;
 
-public class HazmatChestPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions {
+public class HazmatChestPiece extends ArmorItem implements ArmorTickable, EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(Ag4tr.AG4TR_GROUP).maxCount(1).fireproof().maxDamage(-1));
@@ -55,75 +56,100 @@ public class HazmatChestPiece extends ArmorItem implements ArmorTickable, Energy
         if(!playerEntity.getEntityWorld().isClient()) {
             if (playerIsWearingFullHazmat(playerEntity)) {
                 if (!playerEntity.isInLava()) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
                 } else {
-                    if (this.slot == EquipmentSlot.CHEST) {
-                        if (Energy.of(itemStack).use(coolingEnergyCost)) {
-                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 5, 0, false, false, false));
-                        }
+                    if (Energy.of(itemStack).use(coolingEnergyCost)) {
+                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
+                    } else {
+                        disableFireResist(playerEntity);
                     }
                 }
 
                 if (playerEntity.isOnFire() && Energy.of(itemStack).getEnergy() >= coolingEnergyCost * 2) {
                     playerEntity.extinguish();
                 }
+            } else {
+                disableFireResist(playerEntity);
             }
 
-            if (this.slot == EquipmentSlot.CHEST) {
-                if ((getStoredAir(itemStack) == 0)) {
-                    for (int i = 0; i < playerEntity.inventory.size(); i++) {
-                        ItemStack iteratedStack = playerEntity.inventory.getStack(i);
-                        if (iteratedStack.getItem() == TRContent.CELL) {
-                            if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air"))) && Energy.of(itemStack).use(airCanSwapEnergyCost)) {
-                                iteratedStack.decrement(1);
-                                ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
-                                playerEntity.giveItemStack(emptyCell);
-                                setStoredAir(itemStack, airCapacity);
-                            }
+            if ((getStoredAir(itemStack) == 0)) {
+                for (int i = 0; i < playerEntity.inventory.size(); i++) {
+                    ItemStack iteratedStack = playerEntity.inventory.getStack(i);
+                    if (iteratedStack.getItem() == TRContent.CELL) {
+                        if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air"))) && Energy.of(itemStack).use(airCanSwapEnergyCost)) {
+                            iteratedStack.decrement(1);
+                            ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
+                            playerEntity.giveItemStack(emptyCell);
+                            setStoredAir(itemStack, airCapacity);
                         }
                     }
                 }
+            }
+            if (playerIsWearingChestAndHelm(playerEntity)) {
                 if (playerEntity.isSubmergedInWater()) {
-
-                    if (playerIsWearingChestAndHelm(playerEntity)) {
-                        if (useStoredAir(itemStack, 1)) {
-                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 5, 0, false, false, false));
-                        }
+                    if (useStoredAir(itemStack, 1)) {
+                        playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, false));
+                    } else {
+                        disableWaterBreathing(playerEntity);
                     }
+                } else {
+                    disableWaterBreathing(playerEntity);
                 }
             }
+            else {
+                disableWaterBreathing(playerEntity);
+            }
+        }
+    }
+
+    private void disableFireResist(PlayerEntity playerEntity){
+        if (!playerEntity.getEntityWorld().isClient()) {
+            playerEntity.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
+        }
+    }
+
+    private void disableWaterBreathing(PlayerEntity playerEntity){
+        if (!playerEntity.getEntityWorld().isClient()) {
+            playerEntity.removeStatusEffect(StatusEffects.WATER_BREATHING);
+        }
+    }
+
+    private void removeEffects(PlayerEntity playerEntity) {
+        if (!playerEntity.getEntityWorld().isClient()) {
+            playerEntity.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
+            playerEntity.removeStatusEffect(StatusEffects.WATER_BREATHING);
         }
     }
 
     public int getStoredAir(ItemStack stack) {
-        if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
+        if (stack.getItem() == Ag4trContent.HAZMAT_CHESTPLATE) {
             validateAirNBTTag(stack);
             return stack.getTag().getInt("air");
         }
-            return 0;
+        return 0;
     }
 
     public void setStoredAir(ItemStack stack, int amount) {
-        if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
+        if (stack.getItem() == Ag4trContent.HAZMAT_CHESTPLATE) {
             validateAirNBTTag(stack);
             stack.getTag().putInt("air", amount);
         }
     }
 
     public boolean useStoredAir(ItemStack stack, int amount) {
-        if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
+        if (stack.getItem() == Ag4trContent.HAZMAT_CHESTPLATE) {
             validateAirNBTTag(stack);
-        if(getStoredAir(stack)>=amount) {
-            setStoredAir(stack, getStoredAir(stack)-amount);
-            return true;
-        }
+            if(getStoredAir(stack)>=amount) {
+                setStoredAir(stack, getStoredAir(stack)-amount);
+                return true;
+            }
             return false;
         }
-            return  false;
+        return  false;
     }
 
     public boolean addStoredAir(ItemStack stack, int amount) {
-        if (stack.getItem() == Ag4trContent.RHM_CHESTPLATE) {
+        if (stack.getItem() == Ag4trContent.HAZMAT_CHESTPLATE) {
             validateAirNBTTag(stack);
             if(getStoredAir(stack)+amount>airCapacity) {
                 return false;
@@ -132,7 +158,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorTickable, Energy
                 return true;
             }
         }
-            return  false;
+        return  false;
     }
 
     public int getAirCapacity() { return airCapacity; }
@@ -206,6 +232,9 @@ public class HazmatChestPiece extends ArmorItem implements ArmorTickable, Energy
     public int getDurabilityColor(ItemStack stack) {
         return PowerSystem.getDisplayPower().colour;
     }
+
+    @Override
+    public void onRemoved(PlayerEntity playerEntity) {
+        removeEffects(playerEntity);
+    }
 }
-
-
