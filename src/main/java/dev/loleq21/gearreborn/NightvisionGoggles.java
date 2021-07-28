@@ -52,43 +52,50 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) { //start method
-            if (entity instanceof PlayerEntity) {
-                PlayerEntity user = (PlayerEntity) entity;
+        if (entity instanceof PlayerEntity) {
+            PlayerEntity user = (PlayerEntity) entity;
 
-                if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
-                    ItemUtils.checkActive(stack, (int)energyPerTickCost, world.isClient(), MessageIDs.poweredToolID);
-                    boolean active = stack.getTag().getBoolean("isActive");
-                    if (Energy.of(stack).getEnergy() < energyPerTickCost) { disableNightVision(world, user); }
-                    byte toggleCooldown = stack.getTag().getByte("toggleTimer");
+            if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
+                ItemUtils.checkActive(stack, (int) energyPerTickCost, world.isClient(), MessageIDs.poweredToolID);
+                boolean active = stack.getNbt().getBoolean("isActive");
+                if (Energy.of(stack).getEnergy() < energyPerTickCost) {
+                    disableNightVision(world, user);
+                }
+                byte toggleCooldown = stack.getNbt().getByte("toggleTimer");
 
-                    if (NV_KEY_BIND.isPressed() && toggleCooldown == 0){
-                        toggleCooldown = 10;
-                        if (!active && Energy.of(stack).getEnergy()>=energyPerTickCost){
-                            active = true;
-                            if (world.isClient) {
-                                ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, (new TranslatableText("gearreborn.misc.shortenednvgname").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceon").formatted(Formatting.GOLD))));
-                            }
-                        } else if (active) {
-                            active = false;
-                            disableNightVision(world, user);
-                            if (world.isClient()) { ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, (new TranslatableText("gearreborn.misc.shortenednvgname").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceoff").formatted(Formatting.GOLD)))); }
+                if (NV_KEY_BIND.isPressed() && toggleCooldown == 0) {
+                    toggleCooldown = 10;
+                    if (!active && Energy.of(stack).getEnergy() >= energyPerTickCost) {
+                        active = true;
+                        if (world.isClient) {
+                            ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, (new TranslatableText("gearreborn.misc.shortnvgname").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceon").formatted(Formatting.GOLD))));
                         }
-                        else {
-                            if (world.isClient) { ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, new TranslatableText("reborncore.message.energyError").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("reborncore.message.deactivating").formatted(Formatting.GOLD))); }
+                    } else if (active) {
+                        active = false;
+                        disableNightVision(world, user);
+                        if (world.isClient()) {
+                            ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, (new TranslatableText("gearreborn.misc.shortnvgname").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceoff").formatted(Formatting.GOLD))));
                         }
-                        if(!world.isClient()) { stack.getOrCreateTag().putBoolean("isActive", active); }
+                    } else {
+                        if (world.isClient) {
+                            ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, new TranslatableText("reborncore.message.energyError").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("reborncore.message.deactivating").formatted(Formatting.GOLD)));
+                        }
                     }
-                    if(!world.isClient()) {
-                        if (ItemUtils.isActive(stack) && Energy.of(stack).use(energyPerTickCost)) {
-                                   user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
-                          }
-                    }
-                    if (!world.isClient() && toggleCooldown>0) {
-                        --toggleCooldown;
-                        stack.getOrCreateTag().putByte("toggleTimer", toggleCooldown);
+                    if (!world.isClient()) {
+                        stack.getOrCreateNbt().putBoolean("isActive", active);
                     }
                 }
+                if (!world.isClient()) {
+                    if (ItemUtils.isActive(stack) && ((user.isCreative() || user.isSpectator()) || Energy.of(stack).use(energyPerTickCost))) {
+                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
+                    }
+                }
+                if (!world.isClient() && toggleCooldown > 0) {
+                    --toggleCooldown;
+                    stack.getOrCreateNbt().putByte("toggleTimer", toggleCooldown);
+                }
             }
+        }
     }
 
     private void disableNightVision(World world, PlayerEntity entity) {

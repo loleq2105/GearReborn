@@ -23,12 +23,11 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    def tr_version= 'TechReborn:TechReborn-1.17:5.0.3-beta+build.55'
+    def tr_version= 'TechReborn:TechReborn-1.17:5.0.5-beta+build.85'
     modApi (tr_version) { exclude group: "net.fabricmc.fabric-api"}
 
-    def rc_version = 'RebornCore:RebornCore-1.17:5.0.3-beta+build.55'
+    def rc_version = 'RebornCore:RebornCore-1.17:5.0.5-beta+build.85'
     modApi (rc_version) { exclude group: "net.fabricmc.fabric-api"}
-    include rc_version
 
     modApi("me.sargunvohra.mcmods:autoconfig1u:3.3.1") {
         exclude(group: "net.fabricmc.fabric-api")

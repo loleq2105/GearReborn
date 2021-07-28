@@ -13,17 +13,17 @@ public class GRItemUtils {
     }
 
     public static boolean isActive(ItemStack stack) {
-        return !stack.isEmpty() && stack.getTag() != null && stack.getTag().getBoolean("isActive");
+        return !stack.isEmpty() && stack.getNbt() != null && stack.getNbt().getBoolean("isActive");
     }
 
     public static void switchActive(ItemStack stack, boolean isClient, int messageId, String messageTranslationKey) {
         if (!isActive(stack)) {
-            stack.getOrCreateTag().putBoolean("isActive", true);
+            stack.getOrCreateNbt().putBoolean("isActive", true);
             if (isClient) {
                 ChatUtils.sendNoSpamMessages(messageId, (new TranslatableText(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceon").formatted(Formatting.GOLD))));
             }
         } else {
-            stack.getOrCreateTag().putBoolean("isActive", false);
+            stack.getOrCreateNbt().putBoolean("isActive", false);
             if (isClient) {
                 ChatUtils.sendNoSpamMessages(messageId, (new TranslatableText(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceoff").formatted(Formatting.GOLD))));
             }
@@ -32,9 +32,9 @@ public class GRItemUtils {
     }
     public static void switchActiveNoMsg(ItemStack stack, boolean isClient) {
         if (!isActive(stack)) {
-            stack.getOrCreateTag().putBoolean("isActive", true);
+            stack.getOrCreateNbt().putBoolean("isActive", true);
         } else {
-            stack.getOrCreateTag().putBoolean("isActive", false);
+            stack.getOrCreateNbt().putBoolean("isActive", false);
         }
 
     }

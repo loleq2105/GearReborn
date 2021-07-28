@@ -123,22 +123,22 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     
     public int getStoredAir(ItemStack stack) {
         if (stack.getItem() == GRContent.HAZMAT_CHESTPIECE) {
-            validateAirNBTTag(stack);
-            return stack.getTag().getInt("air");
+            validateAirNbtTag(stack);
+            return stack.getNbt().getInt("air");
         }
             return 0;
     }
 
     public void setStoredAir(ItemStack stack, int amount) {
         if (stack.getItem() == GRContent.HAZMAT_CHESTPIECE) {
-            validateAirNBTTag(stack);
-            stack.getTag().putInt("air", amount);
+            validateAirNbtTag(stack);
+            stack.getNbt().putInt("air", amount);
         }
     }
 
     public boolean useStoredAir(ItemStack stack, int amount) {
         if (stack.getItem() == GRContent.HAZMAT_CHESTPIECE) {
-            validateAirNBTTag(stack);
+            validateAirNbtTag(stack);
         if(getStoredAir(stack)>=amount) {
             setStoredAir(stack, getStoredAir(stack)-amount);
             return true;
@@ -150,7 +150,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
 
     public boolean addStoredAir(ItemStack stack, int amount) {
         if (stack.getItem() == GRContent.HAZMAT_CHESTPIECE) {
-            validateAirNBTTag(stack);
+            validateAirNbtTag(stack);
             if(getStoredAir(stack)+amount>airCapacity) {
                 return false;
             } else {
@@ -163,20 +163,20 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
 
     public int getAirCapacity() { return airCapacity; }
 
-    private void validateAirNBTTag(ItemStack stack) {
+    private void validateAirNbtTag(ItemStack stack) {
         GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
-        if (!stack.getTag().contains("air", 3)){
-            stack.getTag().putInt("air", 0);
+        if (!stack.getNbt().contains("air", 3)){
+            stack.getNbt().putInt("air", 0);
             return;
         }
-        if (stack.getTag().getInt("air")>config.hazmatChestpieceAirTicksCapacity) {
-            stack.getTag().putInt("air", config.hazmatChestpieceAirTicksCapacity);
+        if (stack.getNbt().getInt("air")>config.hazmatChestpieceAirTicksCapacity) {
+            stack.getNbt().putInt("air", config.hazmatChestpieceAirTicksCapacity);
         }
     }
 
     public int getStoredAir4ToolTip(ItemStack stack) {
-        if (stack.hasTag()) {
-            return stack.getTag().getInt("air");
+        if (stack.hasNbt()) {
+            return stack.getNbt().getInt("air");
         }
         else {
             return 0;
@@ -204,7 +204,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
         LiteralText line1 = new LiteralText(String.valueOf((getStoredAir4ToolTip(stack)*100)/airCapacity));
         line1.append("%");
         line1.append(" ");
-        line1.append(new TranslatableText("gearreborn.misc.hazmatchestplateairpressure"));
+        line1.append(new TranslatableText("gearreborn.misc.hazmatairpressure"));
         line1.formatted(Formatting.AQUA);
         tooltip.add(1, line1);
     }

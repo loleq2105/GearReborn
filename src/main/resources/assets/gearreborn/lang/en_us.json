@@ -14,9 +14,9 @@
    "itemGroup.gearreborn.items": "Gear Reborn",
    "gearreborn.misc.deviceoff": "Inactive",
    "gearreborn.misc.deviceon": "Active",
-   "gearreborn.misc.shortenednvgname": "Night Vision Goggles",
-   "gearreborn.misc.hazmatchestplateairpressure": "O₂",
-   "gearreborn.misc.shortenedstungunname": "Stun Gun",
+   "gearreborn.misc.shortnvgname": "Night Vision Goggles",
+   "gearreborn.misc.hazmatairpressure": "O₂",
+   "gearreborn.misc.shortstungunname": "Stun Gun",
    "gearreborn.misc.stunguntooltipcapacitors": "Capacitors"
 
 

@@ -70,7 +70,7 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
         final ItemStack stack = player.getStackInHand(hand);
         if (player.isSneaking()) {
-            GRItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "gearreborn.misc.shortenedstungunname");
+            GRItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "gearreborn.misc.shortstungunname");
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
@@ -126,8 +126,8 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
 
     public static int getCapacitorCharge(ItemStack stack) {
         if (stack.getItem() == GRContent.STUN_GUN) {
-            validateCapChargeNBTTag(stack);
-            return stack.getTag().getInt("capcharge");
+            validateCapChargeNbtTag(stack);
+            return stack.getNbt().getInt("capcharge");
         }
         return 0;
     }
@@ -135,26 +135,26 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
 
     public static void setCapacitorCharge(ItemStack stack, int amount) {
         if (stack.getItem() == GRContent.STUN_GUN) {
-            validateCapChargeNBTTag(stack);
-            stack.getTag().putInt("capcharge", amount);
+            validateCapChargeNbtTag(stack);
+            stack.getNbt().putInt("capcharge", amount);
         }
     }
 
-    private static void validateCapChargeNBTTag(ItemStack stack) {
+    private static void validateCapChargeNbtTag(ItemStack stack) {
         GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
-        if (!stack.getTag().contains("capcharge", 3)){
-            stack.getTag().putInt("capcharge", 0);
+        if (!stack.getNbt().contains("capcharge", 3)){
+            stack.getNbt().putInt("capcharge", 0);
             return;
         }
-        if (stack.getTag().getInt("capcharge")>config.stungunChargeTicks) {
-            stack.getTag().putInt("capcharge", config.stungunChargeTicks);
+        if (stack.getNbt().getInt("capcharge")>config.stungunChargeTicks) {
+            stack.getNbt().putInt("capcharge", config.stungunChargeTicks);
         }
 
     }
 
     public int getCapCharge4ToolTip(ItemStack stack) {
-        if (stack.hasTag()) {
-            return stack.getTag().getInt("capcharge");
+        if (stack.hasNbt()) {
+            return stack.getNbt().getInt("capcharge");
         }
             return 0;
     }
@@ -193,9 +193,7 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         GRItemUtils.buildActiveTooltip(stack, tooltip);
-        //TranslatableText line1 = new TranslatableText("gearreborn.misc.stunguntooltipcapacitors");
         LiteralText line1 = new LiteralText("[");
-        //line1.append(" [");
         line1.formatted(Formatting.GRAY);
         if (getCapCharge4ToolTip(stack)==capacitorChargeUnits) {
             line1.append(new LiteralText("■").formatted(Formatting.GREEN));
