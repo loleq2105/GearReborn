@@ -3,6 +3,9 @@ package dev.loleq21.gearreborn;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -13,6 +16,7 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -56,6 +60,13 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
             PlayerEntity user = (PlayerEntity) entity;
 
             if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
+
+                if (world.isClient()) {
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeBoolean(NV_KEY_BIND.isPressed() ? true : false);
+                    ClientPlayNetworking.send(GearReborn.gogglesTogglePackedIdentifier, buf);
+                }
+
                 ItemUtils.checkActive(stack, (int) energyPerTickCost, world.isClient(), MessageIDs.poweredToolID);
                 boolean active = stack.getNbt().getBoolean("isActive");
                 if (Energy.of(stack).getEnergy() < energyPerTickCost) {
@@ -63,7 +74,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                 }
                 byte toggleCooldown = stack.getNbt().getByte("toggleTimer");
 
-                if (NV_KEY_BIND.isPressed() && toggleCooldown == 0) {
+                if (stack.getOrCreateNbt().getBoolean("switchPressed") && toggleCooldown == 0) {
                     toggleCooldown = 10;
                     if (!active && Energy.of(stack).getEnergy() >= energyPerTickCost) {
                         active = true;
