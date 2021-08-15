@@ -239,7 +239,7 @@ public class HazmatChestPiece extends DyeableArmorItem implements ArmorBlockEnti
     @Override
     public int getColor(ItemStack stack) {
         NbtCompound nbtCompound = stack.getSubNbt("display");
-        return nbtCompound != null && nbtCompound.contains("color", 99) ? nbtCompound.getInt("color") : 16383998 ;
+        return nbtCompound != null && nbtCompound.contains("color", 99) ? nbtCompound.getInt("color") : GearReborn.DEFAULT_HAZMAT_COLOR;
     }
 }
 

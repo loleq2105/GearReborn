@@ -2,6 +2,6 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "gearreborn:item/hazmat_chestpiece",
-    "layer1": "gearreborn:item/hazmat_chestpiece_charged_overlay"
+    "layer1": "gearreborn:item/hazmat_chestpiece_overlay_charged"
   }
 }
