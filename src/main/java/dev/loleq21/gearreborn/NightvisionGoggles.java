@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -16,7 +15,8 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -55,61 +55,31 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) { //start method
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof PlayerEntity) {
             PlayerEntity user = (PlayerEntity) entity;
 
             if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
 
-                if (world.isClient()) {
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeBoolean(NV_KEY_BIND.isPressed() ? true : false);
-                    ClientPlayNetworking.send(GearReborn.gogglesTogglePackedIdentifier, buf);
-                }
-
-                ItemUtils.checkActive(stack, (int) energyPerTickCost, world.isClient(), MessageIDs.poweredToolID);
-                boolean active = stack.getNbt().getBoolean("isActive");
-                if (Energy.of(stack).getEnergy() < energyPerTickCost) {
-                    disableNightVision(world, user);
-                }
-                byte toggleCooldown = stack.getNbt().getByte("toggleTimer");
-
-                if (stack.getOrCreateNbt().getBoolean("switchPressed") && toggleCooldown == 0) {
-                    toggleCooldown = 10;
-                    if (!active && Energy.of(stack).getEnergy() >= energyPerTickCost) {
-                        active = true;
-                        if (world.isClient) {
-                            ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, (new TranslatableText("gearreborn.misc.shortnvgname").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceon").formatted(Formatting.GOLD))));
-                        }
-                    } else if (active) {
-                        active = false;
-                        disableNightVision(world, user);
-                        if (world.isClient()) {
-                            ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, (new TranslatableText("gearreborn.misc.shortnvgname").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceoff").formatted(Formatting.GOLD))));
-                        }
-                    } else {
-                        if (world.isClient) {
-                            ChatUtils.sendNoSpamMessages(MessageIDs.poweredToolID, new TranslatableText("reborncore.message.energyError").formatted(Formatting.GRAY).append(" ").append(new TranslatableText("reborncore.message.deactivating").formatted(Formatting.GOLD)));
-                        }
-                    }
-                    if (!world.isClient()) {
-                        stack.getOrCreateNbt().putBoolean("isActive", active);
-                    }
+                if (world.isClient() && NV_KEY_BIND.isPressed()){
+                    ClientPlayNetworking.send(GearReborn.gogglesTogglePacketIdentifier, PacketByteBufs.empty());
                 }
                 if (!world.isClient()) {
+                    checkActive(stack, (int) energyPerTickCost, world.isClient(), MessageIDs.poweredToolID, world, user);
                     if (ItemUtils.isActive(stack) && ((user.isCreative() || user.isSpectator()) || Energy.of(stack).use(energyPerTickCost))) {
                         user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
                     }
-                }
-                if (!world.isClient() && toggleCooldown > 0) {
-                    --toggleCooldown;
-                    stack.getOrCreateNbt().putByte("toggleTimer", toggleCooldown);
+                    byte toggleCooldown = stack.getNbt().getByte("toggleTimer");
+                    if (toggleCooldown > 0) {
+                        --toggleCooldown;
+                        stack.getOrCreateNbt().putByte("toggleTimer", toggleCooldown);
+                    }
                 }
             }
         }
     }
 
-    private void disableNightVision(World world, PlayerEntity entity) {
+    public static void disableNightVision(World world, PlayerEntity entity) {
         if (!world.isClient()) {
             entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
         }
@@ -165,5 +135,27 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
         InitUtils.initPoweredItems(this, itemList);
     }
 
+    private static void checkActive(ItemStack stack, int cost, boolean isClient, int messageId, World world, PlayerEntity user) {
+        if (!ItemUtils.isActive(stack)) {
+            disableNightVision(world, user);
+            return;
+        }
+        if (Energy.of(stack).getEnergy() >= cost) {
+            return;
+        }
+        if (isClient) {
+            ChatUtils.sendNoSpamMessages(messageId, new TranslatableText("reborncore.message.energyError")
+                    .formatted(Formatting.GRAY)
+                    .append(" ")
+                    .append(
+                            new TranslatableText("reborncore.message.deactivating")
+                                    .formatted(Formatting.GOLD)
+                    )
+            );
+        }
+        stack.getOrCreateNbt().putBoolean("isActive", false);
+        disableNightVision(world, user);
+        world.playSound(null, user.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.5f);
+    }
 
 }
