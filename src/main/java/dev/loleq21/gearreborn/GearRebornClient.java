@@ -26,7 +26,7 @@ public class GearRebornClient implements ClientModInitializer {
     public static final KeyBinding NV_KEY_BIND = new KeyBinding("key.gearreborn.toggle_nv",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_N,
-            "category.geareborn.title");
+            "category.gearreborn.title");
 
     @Override
     public void onInitializeClient() {
