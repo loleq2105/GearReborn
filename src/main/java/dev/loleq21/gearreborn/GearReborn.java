@@ -29,7 +29,6 @@ public class GearReborn implements ModInitializer {
 
     public static final String MOD_ID = "gearreborn";
     public static final ItemGroup ITEMGROUP = FabricItemGroupBuilder.create(new Identifier(MOD_ID, "items")).icon(() -> new ItemStack(GRContent.HAZMAT_HELMET)).build();
-    public static final int DEFAULT_HAZMAT_COLOR = 16701501;
 
     public static final EntityType[] bossMobsArray = new EntityType[]{EntityType.ENDER_DRAGON, EntityType.WITHER};
     public static final Set<EntityType> bossMobs = new HashSet<EntityType>(Arrays.asList(bossMobsArray));

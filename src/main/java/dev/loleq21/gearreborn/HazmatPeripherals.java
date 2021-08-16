@@ -1,6 +1,7 @@
 package dev.loleq21.gearreborn;
 
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.DyeableArmorItem;
 import net.minecraft.item.ItemStack;
@@ -15,7 +16,7 @@ public class HazmatPeripherals extends DyeableArmorItem {
     @Override
     public int getColor(ItemStack stack) {
         NbtCompound nbtCompound = stack.getSubNbt("display");
-        return nbtCompound != null && nbtCompound.contains("color", 99) ? nbtCompound.getInt("color") : GearReborn.DEFAULT_HAZMAT_COLOR;
+        return nbtCompound != null && nbtCompound.contains("color", 99) ? nbtCompound.getInt("color") : 16383998 ;
     }
 
 }
