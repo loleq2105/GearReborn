@@ -29,6 +29,7 @@ import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
 import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
+import team.reborn.energy.EnergySide;
 import team.reborn.energy.EnergyTier;
 import techreborn.init.TRContent;
 import techreborn.utils.InitUtils;
@@ -221,6 +222,11 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     @Override
     public double getDurability(ItemStack stack) {
         return 1 - ItemUtils.getPowerForDurabilityBar(stack);
+    }
+
+    @Override
+    public double getMaxOutput(EnergySide side) {
+        return 0;
     }
 
     @Override

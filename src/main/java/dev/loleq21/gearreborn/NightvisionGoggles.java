@@ -29,6 +29,7 @@ import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
 import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
+import team.reborn.energy.EnergySide;
 import team.reborn.energy.EnergyTier;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
@@ -123,6 +124,11 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         GRItemUtils.buildActiveTooltip(stack, tooltip);
+    }
+
+    @Override
+    public double getMaxOutput(EnergySide side) {
+        return 0;
     }
 
     @Environment(EnvType.CLIENT)

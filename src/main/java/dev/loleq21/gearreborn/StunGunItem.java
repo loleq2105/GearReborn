@@ -29,6 +29,7 @@ import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
 import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
+import team.reborn.energy.EnergySide;
 import team.reborn.energy.EnergyTier;
 import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
@@ -207,6 +208,10 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
         tooltip.add(line1);
     }
 
+    @Override
+    public double getMaxOutput(EnergySide side) {
+        return 0;
+    }
 
     @Environment(EnvType.CLIENT)
     @Override

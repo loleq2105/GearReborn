@@ -17,17 +17,18 @@ public class GRContent {
 
     private static final Map<Identifier, Item> GRITEMS = new LinkedHashMap<>();
 
-    public static final Item RUBBER_HELMET = addItem("rubber_helmet", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.HEAD));
-    public static final Item RUBBER_CHESTPLATE = addItem("rubber_chestplate", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.CHEST));
-    public static final Item RUBBER_LEGGINGS = addItem("rubber_leggings", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.LEGS));
-    public static final Item RUBBER_BOOTS = addItem("rubber_boots", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.FEET));
+    public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
+    public static final Item STUN_GUN = addItem("stun_gun", new StunGunItem());
 
     public static final Item HAZMAT_HELMET = addItem("hazmat_helmet", new HazmatPeripherals(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.HEAD));
     public static final Item HAZMAT_CHESTPIECE = addItem("hazmat_chestpiece", new HazmatChestPiece(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.CHEST));
     public static final Item HAZMAT_LEGGINGS = addItem("hazmat_leggings", new HazmatPeripherals(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.LEGS));
 
-    public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
-    public static final Item STUN_GUN = addItem("stun_gun", new StunGunItem());
+    public static final Item RUBBER_BOOTS = addItem("rubber_boots", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.FEET));
+
+    public static final Item RUBBER_HELMET = addItem("rubber_helmet", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.HEAD));
+    public static final Item RUBBER_CHESTPLATE = addItem("rubber_chestplate", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.CHEST));
+    public static final Item RUBBER_LEGGINGS = addItem("rubber_leggings", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, EquipmentSlot.LEGS));
 
     private static <I extends Item> I addItem(String name, I item) {
         GRITEMS.put(new Identifier(GearReborn.MOD_ID, name), item);
