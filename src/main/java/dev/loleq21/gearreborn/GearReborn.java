@@ -12,7 +12,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -66,13 +65,13 @@ public class GearReborn implements ModInitializer {
                 stack.getOrCreateNbt().putByte("toggleTimer", (byte)10);
                 if (!active && Energy.of(stack).getEnergy() >= config.nvgActiveEnergyPerTickCost) {
                     active = true;
-                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 1.2f);
+                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 1.1f);
                 } else if (active) {
                     active = false;
                     disableNightVision(world, player);
                     world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.9f);
                 } else {
-                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.5f);
+                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.6f);
                 }
                     stack.getOrCreateNbt().putBoolean("isActive", active);
             }
