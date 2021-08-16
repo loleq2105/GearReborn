@@ -1,8 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "gearreborn:item/hazmat_helmet",
-    "layer1": "gearreborn:item/hazmat_helmet_overlay"
+    "layer0": "gearreborn:item/hazmat_helmet"
   }
 }
 

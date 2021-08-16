@@ -9,8 +9,10 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -36,7 +38,7 @@ import java.util.List;
 import static dev.loleq21.gearreborn.HazmatSuitUtils.playerIsWearingChestAndHelm;
 import static dev.loleq21.gearreborn.HazmatSuitUtils.playerIsWearingFullHazmat;
 
-public class HazmatChestPiece extends DyeableArmorItem implements ArmorBlockEntityTicker, EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
+public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicker, EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof().maxDamage(-1));
@@ -234,12 +236,6 @@ public class HazmatChestPiece extends DyeableArmorItem implements ArmorBlockEnti
     @Override
     public void onRemoved(PlayerEntity playerEntity) {
         removeEffects(playerEntity);
-    }
-
-    @Override
-    public int getColor(ItemStack stack) {
-        NbtCompound nbtCompound = stack.getSubNbt("display");
-        return nbtCompound != null && nbtCompound.contains("color", 99) ? nbtCompound.getInt("color") : 16383998 ;
     }
 }
 
