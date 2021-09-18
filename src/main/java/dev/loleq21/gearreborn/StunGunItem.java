@@ -25,19 +25,17 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.common.powerSystem.PowerSystem;
+import reborncore.common.powerSystem.RcEnergyItem;
+import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
-import team.reborn.energy.Energy;
-import team.reborn.energy.EnergyHolder;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyTier;
 import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
-public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExtensions {
+public class StunGunItem extends Item implements RcEnergyItem, ItemDurabilityExtensions {
 
     public StunGunItem() {
         super(new Settings().group(GearReborn.ITEMGROUP).maxCount(1));
@@ -46,8 +44,8 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
     GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
 
-    public final double zapEnergyCost = config.stungunOneClickEnergyCost;
-    public final double energyCapacity = config.stungunEnergyCapacity;
+    public final long zapEnergyCost = config.stungunOneClickEnergyCost;
+    public final long energyCapacity = config.stungunEnergyCapacity;
     public final int capacitorChargeUnits = config.stungunChargeTicks;
     public final int slownessTicks = config.stungunSlownessTicks;
     public final int weaknessTicks = config.stungunWeaknessTicks;
@@ -60,7 +58,7 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, world.isClient(), MessageIDs.poweredToolID);
         if (ItemUtils.isActive(stack)) {
-            if (getCapacitorCharge(stack) < capacitorChargeUnits && Energy.of(stack).use(zapEnergyCost)) {
+            if (getCapacitorCharge(stack) < capacitorChargeUnits && tryUseEnergy(stack, zapEnergyCost)) {
                 setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
                 entity.playSound(ModSounds.CABLE_SHOCK, 0.4F, 1.0F);
             }
@@ -181,13 +179,13 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
     }
 
     @Override
-    public double getMaxStoredPower() {
+    public long getEnergyCapacity() {
         return energyCapacity;
     }
 
     @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
+    public RcEnergyTier getTier() {
+        return RcEnergyTier.MEDIUM;
     }
 
     @Environment(EnvType.CLIENT)
@@ -206,11 +204,6 @@ public class StunGunItem extends Item implements EnergyHolder, ItemDurabilityExt
         line1.append("]");
         line1.formatted(Formatting.GRAY);
         tooltip.add(line1);
-    }
-
-    @Override
-    public double getMaxOutput(EnergySide side) {
-        return 0;
     }
 
     @Environment(EnvType.CLIENT)

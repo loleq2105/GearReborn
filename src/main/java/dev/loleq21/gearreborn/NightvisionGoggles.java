@@ -24,13 +24,11 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.PowerSystem;
+import reborncore.common.powerSystem.RcEnergyItem;
+import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ChatUtils;
 import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
-import team.reborn.energy.Energy;
-import team.reborn.energy.EnergyHolder;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyTier;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
 
@@ -38,7 +36,7 @@ import java.util.List;
 
 import static dev.loleq21.gearreborn.GearRebornClient.NV_KEY_BIND;
 
-public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
+public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, ItemDurabilityExtensions, ArmorRemoveHandler {
 
     public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).maxDamage(-1));
@@ -46,8 +44,8 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
 
     GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
-    public final double energyPerTickCost = config.nvgActiveEnergyPerTickCost;
-    public final double energyCapacity = config.nvgEnergyCapacity;
+    public final long energyPerTickCost = config.nvgActiveEnergyPerTickCost;
+    public final long energyCapacity = config.nvgEnergyCapacity;
 
     @Override
     public boolean isDamageable() {
@@ -66,7 +64,7 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
                 }
                 if (!world.isClient()) {
                     checkActive(stack, (int) energyPerTickCost, world.isClient(), MessageIDs.poweredToolID, world, user);
-                    if (ItemUtils.isActive(stack) && ((user.isCreative() || user.isSpectator()) || Energy.of(stack).use(energyPerTickCost))) {
+                    if (ItemUtils.isActive(stack) && ((user.isCreative() || user.isSpectator()) || tryUseEnergy(stack, energyPerTickCost))) {
                         user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
                     }
                     byte toggleCooldown = stack.getNbt().getByte("toggleTimer");
@@ -111,24 +109,19 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
     }
 
     @Override
-    public double getMaxStoredPower() {
+    public long getEnergyCapacity() {
         return energyCapacity;
     }
 
     @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
+    public RcEnergyTier getTier() {
+        return RcEnergyTier.MEDIUM;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         GRItemUtils.buildActiveTooltip(stack, tooltip);
-    }
-
-    @Override
-    public double getMaxOutput(EnergySide side) {
-        return 0;
     }
 
     @Environment(EnvType.CLIENT)
@@ -140,12 +133,12 @@ public class NightvisionGoggles extends ArmorItem implements EnergyHolder, ItemD
         InitUtils.initPoweredItems(this, itemList);
     }
 
-    private static void checkActive(ItemStack stack, int cost, boolean isClient, int messageId, World world, PlayerEntity user) {
+    private void checkActive(ItemStack stack, int cost, boolean isClient, int messageId, World world, PlayerEntity user) {
         if (!ItemUtils.isActive(stack)) {
             disableNightVision(world, user);
             return;
         }
-        if (Energy.of(stack).getEnergy() >= cost) {
+        if (getStoredEnergy(stack) >= cost) {
             return;
         }
         if (isClient) {

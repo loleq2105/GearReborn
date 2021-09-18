@@ -15,7 +15,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import team.reborn.energy.Energy;
+import team.reborn.energy.api.base.SimpleBatteryItem;
 import techreborn.api.events.CableElectrocutionEvent;
 
 import static dev.loleq21.gearreborn.NightvisionGoggles.disableNightVision;
@@ -63,7 +63,7 @@ public class GearReborn implements ModInitializer {
 
             if (toggleCooldown == 0) {
                 stack.getOrCreateNbt().putByte("toggleTimer", (byte)10);
-                if (!active && Energy.of(stack).getEnergy() >= config.nvgActiveEnergyPerTickCost) {
+                if (SimpleBatteryItem.getStoredEnergyUnchecked(stack) >= config.nvgActiveEnergyPerTickCost) {
                     active = true;
                     world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 1.1f);
                 } else if (active) {

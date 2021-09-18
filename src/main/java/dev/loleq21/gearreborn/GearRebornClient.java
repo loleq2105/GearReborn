@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import reborncore.common.util.ItemUtils;
 import reborncore.mixin.client.AccessorModelPredicateProviderRegistry;
-import team.reborn.energy.Energy;
+import team.reborn.energy.api.base.SimpleBatteryItem;
 
 @Environment(EnvType.CLIENT)
 public class GearRebornClient implements ClientModInitializer {
@@ -48,7 +48,7 @@ public class GearRebornClient implements ClientModInitializer {
                 HazmatChestPiece.class,
                 new Identifier("gearreborn:charged"),
                 (item, stack, world, entity, seed) -> {
-                    if (!stack.isEmpty() && Energy.of(stack).getEnergy()>=config.hazmatChestpieceLavaCoolingEnergyCost *2) {
+                    if (!stack.isEmpty() && SimpleBatteryItem.getStoredEnergyUnchecked(stack) >=config.hazmatChestpieceLavaCoolingEnergyCost *2) {
                         return 1.0F;
                     }
                     return 0.0F;

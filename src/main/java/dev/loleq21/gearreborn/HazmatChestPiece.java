@@ -25,12 +25,10 @@ import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
 import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.PowerSystem;
+import reborncore.common.powerSystem.RcEnergyItem;
+import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
-import team.reborn.energy.Energy;
-import team.reborn.energy.EnergyHolder;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyTier;
 import techreborn.init.TRContent;
 import techreborn.utils.InitUtils;
 
@@ -39,7 +37,7 @@ import java.util.List;
 import static dev.loleq21.gearreborn.HazmatSuitUtils.playerIsWearingChestAndHelm;
 import static dev.loleq21.gearreborn.HazmatSuitUtils.playerIsWearingFullHazmat;
 
-public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicker, EnergyHolder, ItemDurabilityExtensions, ArmorRemoveHandler {
+public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem, ItemDurabilityExtensions, ArmorRemoveHandler {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof().maxDamage(-1));
@@ -48,9 +46,9 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
     public final int airCapacity = config.hazmatChestpieceAirTicksCapacity;
-    public final double energyCapacity = config.hazmatChestpieceEnergyCapacity;
-    public final double coolingEnergyCost = config.hazmatChestpieceLavaCoolingEnergyCost;
-    public final double airCanSwapEnergyCost = config.hazmatChestpieceCellSwapEnergyCost;
+    public final long energyCapacity = config.hazmatChestpieceEnergyCapacity;
+    public final long coolingEnergyCost = config.hazmatChestpieceLavaCoolingEnergyCost;
+    public final long airCanSwapEnergyCost = config.hazmatChestpieceCellSwapEnergyCost;
 
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
@@ -59,14 +57,14 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
                 if (!playerEntity.isInLava()) {
                     playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
                 } else {
-                        if (Energy.of(itemStack).use(coolingEnergyCost)) {
+                        if (tryUseEnergy(itemStack, coolingEnergyCost)) {
                             playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
                         } else {
                             disableFireResist(playerEntity);
                         }
                 }
 
-                if (playerEntity.isOnFire() && Energy.of(itemStack).getEnergy() >= coolingEnergyCost * 2) {
+                if (playerEntity.isOnFire() && getStoredEnergy(itemStack) >= coolingEnergyCost * 2) {
                     playerEntity.extinguish();
                 }
             } else {
@@ -77,7 +75,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
                     for (int i = 0; i < playerEntity.getInventory().size(); i++) {
                         ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
                         if (iteratedStack.getItem() == TRContent.CELL) {
-                            if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air"))) && Energy.of(itemStack).use(airCanSwapEnergyCost)) {
+                            if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air"))) && tryUseEnergy(itemStack, airCanSwapEnergyCost)) {
                                 iteratedStack.decrement(1);
                                 ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
                                 playerEntity.giveItemStack(emptyCell);
@@ -190,13 +188,13 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     }
 
     @Override
-    public double getMaxStoredPower() {
-        return energyCapacity;
+    public long getEnergyCapacity() {
+        return (long)energyCapacity;
     }
 
     @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
+    public RcEnergyTier getTier() {
+        return RcEnergyTier.MEDIUM;
     }
 
     @Environment(EnvType.CLIENT)
@@ -222,11 +220,6 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     @Override
     public double getDurability(ItemStack stack) {
         return 1 - ItemUtils.getPowerForDurabilityBar(stack);
-    }
-
-    @Override
-    public double getMaxOutput(EnergySide side) {
-        return 0;
     }
 
     @Override
