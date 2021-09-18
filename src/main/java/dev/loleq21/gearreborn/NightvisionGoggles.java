@@ -67,7 +67,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, ItemD
                     if (ItemUtils.isActive(stack) && ((user.isCreative() || user.isSpectator()) || tryUseEnergy(stack, energyPerTickCost))) {
                         user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
                     }
-                    byte toggleCooldown = stack.getNbt().getByte("toggleTimer");
+                    byte toggleCooldown = stack.getOrCreateNbt().getByte("toggleTimer");
                     if (toggleCooldown > 0) {
                         --toggleCooldown;
                         stack.getOrCreateNbt().putByte("toggleTimer", toggleCooldown);

@@ -64,13 +64,16 @@ public class GearReborn implements ModInitializer {
             if (toggleCooldown == 0) {
                 stack.getOrCreateNbt().putByte("toggleTimer", (byte)10);
                 if (SimpleBatteryItem.getStoredEnergyUnchecked(stack) >= config.nvgActiveEnergyPerTickCost) {
-                    active = true;
-                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 1.1f);
-                } else if (active) {
-                    active = false;
-                    disableNightVision(world, player);
-                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.9f);
-                } else {
+                    if (!active) {
+                        active = true;
+                        world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 1.1f);
+                    } else {
+                        active = false;
+                        disableNightVision(world, player);
+                        world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.9f);
+                    }
+                }
+                else {
                     world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.6f);
                 }
                     stack.getOrCreateNbt().putBoolean("isActive", active);
