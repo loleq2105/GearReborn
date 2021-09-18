@@ -164,7 +164,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
 
     private void validateAirNbtTag(ItemStack stack) {
         GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
-        if (!stack.getNbt().contains("air", 3)){
+        if (!stack.getOrCreateNbt().contains("air", 3)){
             stack.getNbt().putInt("air", 0);
             return;
         }
@@ -184,12 +184,12 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
 
     @Override
     public boolean isEnchantable(ItemStack stack) {
-        return true;
+        return false;
     }
 
     @Override
     public long getEnergyCapacity() {
-        return (long)energyCapacity;
+        return energyCapacity;
     }
 
     @Override

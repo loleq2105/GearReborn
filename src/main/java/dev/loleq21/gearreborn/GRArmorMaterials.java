@@ -16,7 +16,7 @@ public enum GRArmorMaterials implements ArmorMaterial {
     RUBBER("rubber", 5, new int[]{2, 3, 3, 2}, 10, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0F, () -> {
         return Ingredient.ofItems(TRContent.Parts.RUBBER.asItem());
     }),
-    MISCGEAR("miscgear", 15, new int[]{1, 3, 4, 1}, 9, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, () -> {
+    MISCGEAR("miscgear", 15, new int[]{0, 3, 4, 1}, 9, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, () -> {
         return Ingredient.ofItems(TRContent.Ingots.REFINED_IRON);
     }),
     HAZMAT("hazmat", 8, new int[]{2, 2, 2, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, () -> {
