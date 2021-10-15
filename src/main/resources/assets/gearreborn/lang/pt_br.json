@@ -1,0 +1,20 @@
+ {
+   "item.gearreborn.rubber_helmet": "Boné de borracha",
+   "item.gearreborn.rubber_chestplate": "Peitoral de borracha",
+   "item.gearreborn.rubber_leggings": "Calças de borracha",
+   "item.gearreborn.rubber_boots": "Botas de borracha",
+   "item.gearreborn.nv_goggles": "Óculos de visão noturna",
+   "item.gearreborn.hazmat_helmet": "Capacete hazmat",
+   "item.gearreborn.hazmat_chestpiece": "Peitoral hazmat",
+   "item.gearreborn.hazmat_leggings": "Calças hazmat",
+   "item.gearreborn.stun_gun": "Arma de eletrochoque",
+   "key.gearreborn.toggle_nv": "Ligar/Desligar óculos de visão noturna",
+   "category.gearreborn.title": "Gear Reborn",
+   "itemGroup.gearreborn.items": "Gear Reborn",
+   "gearreborn.misc.deviceoff": "Inativo",
+   "gearreborn.misc.deviceon": "Ativo",
+   "gearreborn.misc.hazmatairpressure": "O₂",
+   "gearreborn.misc.shortstungunname": "Arma de eletrochoque",
+   "gearreborn.misc.stunguntooltipcapacitors": "Condensadores",
+   "subtitles.gearreborn.nvgblip": "Óculos de visão noturna ativados"
+ }
