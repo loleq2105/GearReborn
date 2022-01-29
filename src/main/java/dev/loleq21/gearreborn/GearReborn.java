@@ -62,7 +62,7 @@ public class GearReborn implements ModInitializer {
             GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
             if (toggleCooldown == 0) {
-                stack.getOrCreateNbt().putByte("toggleTimer", (byte)10);
+                stack.getOrCreateNbt().putByte("toggleTimer", (byte)8);
                 if (SimpleBatteryItem.getStoredEnergyUnchecked(stack) >= config.nvgActiveEnergyPerTickCost) {
                     if (!active) {
                         active = true;

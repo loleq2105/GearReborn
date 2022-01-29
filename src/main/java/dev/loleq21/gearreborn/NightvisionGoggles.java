@@ -59,9 +59,12 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, ItemD
 
             if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
 
-                if (world.isClient() && NV_KEY_BIND.isPressed()){
-                    ClientPlayNetworking.send(GearReborn.gogglesTogglePacketIdentifier, PacketByteBufs.empty());
+                if (world.isClient()){
+                    while(NV_KEY_BIND.wasPressed()) {
+                        ClientPlayNetworking.send(GearReborn.gogglesTogglePacketIdentifier, PacketByteBufs.empty());
+                    }
                 }
+
                 if (!world.isClient()) {
                     checkActive(stack, (int) energyPerTickCost, world.isClient(), MessageIDs.poweredToolID, world, user);
                     if (ItemUtils.isActive(stack) && ((user.isCreative() || user.isSpectator()) || tryUseEnergy(stack, energyPerTickCost))) {
