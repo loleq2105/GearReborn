@@ -1,28 +1,37 @@
 {
   "schemaVersion": 1,
-  "id": "GearReborn",
+  "id": "gearreborn",
   "version": "${version}",
-  "name": "GearReborn",
-  "description": "",
-  "authors": [],
-  "contact": {},
+  "name": "Gear Reborn",
+  "description": "Additional gear for Tech Reborn!",
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/gearreborn",
+    "sources": "https://github.com/loleq21/GearReborn",
+    "issues": "https://github.com/loleq2105/GearReborn/issues"
+  },
+  "authors": [
+    "loleq21"
+  ],
   "license": "MIT",
-  "icon": "assets/GearReborn/icon.png",
+  "icon": "assets/gearreborn/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "dev.loleq21.gearreborn.client.GearRebornClient"
+      "dev.loleq21.gearreborn.GearRebornClient"
     ],
     "main": [
       "dev.loleq21.gearreborn.GearReborn"
     ]
   },
   "mixins": [
-    "GearReborn.mixins.json"
+    "gearreborn.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.12.12",
+    "fabricloader": ">=0.11.3",
     "fabric": "*",
-    "minecraft": "1.17.1"
+    "minecraft": "1.17.x",
+    "java": ">=16",
+    "techreborn": "*",
+    "autoconfig1u": "*"
   }
 }
