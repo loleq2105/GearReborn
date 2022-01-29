@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#C#",
+        "#G#"
+    ],
+    "key": {
+        "#": {
+            "item": "techreborn:rubber"
+        },
+        "C": {
+            "item": "minecraft:yellow_dye"
+        },
+        "G": {
+            "item": "techreborn:reinforced_glass"
+        }
+    },
+    "result": {
+        "item": "gearreborn:hazmat_helmet",
+        "count": 1
+    }
+}

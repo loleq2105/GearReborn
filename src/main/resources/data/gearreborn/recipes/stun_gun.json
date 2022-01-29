@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " #N",
+        "Ki#",
+        "BK "
+    ],
+    "key": {
+        "#": {
+            "item": "techreborn:hv_cable"
+        },
+        "i": {
+            "item": "techreborn:insulated_copper_cable"
+        },
+        "K": {
+            "item": "techreborn:electronic_circuit"
+        },
+        "N": {
+            "tag": "c:refined_iron_ingots"
+        },
+        "B": {
+            "item": "techreborn:red_cell_battery"
+        }
+    },
+    "result": {
+        "item": "gearreborn:stun_gun",
+        "count": 1
+    }
+}

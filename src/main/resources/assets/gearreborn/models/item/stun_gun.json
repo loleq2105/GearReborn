@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "gearreborn:item/stun_gun_inactive"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "gearreborn:active": 1
+      },
+      "model": "gearreborn:item/stun_gun_active"
+    }
+  ]
+}

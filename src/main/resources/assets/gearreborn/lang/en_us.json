@@ -1,0 +1,24 @@
+ {
+
+   "item.gearreborn.rubber_helmet": "Rubber Cap",
+   "item.gearreborn.rubber_chestplate": "Rubber Tunic",
+   "item.gearreborn.rubber_leggings": "Rubber Leggings",
+   "item.gearreborn.rubber_boots": "Rubber Boots",
+   "item.gearreborn.nv_goggles": "Night Vision Goggles",
+   "item.gearreborn.hazmat_helmet": "Hazmat Helmet",
+   "item.gearreborn.hazmat_chestpiece": "Hazmat Chestpiece",
+   "item.gearreborn.hazmat_leggings": "Hazmat Bottoms",
+   "item.gearreborn.stun_gun": "Stun Gun",
+   "key.gearreborn.toggle_nv": "Toggle Night Vision Goggles",
+   "category.gearreborn.title": "Gear Reborn",
+   "itemGroup.gearreborn.items": "Gear Reborn",
+   "gearreborn.misc.deviceoff": "Inactive",
+   "gearreborn.misc.deviceon": "Active",
+   "gearreborn.misc.hazmatairpressure": "O₂",
+   "gearreborn.misc.shortstungunname": "Stun Gun",
+   "gearreborn.misc.stunguntooltipcapacitors": "Capacitors",
+   "subtitles.gearreborn.nvgblip": "Night Vision Goggles blip"
+
+
+
+ }

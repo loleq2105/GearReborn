@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.loleq21.gearreborn.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "LivingEntityMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
