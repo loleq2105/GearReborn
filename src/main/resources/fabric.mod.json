@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "GearReborn",
+  "version": "${version}",
+  "name": "GearReborn",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/GearReborn/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "dev.loleq21.gearreborn.client.GearRebornClient"
+    ],
+    "main": [
+      "dev.loleq21.gearreborn.GearReborn"
+    ]
+  },
+  "mixins": [
+    "GearReborn.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": "1.17.1"
+  }
+}
