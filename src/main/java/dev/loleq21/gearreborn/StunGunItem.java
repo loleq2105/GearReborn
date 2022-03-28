@@ -27,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
 import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
-import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
 import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
@@ -35,7 +34,7 @@ import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
-public class StunGunItem extends Item implements RcEnergyItem, ItemDurabilityExtensions {
+public class StunGunItem extends Item implements RcEnergyItem {
 
     public StunGunItem() {
         super(new Settings().group(GearReborn.ITEMGROUP).maxCount(1));
@@ -159,23 +158,23 @@ public class StunGunItem extends Item implements RcEnergyItem, ItemDurabilityExt
     }
 
     @Override
-    public double getDurability(ItemStack stack) {
-        return 1 - ItemUtils.getPowerForDurabilityBar(stack);
+    public int getItemBarStep(ItemStack stack) {
+        return ItemUtils.getPowerForDurabilityBar(stack);
     }
 
     @Override
-    public boolean showDurability(ItemStack stack) {
+    public boolean isItemBarVisible(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
+    public int getItemBarColor(ItemStack stack) {
+        return ItemUtils.getColorForDurabilityBar(stack);
     }
 
-    @Override
-    public int getDurabilityColor(ItemStack stack) {
-        return PowerSystem.getDisplayPower().colour;
+
+    public boolean isEnchantable(ItemStack stack) {
+        return false;
     }
 
     @Override

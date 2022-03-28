@@ -27,7 +27,6 @@ import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ChatUtils;
-import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
 import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
@@ -36,7 +35,7 @@ import java.util.List;
 
 import static dev.loleq21.gearreborn.GearRebornClient.NV_KEY_BIND;
 
-public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, ItemDurabilityExtensions, ArmorRemoveHandler {
+public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, ArmorRemoveHandler {
 
     public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).maxDamage(-1));
@@ -92,23 +91,22 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, ItemD
     }
 
     @Override
-    public double getDurability(ItemStack stack) {
-        return 1 - ItemUtils.getPowerForDurabilityBar(stack);
+    public int getItemBarStep(ItemStack stack) {
+        return ItemUtils.getPowerForDurabilityBar(stack);
     }
 
     @Override
-    public boolean showDurability(ItemStack stack) {
+    public boolean isItemBarVisible(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
+    public int getItemBarColor(ItemStack stack) {
+        return ItemUtils.getColorForDurabilityBar(stack);
     }
 
-    @Override
-    public int getDurabilityColor(ItemStack stack) {
-        return PowerSystem.getDisplayPower().colour;
+    public boolean isEnchantable(ItemStack stack) {
+        return false;
     }
 
     @Override
