@@ -15,6 +15,7 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -65,7 +66,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
                 }
 
                 if (!world.isClient()) {
-                    checkActive(stack, (int) energyPerTickCost, world.isClient(), MessageIDs.poweredToolID, world, user);
+                    checkActive(stack, (int) energyPerTickCost, MessageIDs.poweredToolID, world, user);
                     if (ItemUtils.isActive(stack) && ((user.isCreative() || user.isSpectator()) || tryUseEnergy(stack, energyPerTickCost))) {
                         user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
                     }
@@ -134,7 +135,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
         InitUtils.initPoweredItems(this, itemList);
     }
 
-    private void checkActive(ItemStack stack, int cost, boolean isClient, int messageId, World world, PlayerEntity user) {
+    private void checkActive(ItemStack stack, int cost, int messageId, World world, PlayerEntity user) {
         if (!ItemUtils.isActive(stack)) {
             disableNightVision(world, user);
             return;
@@ -142,8 +143,8 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
         if (getStoredEnergy(stack) >= cost) {
             return;
         }
-        if (isClient) {
-            ChatUtils.sendNoSpamMessages(messageId, new TranslatableText("reborncore.message.energyError")
+        if (user instanceof ServerPlayerEntity serverPlayerEntity) {
+            ChatUtils.sendNoSpamMessage(serverPlayerEntity, messageId, new TranslatableText("reborncore.message.energyError")
                     .formatted(Formatting.GRAY)
                     .append(" ")
                     .append(

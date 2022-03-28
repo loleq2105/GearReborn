@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -55,7 +56,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, world.isClient(), MessageIDs.poweredToolID);
+        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, MessageIDs.poweredToolID, entity);
         if (ItemUtils.isActive(stack)) {
             if (getCapacitorCharge(stack) < capacitorChargeUnits && tryUseEnergy(stack, zapEnergyCost)) {
                 setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
@@ -68,7 +69,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
         final ItemStack stack = player.getStackInHand(hand);
         if (player.isSneaking()) {
-            GRItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "gearreborn.misc.shortstungunname");
+            GRItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "gearreborn.misc.shortstungunname", player);
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
