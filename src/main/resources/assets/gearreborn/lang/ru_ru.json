@@ -1,0 +1,20 @@
+ {
+   "item.gearreborn.rubber_helmet": "Резиновый шлем",
+   "item.gearreborn.rubber_chestplate": "Резиновый нагрудник",
+   "item.gearreborn.rubber_leggings": "Резиновые поножи",
+   "item.gearreborn.rubber_boots": "Резиновые ботинки",
+   "item.gearreborn.nv_goggles": "Очки ночного видения",
+   "item.gearreborn.hazmat_helmet": "Защитный шлем",
+   "item.gearreborn.hazmat_chestpiece": "Защитный нагрудник",
+   "item.gearreborn.hazmat_leggings": "Защитные штаны",
+   "item.gearreborn.stun_gun": "Электрошокер",
+   "key.gearreborn.toggle_nv": "Переключить очки ночного видения",
+   "category.gearreborn.title": "Gear Reborn",
+   "itemGroup.gearreborn.items": "Gear Reborn",
+   "gearreborn.misc.deviceoff": "Неактивно",
+   "gearreborn.misc.deviceon": "Активно",
+   "gearreborn.misc.hazmatairpressure": "O₂",
+   "gearreborn.misc.shortstungunname": "Электрошокер",
+   "gearreborn.misc.stunguntooltipcapacitors": "Конденсаторы",
+   "subtitles.gearreborn.nvgblip": "Свечение очков ночного видения"
+ }

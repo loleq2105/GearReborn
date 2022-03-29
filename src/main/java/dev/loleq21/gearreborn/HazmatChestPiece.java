@@ -27,7 +27,6 @@ import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
-import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
 import techreborn.init.TRContent;
 import techreborn.utils.InitUtils;
@@ -37,7 +36,7 @@ import java.util.List;
 import static dev.loleq21.gearreborn.HazmatSuitUtils.playerIsWearingChestAndHelm;
 import static dev.loleq21.gearreborn.HazmatSuitUtils.playerIsWearingFullHazmat;
 
-public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem, ItemDurabilityExtensions, ArmorRemoveHandler {
+public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem, ArmorRemoveHandler {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof().maxDamage(-1));
@@ -182,7 +181,6 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
         }
     }
 
-    @Override
     public boolean isEnchantable(ItemStack stack) {
         return false;
     }
@@ -218,18 +216,18 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     }
 
     @Override
-    public double getDurability(ItemStack stack) {
-        return 1 - ItemUtils.getPowerForDurabilityBar(stack);
+    public int getItemBarStep(ItemStack stack) {
+        return ItemUtils.getPowerForDurabilityBar(stack);
     }
 
     @Override
-    public boolean showDurability(ItemStack stack) {
+    public boolean isItemBarVisible(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getDurabilityColor(ItemStack stack) {
-        return PowerSystem.getDisplayPower().colour;
+    public int getItemBarColor(ItemStack stack) {
+        return ItemUtils.getColorForDurabilityBar(stack);
     }
 
     @Override

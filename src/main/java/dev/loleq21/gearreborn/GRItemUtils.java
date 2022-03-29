@@ -1,6 +1,8 @@
 package dev.loleq21.gearreborn;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -16,16 +18,16 @@ public class GRItemUtils {
         return !stack.isEmpty() && stack.getNbt() != null && stack.getNbt().getBoolean("isActive");
     }
 
-    public static void switchActive(ItemStack stack, boolean isClient, int messageId, String messageTranslationKey) {
+    public static void switchActive(ItemStack stack, boolean isClient, int messageId, String messageTranslationKey, Entity entity) {
         if (!isActive(stack)) {
             stack.getOrCreateNbt().putBoolean("isActive", true);
-            if (isClient) {
-                ChatUtils.sendNoSpamMessages(messageId, (new TranslatableText(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceon").formatted(Formatting.GOLD))));
+            if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
+                ChatUtils.sendNoSpamMessage(serverPlayerEntity, messageId, (new TranslatableText(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceon").formatted(Formatting.GOLD))));
             }
         } else {
             stack.getOrCreateNbt().putBoolean("isActive", false);
-            if (isClient) {
-                ChatUtils.sendNoSpamMessages(messageId, (new TranslatableText(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceoff").formatted(Formatting.GOLD))));
+            if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
+                ChatUtils.sendNoSpamMessage(serverPlayerEntity, messageId, (new TranslatableText(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(new TranslatableText("gearreborn.misc.deviceoff").formatted(Formatting.GOLD))));
             }
         }
 

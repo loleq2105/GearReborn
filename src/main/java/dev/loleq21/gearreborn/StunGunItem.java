@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -27,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
-import reborncore.common.util.ItemDurabilityExtensions;
 import reborncore.common.util.ItemUtils;
 import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
@@ -35,7 +35,7 @@ import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
-public class StunGunItem extends Item implements RcEnergyItem, ItemDurabilityExtensions {
+public class StunGunItem extends Item implements RcEnergyItem {
 
     public StunGunItem() {
         super(new Settings().group(GearReborn.ITEMGROUP).maxCount(1));
@@ -56,7 +56,7 @@ public class StunGunItem extends Item implements RcEnergyItem, ItemDurabilityExt
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, world.isClient(), MessageIDs.poweredToolID);
+        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, MessageIDs.poweredToolID, entity);
         if (ItemUtils.isActive(stack)) {
             if (getCapacitorCharge(stack) < capacitorChargeUnits && tryUseEnergy(stack, zapEnergyCost)) {
                 setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
@@ -69,7 +69,7 @@ public class StunGunItem extends Item implements RcEnergyItem, ItemDurabilityExt
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
         final ItemStack stack = player.getStackInHand(hand);
         if (player.isSneaking()) {
-            GRItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "gearreborn.misc.shortstungunname");
+            GRItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "gearreborn.misc.shortstungunname", player);
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
@@ -159,23 +159,23 @@ public class StunGunItem extends Item implements RcEnergyItem, ItemDurabilityExt
     }
 
     @Override
-    public double getDurability(ItemStack stack) {
-        return 1 - ItemUtils.getPowerForDurabilityBar(stack);
+    public int getItemBarStep(ItemStack stack) {
+        return ItemUtils.getPowerForDurabilityBar(stack);
     }
 
     @Override
-    public boolean showDurability(ItemStack stack) {
+    public boolean isItemBarVisible(ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
+    public int getItemBarColor(ItemStack stack) {
+        return ItemUtils.getColorForDurabilityBar(stack);
     }
 
-    @Override
-    public int getDurabilityColor(ItemStack stack) {
-        return PowerSystem.getDisplayPower().colour;
+
+    public boolean isEnchantable(ItemStack stack) {
+        return false;
     }
 
     @Override
