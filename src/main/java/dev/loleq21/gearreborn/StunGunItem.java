@@ -69,7 +69,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
         final ItemStack stack = player.getStackInHand(hand);
         if (player.isSneaking()) {
-            GRItemUtils.switchActive(stack, world.isClient(), MessageIDs.poweredToolID, "gearreborn.misc.shortstungunname", player);
+            ItemUtils.switchActive(stack, 0, MessageIDs.poweredToolID, player);
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
