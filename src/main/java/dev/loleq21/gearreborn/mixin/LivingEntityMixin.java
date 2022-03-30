@@ -1,6 +1,8 @@
 package dev.loleq21.gearreborn.mixin;
 
 import dev.loleq21.gearreborn.GRContent;
+import dev.loleq21.gearreborn.HazmatSuitUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -12,6 +14,8 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.tag.ItemTags;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,6 +32,8 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow protected abstract int computeFallDamage(float fallDistance, float damageMultiplier);
 
+
+    @Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition);
 
     private void spawnBootParticles(ItemStack stack, float fallDistance) {
         double d = Math.min((double)(0.2F + fallDistance / 15.0F), 2.5D);
@@ -68,4 +74,16 @@ public abstract class LivingEntityMixin extends Entity {
             }
         }
     }
+
+    @Inject(at = @At("HEAD"), method = "canFreeze", cancellable = true)
+    private void canFreeze(CallbackInfoReturnable<Boolean> cir) {
+
+        if((Object) this instanceof PlayerEntity && HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity) (Object)this)){
+            cir.setReturnValue(false);
+        }
+
+    }
+
+
+
 }
