@@ -13,6 +13,9 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -79,6 +82,8 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
                                 ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
                                 playerEntity.giveItemStack(emptyCell);
                                 setStoredAir(itemStack, airCapacity);
+                                World world = playerEntity.getEntityWorld();
+                                world.playSound(null, playerEntity.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.NEUTRAL, 0.8F, 1.0F + (world.random.nextFloat() - world.random.nextFloat()) * 0.4F);
                             }
                         }
                     }
