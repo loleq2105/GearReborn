@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "LivingEntityMixin",
-    "PowderSnowBlockMixin"
+    "PowderSnowBlockMixin",
+    "BeeEntityMixin"
   ],
   "client": [
   ],
