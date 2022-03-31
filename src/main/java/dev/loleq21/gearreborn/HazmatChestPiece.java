@@ -47,7 +47,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     public final int airCapacity = config.hazmatChestpieceAirTicksCapacity;
     public final long energyCapacity = config.hazmatChestpieceEnergyCapacity;
     public final long coolingEnergyCost = config.hazmatChestpieceLavaCoolingEnergyCost;
-    public final long airCanSwapEnergyCost = config.hazmatChestpieceCellSwapEnergyCost;
+
 
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
@@ -74,7 +74,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
                     for (int i = 0; i < playerEntity.getInventory().size(); i++) {
                         ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
                         if (iteratedStack.getItem() == TRContent.CELL) {
-                            if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air"))) && tryUseEnergy(itemStack, airCanSwapEnergyCost)) {
+                            if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air")))) {
                                 iteratedStack.decrement(1);
                                 ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
                                 playerEntity.giveItemStack(emptyCell);
