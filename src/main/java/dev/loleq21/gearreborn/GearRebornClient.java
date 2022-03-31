@@ -15,10 +15,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.tick.Tick;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import reborncore.common.util.ItemUtils;
@@ -28,7 +26,7 @@ import team.reborn.energy.api.base.SimpleBatteryItem;
 @Environment(EnvType.CLIENT)
 public class GearRebornClient implements ClientModInitializer {
 
-    boolean e = true;
+    boolean canToggleGoggles = true;
     public static final KeyBinding NV_KEY_BIND = new KeyBinding("key.gearreborn.toggle_nv",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_N,
@@ -63,12 +61,12 @@ public class GearRebornClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (NV_KEY_BIND.isPressed()) {
-                if (!e) return;
-                e = !e;
+                if (!canToggleGoggles) return;
+                canToggleGoggles = !canToggleGoggles;
                 ClientPlayNetworking.send(GearReborn.gogglesTogglePacketIdentifier, PacketByteBufs.empty());
             }
             if (!NV_KEY_BIND.isPressed()){
-                e=true;
+                canToggleGoggles=true;
             }
         });
 

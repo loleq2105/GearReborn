@@ -236,6 +236,11 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     public void onRemoved(PlayerEntity playerEntity) {
         removeEffects(playerEntity);
     }
+
+    @Override
+    public boolean isDamageable() {
+        return false;
+    }
 }
 
 
