@@ -56,13 +56,10 @@ public class GearReborn implements ModInitializer {
 
         ServerPlayNetworking.registerGlobalReceiver(gogglesTogglePacketIdentifier, (client, player, responseSender, buf, handler) -> {
             ItemStack stack = player.getEquippedStack(EquipmentSlot.HEAD);
-            byte toggleCooldown = stack.getNbt().getByte("toggleTimer");
             boolean active = stack.getNbt().getBoolean("isActive");
             World world = player.getEntityWorld();
             GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
-            if (toggleCooldown == 0) {
-                stack.getOrCreateNbt().putByte("toggleTimer", (byte)8);
                 if (SimpleBatteryItem.getStoredEnergyUnchecked(stack) >= config.nvgActiveEnergyPerTickCost) {
                     if (!active) {
                         active = true;
@@ -77,7 +74,7 @@ public class GearReborn implements ModInitializer {
                     world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.6f);
                 }
                 stack.getOrCreateNbt().putBoolean("isActive", active);
-            }
+
         });
     }
 }
