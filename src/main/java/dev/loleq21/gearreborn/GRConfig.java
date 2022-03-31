@@ -12,8 +12,6 @@ public class GRConfig implements ConfigData {
     int hazmatChestpieceAirTicksCapacity = 524;
     @Comment("How much energy (expressed in E) per tick the hazmat chestpiece consumes when shielding the player from lava damage")
     int hazmatChestpieceLavaCoolingEnergyCost = 32;
-    @Comment("How much energy (expressed in E) the hazmat chestpiece consumes when swapping its internal compressed air cell")
-    int hazmatChestpieceCellSwapEnergyCost = 128;
     @Comment("How much energy (expressed in E) per tick the NVG consume when they're active and on the player's head")
     int nvgActiveEnergyPerTickCost = 16;
     @Comment("The energy capacity of the NVG, expressed in E")
