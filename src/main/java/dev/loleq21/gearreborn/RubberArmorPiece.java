@@ -1,5 +1,7 @@
 package dev.loleq21.gearreborn;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -8,11 +10,10 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import reborncore.api.items.ItemStackModifiers;
 
 import java.util.UUID;
 
-public class RubberArmorPiece extends ArmorItem implements ItemStackModifiers {
+public class RubberArmorPiece extends ArmorItem {
 
     public RubberArmorPiece(ArmorMaterial material, EquipmentSlot slot){
         super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1));
@@ -22,10 +23,14 @@ public class RubberArmorPiece extends ArmorItem implements ItemStackModifiers {
 
 
     @Override
-    public void getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack itemStack, Multimap<EntityAttribute, EntityAttributeModifier> multimap) {
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot equipmentSlot) {
+        var attributes = ArrayListMultimap.create(super.getAttributeModifiers(stack, slot));
+
         if (equipmentSlot == this.slot) {
-            multimap.put(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, new EntityAttributeModifier(MODIFIERS[slot.getEntitySlotId()], "Knockback modifier", 0.06, EntityAttributeModifier.Operation.ADDITION));
+            attributes.put(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, new EntityAttributeModifier(MODIFIERS[slot.getEntitySlotId()], "Knockback modifier", 0.06, EntityAttributeModifier.Operation.ADDITION));
         }
+
+        return ImmutableMultimap.copyOf(attributes);
     }
 
 }
