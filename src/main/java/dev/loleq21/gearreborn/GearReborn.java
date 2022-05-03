@@ -56,26 +56,32 @@ public class GearReborn implements ModInitializer {
 
         ServerPlayNetworking.registerGlobalReceiver(gogglesTogglePacketIdentifier, (client, player, responseSender, buf, handler) -> {
             ItemStack stack = player.getEquippedStack(EquipmentSlot.HEAD);
-            boolean active = stack.getNbt().getBoolean("isActive");
+
+            if (stack.getItem() == GRContent.NV_GOGGLES.asItem()){
+                boolean active = stack.getNbt().getBoolean("isActive");
             World world = player.getEntityWorld();
             GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
-                if (SimpleBatteryItem.getStoredEnergyUnchecked(stack) >= config.nvgActiveEnergyPerTickCost) {
-                    if (!active) {
-                        active = true;
-                        world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 1.1f);
-                    } else {
-                        active = false;
-                        disableNightVision(world, player);
-                        world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.9f);
-                    }
+            if (SimpleBatteryItem.getStoredEnergyUnchecked(stack) >= config.nvgActiveEnergyPerTickCost) {
+                if (!active) {
+                    active = true;
+                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 1.1f);
+                } else {
+                    active = false;
+                    disableNightVision(world, player);
+                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.9f);
                 }
-                else {
-                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.6f);
-                }
-                stack.getOrCreateNbt().putBoolean("isActive", active);
+            } else {
+                world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.6f);
+            }
+            stack.getOrCreateNbt().putBoolean("isActive", active);
+
+        }
 
         });
+
+
+
     }
 }
 
