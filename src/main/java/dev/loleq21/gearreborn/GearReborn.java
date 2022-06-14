@@ -58,7 +58,7 @@ public class GearReborn implements ModInitializer {
             ItemStack stack = player.getEquippedStack(EquipmentSlot.HEAD);
 
             if (stack.getItem() == GRContent.NV_GOGGLES.asItem()){
-                boolean active = stack.getNbt().getBoolean("isActive");
+                boolean active = stack.getOrCreateNbt().getBoolean("isActive");
             World world = player.getEntityWorld();
             GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 

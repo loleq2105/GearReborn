@@ -68,7 +68,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
     @Override
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
         if (!player.isSneaking()) {
-            return new TypedActionResult<>(ActionResult.PASS, null);
+            return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
         }
         final ItemStack stack = player.getStackInHand(hand);
         ItemUtils.switchActive(stack, 0, MessageIDs.poweredToolID, player);
