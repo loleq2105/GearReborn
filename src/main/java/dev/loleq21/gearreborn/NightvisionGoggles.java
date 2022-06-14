@@ -3,8 +3,6 @@ package dev.loleq21.gearreborn;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -32,8 +30,6 @@ import techreborn.utils.InitUtils;
 import techreborn.utils.MessageIDs;
 
 import java.util.List;
-
-import static dev.loleq21.gearreborn.GearRebornClient.NV_KEY_BIND;
 
 public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, ArmorRemoveHandler {
 
@@ -69,16 +65,16 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
             return;
         }
 
+        if (!ItemUtils.isActive(stack)) {
+            return;
+        }
+
         if (user.isCreative() || user.isSpectator()) {
             user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
             return;
         }
 
         checkActive(stack, (int) energyPerTickCost, MessageIDs.poweredToolID, world, user);
-
-        if (!ItemUtils.isActive(stack)) {
-            return;
-        }
 
         if (!tryUseEnergy(stack, energyPerTickCost)) {
             return;

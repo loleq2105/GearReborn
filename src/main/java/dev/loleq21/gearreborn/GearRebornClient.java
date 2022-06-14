@@ -36,8 +36,10 @@ public class GearRebornClient implements ClientModInitializer {
     public void onInitializeClient() {
 
         KeyBindingHelper.registerKeyBinding(NV_KEY_BIND);
-        //predicates for animated textures
         GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
+
+        //predicates for animated textures
+
         registerPredicateProvider(
                 StunGunItem.class,
                 new Identifier("gearreborn:active"),
