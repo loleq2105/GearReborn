@@ -15,8 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -25,7 +24,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemUtils;
@@ -192,14 +190,14 @@ public class StunGunItem extends Item implements RcEnergyItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         GRItemUtils.buildActiveTooltip(stack, tooltip);
-        LiteralText line1 = new LiteralText("[");
+        MutableText line1 = Text.literal("[");
         line1.formatted(Formatting.GRAY);
         if (getCapCharge4ToolTip(stack)==capacitorChargeUnits) {
-            line1.append(new LiteralText("■").formatted(Formatting.GREEN));
+            line1.append(Text.literal("■").formatted(Formatting.GREEN));
         } else if (getCapCharge4ToolTip(stack)==0){
-            line1.append(new LiteralText("■").formatted(Formatting.DARK_GRAY));
+            line1.append(Text.literal("■").formatted(Formatting.DARK_GRAY));
         } else {
-            line1.append(new LiteralText("■").formatted(Formatting.YELLOW));
+            line1.append(Text.literal("■").formatted(Formatting.YELLOW));
         }
         line1.append("]");
         line1.formatted(Formatting.GRAY);

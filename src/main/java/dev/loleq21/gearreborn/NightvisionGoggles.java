@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -144,11 +143,11 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
             return;
         }
         if (user instanceof ServerPlayerEntity serverPlayerEntity) {
-            ChatUtils.sendNoSpamMessage(serverPlayerEntity, messageId, new TranslatableText("reborncore.message.energyError")
+            ChatUtils.sendNoSpamMessage(serverPlayerEntity, messageId, Text.translatable("reborncore.message.energyError")
                     .formatted(Formatting.GRAY)
                     .append(" ")
                     .append(
-                            new TranslatableText("reborncore.message.deactivating")
+                            Text.translatable("reborncore.message.deactivating")
                                     .formatted(Formatting.GOLD)
                     )
             );

@@ -63,7 +63,7 @@ public abstract class LivingEntityMixin extends Entity {
                         player.sendEquipmentBreakStatus(EquipmentSlot.FEET);
                     }
                     if (bootDamage > 0) {
-                        equippedBootsItemStack.damage(bootDamage, new Random(), (ServerPlayerEntity) player);
+                        equippedBootsItemStack.damage(bootDamage, (net.minecraft.util.math.random.Random) new Random(), (ServerPlayerEntity) player);
                         spawnBootParticles(TRContent.Parts.RUBBER.getStack(), fallDistance);
                     }
                     if (userDamage > 0) {

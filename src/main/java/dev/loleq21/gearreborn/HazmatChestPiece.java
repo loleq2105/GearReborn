@@ -16,9 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -203,10 +202,10 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        LiteralText line1 = new LiteralText(String.valueOf((getStoredAir4ToolTip(stack)*100)/airCapacity));
+        MutableText line1 = Text.literal(String.valueOf((getStoredAir4ToolTip(stack)*100)/airCapacity));
         line1.append("%");
         line1.append(" ");
-        line1.append(new TranslatableText("gearreborn.misc.hazmatairpressure"));
+        line1.append(Text.translatable("gearreborn.misc.hazmatairpressure"));
         line1.formatted(Formatting.AQUA);
         tooltip.add(1, line1);
     }
