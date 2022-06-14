@@ -16,6 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -63,7 +64,7 @@ public abstract class LivingEntityMixin extends Entity {
                         player.sendEquipmentBreakStatus(EquipmentSlot.FEET);
                     }
                     if (bootDamage > 0) {
-                        equippedBootsItemStack.damage(bootDamage, (net.minecraft.util.math.random.Random) new Random(), (ServerPlayerEntity) player);
+                        equippedBootsItemStack.damage(bootDamage, new LocalRandom(new Random().nextLong()), (ServerPlayerEntity) player);
                         spawnBootParticles(TRContent.Parts.RUBBER.getStack(), fallDistance);
                     }
                     if (userDamage > 0) {
