@@ -15,8 +15,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -25,7 +25,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemUtils;
@@ -57,69 +56,73 @@ public class StunGunItem extends Item implements RcEnergyItem {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, MessageIDs.poweredToolID, entity);
-        if (ItemUtils.isActive(stack)) {
-            if (getCapacitorCharge(stack) < capacitorChargeUnits && tryUseEnergy(stack, zapEnergyCost)) {
-                setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
-                entity.playSound(ModSounds.CABLE_SHOCK, 0.4F, 1.0F);
-            }
+        if (!ItemUtils.isActive(stack)) {
+            return;
+        }
+        if (getCapacitorCharge(stack) < capacitorChargeUnits && tryUseEnergy(stack, zapEnergyCost)) {
+            setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
+            entity.playSound(ModSounds.CABLE_SHOCK, 0.4F, 1.0F);
         }
     }
 
     @Override
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
-        final ItemStack stack = player.getStackInHand(hand);
-        if (player.isSneaking()) {
-            ItemUtils.switchActive(stack, 0, MessageIDs.poweredToolID, player);
-            return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+        if (!player.isSneaking()) {
+            return new TypedActionResult<>(ActionResult.PASS, null);
         }
-        return new TypedActionResult<>(ActionResult.PASS, stack);
+        final ItemStack stack = player.getStackInHand(hand);
+        ItemUtils.switchActive(stack, 0, MessageIDs.poweredToolID, player);
+        return new TypedActionResult<>(ActionResult.SUCCESS, stack);
     }
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (ItemUtils.isActive(stack) && getCapacitorCharge(stack) == capacitorChargeUnits) {
 
-            if (target instanceof CreeperEntity) {
-                CreeperEntity creeper = (CreeperEntity) target;
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 4, false, true, true));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 2, false, true, true));
-                if (igniteCreeper) {
-                    creeper.ignite();
-                }
-                target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
-                setCapacitorCharge(stack, 0);
-                return true;
-            }
-            else if (target.getGroup() == EntityGroup.ARTHROPOD) {
-                target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 4, false, true, true));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 2, false, true, true));
-                setCapacitorCharge(stack, 0);
-                if (attacker instanceof PlayerEntity) {
-                    target.damage(DamageSource.player((PlayerEntity) attacker), arthropodDamage);
-                    return true;
-                }
-                return false;
-            }
-            else if (GearReborn.bossMobs.contains(target.getType()) && !stunBosses){
-                target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
-                setCapacitorCharge(stack, 0);
-                return false;
-            }
-            else {
-                if (target instanceof PlayerEntity) {
-                    if (HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity)target)) {
-                        return false;
-                    }
-                }
-                target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 0.8F);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 5, false, true, true));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 4, false, true, true));
-                setCapacitorCharge(stack, 0);
-                return true;
-            }
-        }
+        if (!ItemUtils.isActive(stack)) {
             return false;
+        }
+
+        if (getCapacitorCharge(stack) != capacitorChargeUnits) {
+            return false;
+        }
+
+        if (target instanceof CreeperEntity) {
+            CreeperEntity creeper = (CreeperEntity) target;
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 4, false, true, true));
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 2, false, true, true));
+            if (igniteCreeper) {
+                creeper.ignite();
+            }
+            target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
+            setCapacitorCharge(stack, 0);
+            return true;
+        } else if (target.getGroup() == EntityGroup.ARTHROPOD) {
+            target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 4, false, true, true));
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 2, false, true, true));
+            setCapacitorCharge(stack, 0);
+            if (attacker instanceof PlayerEntity) {
+                target.damage(DamageSource.player((PlayerEntity) attacker), arthropodDamage);
+                return true;
+            }
+            return false;
+        } else if (GearReborn.bossMobs.contains(target.getType()) && !stunBosses) {
+            target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
+            setCapacitorCharge(stack, 0);
+            return false;
+        } else {
+            if (target instanceof PlayerEntity) {
+                if (HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity) target)) {
+                    return false;
+                }
+            }
+            target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 0.8F);
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 5, false, true, true));
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 4, false, true, true));
+            setCapacitorCharge(stack, 0);
+            return true;
+        }
+
     }
 
 
@@ -141,11 +144,11 @@ public class StunGunItem extends Item implements RcEnergyItem {
 
     private static void validateCapChargeNbtTag(ItemStack stack) {
         GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
-        if (!stack.getNbt().contains("capcharge", 3)){
+        if (!stack.getNbt().contains("capcharge", 3)) {
             stack.getNbt().putInt("capcharge", 0);
             return;
         }
-        if (stack.getNbt().getInt("capcharge")>config.stungunChargeTicks) {
+        if (stack.getNbt().getInt("capcharge") > config.stungunChargeTicks) {
             stack.getNbt().putInt("capcharge", config.stungunChargeTicks);
         }
 
@@ -155,7 +158,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
         if (stack.hasNbt()) {
             return stack.getNbt().getInt("capcharge");
         }
-            return 0;
+        return 0;
     }
 
     @Override
@@ -214,7 +217,6 @@ public class StunGunItem extends Item implements RcEnergyItem {
         }
         InitUtils.initPoweredItems(this, itemList);
     }
-
 
 
 }

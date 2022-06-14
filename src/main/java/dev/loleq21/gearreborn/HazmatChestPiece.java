@@ -14,7 +14,6 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -27,7 +26,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
 import reborncore.api.items.ArmorRemoveHandler;
-import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemUtils;
@@ -54,8 +52,65 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
 
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
-        if(!playerEntity.getEntityWorld().isClient()) {
-            if (playerIsWearingFullHazmat(playerEntity)) {
+
+        if (playerEntity.getEntityWorld().isClient()) {
+            return;
+        }
+
+        if (!playerIsWearingChestAndHelm(playerEntity)) {
+            return;
+        }
+
+        if ((getStoredAir(itemStack) == 0)) {
+            for (int i = 0; i < playerEntity.getInventory().size(); i++) {
+                ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
+                if (iteratedStack.getItem() == TRContent.CELL) {
+                    if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air")))) {
+                        iteratedStack.decrement(1);
+                        ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
+                        playerEntity.giveItemStack(emptyCell);
+                        setStoredAir(itemStack, airCapacity);
+                        World world = playerEntity.getEntityWorld();
+                        world.playSound(null, playerEntity.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.NEUTRAL, 0.8F, 1.0F + (world.random.nextFloat() - world.random.nextFloat()) * 0.4F);
+                    }
+                }
+            }
+        }
+
+        if (playerEntity.isSubmergedInWater()) {
+            if (useStoredAir(itemStack, 1)) {
+                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, false));
+            } else {
+                disableWaterBreathing(playerEntity);
+            }
+        } else {
+            disableWaterBreathing(playerEntity);
+        }
+
+        if (!playerIsWearingFullHazmat(playerEntity)) {
+            disableFireResist(playerEntity);
+            return;
+        }
+
+        if (!playerEntity.isInLava()) {
+            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
+        } else {
+            if (tryUseEnergy(itemStack, coolingEnergyCost)) {
+                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
+            } else {
+                disableFireResist(playerEntity);
+            }
+        }
+
+        if (playerEntity.isOnFire() && getStoredEnergy(itemStack) >= coolingEnergyCost * 2) {
+            playerEntity.extinguish();
+        }
+
+    }
+
+        /*
+
+        if (playerIsWearingFullHazmat(playerEntity)) {
                 if (!playerEntity.isInLava()) {
                     playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
                 } else {
@@ -88,48 +143,49 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
                         }
                     }
                 }
-                if (playerIsWearingChestAndHelm(playerEntity)) {
-                    if (playerEntity.isSubmergedInWater()) {
-                        if (useStoredAir(itemStack, 1)) {
-                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, false));
-                        } else {
-                            disableWaterBreathing(playerEntity);
-                        }
-                    } else {
-                        disableWaterBreathing(playerEntity);
-                    }
+        f (playerIsWearingChestAndHelm(playerEntity)) {
+            if (playerEntity.isSubmergedInWater()) {
+                if (useStoredAir(itemStack, 1)) {
+                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, false));
+                } else {
+                    disableWaterBreathing(playerEntity);
                 }
+            } else {
+                disableWaterBreathing(playerEntity);
+            }
+        }
                 else {
                     disableWaterBreathing(playerEntity);
                 }
         }
-    }
 
-    private void disableFireResist(PlayerEntity playerEntity){
+    */
+
+    private void disableFireResist(PlayerEntity playerEntity) {
         if (!playerEntity.getEntityWorld().isClient()) {
             playerEntity.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
         }
     }
 
-    private void disableWaterBreathing(PlayerEntity playerEntity){
+    private void disableWaterBreathing(PlayerEntity playerEntity) {
         if (!playerEntity.getEntityWorld().isClient()) {
             playerEntity.removeStatusEffect(StatusEffects.WATER_BREATHING);
         }
     }
-    
+
     private void removeEffects(PlayerEntity playerEntity) {
         if (!playerEntity.getEntityWorld().isClient()) {
             playerEntity.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
             playerEntity.removeStatusEffect(StatusEffects.WATER_BREATHING);
         }
     }
-    
+
     public int getStoredAir(ItemStack stack) {
         if (stack.getItem() == GRContent.HAZMAT_CHESTPIECE) {
             validateAirNbtTag(stack);
             return stack.getNbt().getInt("air");
         }
-            return 0;
+        return 0;
     }
 
     public void setStoredAir(ItemStack stack, int amount) {
@@ -142,37 +198,39 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     public boolean useStoredAir(ItemStack stack, int amount) {
         if (stack.getItem() == GRContent.HAZMAT_CHESTPIECE) {
             validateAirNbtTag(stack);
-        if(getStoredAir(stack)>=amount) {
-            setStoredAir(stack, getStoredAir(stack)-amount);
-            return true;
-        }
+            if (getStoredAir(stack) >= amount) {
+                setStoredAir(stack, getStoredAir(stack) - amount);
+                return true;
+            }
             return false;
         }
-            return  false;
+        return false;
     }
 
     public boolean addStoredAir(ItemStack stack, int amount) {
         if (stack.getItem() == GRContent.HAZMAT_CHESTPIECE) {
             validateAirNbtTag(stack);
-            if(getStoredAir(stack)+amount>airCapacity) {
+            if (getStoredAir(stack) + amount > airCapacity) {
                 return false;
             } else {
-                setStoredAir(stack, getStoredAir(stack)+amount);
+                setStoredAir(stack, getStoredAir(stack) + amount);
                 return true;
             }
         }
-            return  false;
+        return false;
     }
 
-    public int getAirCapacity() { return airCapacity; }
+    public int getAirCapacity() {
+        return airCapacity;
+    }
 
     private void validateAirNbtTag(ItemStack stack) {
         GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
-        if (!stack.getOrCreateNbt().contains("air", 3)){
+        if (!stack.getOrCreateNbt().contains("air", 3)) {
             stack.getNbt().putInt("air", 0);
             return;
         }
-        if (stack.getNbt().getInt("air")>config.hazmatChestpieceAirTicksCapacity) {
+        if (stack.getNbt().getInt("air") > config.hazmatChestpieceAirTicksCapacity) {
             stack.getNbt().putInt("air", config.hazmatChestpieceAirTicksCapacity);
         }
     }
@@ -180,8 +238,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     public int getStoredAir4ToolTip(ItemStack stack) {
         if (stack.hasNbt()) {
             return stack.getNbt().getInt("air");
-        }
-        else {
+        } else {
             return 0;
         }
     }
@@ -210,6 +267,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
         line1.formatted(Formatting.AQUA);
         tooltip.add(1, line1);
     }
+
 
     @Environment(EnvType.CLIENT)
     @Override

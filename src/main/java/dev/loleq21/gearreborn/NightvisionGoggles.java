@@ -24,7 +24,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorRemoveHandler;
-import reborncore.common.powerSystem.PowerSystem;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ChatUtils;
@@ -54,30 +53,38 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (entity instanceof PlayerEntity) {
-            PlayerEntity user = (PlayerEntity) entity;
 
-            if (user.getEquippedStack(EquipmentSlot.HEAD) == stack) {
 
-                //if (world.isClient()){
-                 //   while(NV_KEY_BIND.wasPressed()) {
-                //        ClientPlayNetworking.send(GearReborn.gogglesTogglePacketIdentifier, PacketByteBufs.empty());
-                //    }
-               // }
-
-                if (!world.isClient()) {
-                    checkActive(stack, (int) energyPerTickCost, MessageIDs.poweredToolID, world, user);
-                    if (ItemUtils.isActive(stack) && ((user.isCreative() || user.isSpectator()) || tryUseEnergy(stack, energyPerTickCost))) {
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
-                    }
-                    byte toggleCooldown = stack.getOrCreateNbt().getByte("toggleTimer");
-                    if (toggleCooldown > 0) {
-                        --toggleCooldown;
-                        stack.getOrCreateNbt().putByte("toggleTimer", toggleCooldown);
-                    }
-                }
-            }
+        if (world.isClient()) {
+            return;
         }
+
+        if (!(entity instanceof PlayerEntity)) {
+            return;
+        }
+
+        PlayerEntity user = (PlayerEntity) entity;
+
+        if (!(user.getEquippedStack(EquipmentSlot.HEAD) == stack)) {
+            return;
+        }
+
+        if (user.isCreative() || user.isSpectator()) {
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
+            return;
+        }
+
+        checkActive(stack, (int) energyPerTickCost, MessageIDs.poweredToolID, world, user);
+
+        if (!ItemUtils.isActive(stack)) {
+            return;
+        }
+
+        if (!tryUseEnergy(stack, energyPerTickCost)) {
+            return;
+        }
+        user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
+
     }
 
     public static void disableNightVision(World world, PlayerEntity entity) {
