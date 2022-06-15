@@ -21,8 +21,11 @@
     ],
     "main": [
       "dev.loleq21.gearreborn.GearReborn"
+    ],
+    "modmenu": [
+      "dev.loleq21.gearreborn.ModMenuIntegration"
     ]
-  },
+      },
   "mixins": [
     "gearreborn.mixins.json"
   ],
