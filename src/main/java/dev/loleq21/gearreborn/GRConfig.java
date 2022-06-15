@@ -22,7 +22,7 @@ public class GRConfig implements ConfigData {
     int stungunEnergyCapacity = 10000;
     @Comment("How many ticks it takes for the stun gun's capacitors to fully charge")
     int stungunChargeTicks = 64;
-    @Comment("How much damage a charged stun gun deals specifically arthropods. Set to 0 to disable this whole spider zapping feature.")
+    @Comment("How much damage a charged stun gun deals specifically to arthropods. Set to 0 to disable this whole spider zapping feature")
     int stungunDamageDealtToArthropodsOnChargedHit = 16;
     @Comment("Should the stun gun ignite Creepers")
     boolean stungunShouldChargedHitsIgniteCreepers = true;

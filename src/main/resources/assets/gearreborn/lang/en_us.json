@@ -16,8 +16,21 @@
    "gearreborn.misc.deviceon": "Active",
    "gearreborn.misc.hazmatairpressure": "O₂",
    "gearreborn.misc.stunguntooltipcapacitors": "Capacitors",
-   "subtitles.gearreborn.nvgblip": "Night Vision Goggles blip"
+   "subtitles.gearreborn.nvgblip": "Night Vision Goggles blip",
 
+    "text.autoconfig.gearreborn.title": "Gear Reborn Config",
 
-
+    "text.autoconfig.gearreborn.option.hazmatChestpieceEnergyCapacity": "Hazmat Chestpiece E capacity",
+    "text.autoconfig.gearreborn.option.hazmatChestpieceAirTicksCapacity": "Hazmat Chestpiece air capacity",
+    "text.autoconfig.gearreborn.option.hazmatChestpieceLavaCoolingEnergyCost": "Hazmat Chestpiece lava shielding E per tick cost",
+    "text.autoconfig.gearreborn.option.nvgActiveEnergyPerTickCost": "NVG operation E per tick cost",
+    "text.autoconfig.gearreborn.option.nvgEnergyCapacity": "NVG E capacity",
+    "text.autoconfig.gearreborn.option.stungunOneClickEnergyCost": "Stun Gun E per tick cost",
+    "text.autoconfig.gearreborn.option.stungunEnergyCapacity": "Stun Gun E capacity",
+    "text.autoconfig.gearreborn.option.stungunChargeTicks": "Stun Gun charge-up length in ticks",
+    "text.autoconfig.gearreborn.option.stungunDamageDealtToArthropodsOnChargedHit": "Stun Gun bonus arthropod damage",
+    "text.autoconfig.gearreborn.option.stungunShouldChargedHitsIgniteCreepers": "Stun Gun should ignite creepers",
+    "text.autoconfig.gearreborn.option.stungunShouldStunBossMobs": "Stun Gun should affect vanilla boss mobs",
+    "text.autoconfig.gearreborn.option.stungunSlownessTicks": "Stun Gun ticks of Slowness afflicted",
+    "text.autoconfig.gearreborn.option.stungunWeaknessTicks": "Stun Gun ticks of Weakness afflicted"
  }
