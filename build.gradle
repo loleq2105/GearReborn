@@ -26,9 +26,9 @@ dependencies {
 
     modApi ("TechReborn:TechReborn-${project.tr_version}") { exclude group: "net.fabricmc.fabric-api" exclude group: "RebornCore"}
     modApi ("RebornCore:RebornCore-${project.rc_version}") { exclude group: "net.fabricmc.fabric-api"}
-    
-    include modApi("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig1u_version}") {
-    exclude(group: "net.fabricmc.fabric-api")
+
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
     }
 
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
