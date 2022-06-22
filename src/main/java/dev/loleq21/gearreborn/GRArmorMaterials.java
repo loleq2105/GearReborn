@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 public enum GRArmorMaterials implements ArmorMaterial {
 
-    RUBBER("rubber", 7, new int[]{2, 3, 3, 2}, 15, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0F, () -> {
+    RUBBER("rubber", 7, new int[]{2, 3, 3, 2}, 15, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.06F, () -> {
         return Ingredient.ofItems(TRContent.Parts.RUBBER.asItem());
     }),
     MISCGEAR("miscgear", 15, new int[]{0, 3, 4, 1}, 9, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, () -> {
