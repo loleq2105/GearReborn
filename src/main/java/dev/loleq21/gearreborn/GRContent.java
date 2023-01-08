@@ -1,10 +1,12 @@
 package dev.loleq21.gearreborn;
 
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,12 +34,13 @@ public class GRContent {
 
     private static <I extends Item> I addItem(String name, I item) {
         GRITEMS.put(new Identifier(GearReborn.MOD_ID, name), item);
+        ItemGroupEvents.modifyEntriesEvent(GearReborn.ITEM_GROUP).register(entries -> entries.add(item));
         return item;
     }
 
     public static void registerGearRebornContent() {
         for (Identifier id : GRITEMS.keySet()) {
-            Registry.register(Registry.ITEM, id, GRITEMS.get(id));
+            Registry.register(Registries.ITEM, id, GRITEMS.get(id));
         }
     }
 }

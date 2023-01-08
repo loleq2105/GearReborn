@@ -28,19 +28,16 @@ import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemUtils;
 import techreborn.init.ModSounds;
-import techreborn.utils.InitUtils;
-import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
 public class StunGunItem extends Item implements RcEnergyItem {
 
     public StunGunItem() {
-        super(new Settings().group(GearReborn.ITEMGROUP).maxCount(1));
+        super(new Settings().maxCount(1));
     }
 
     GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
-
 
     public final long zapEnergyCost = config.stungunOneClickEnergyCost;
     public final long energyCapacity = config.stungunEnergyCapacity;
@@ -54,7 +51,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, MessageIDs.poweredToolID, entity);
+        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, entity);
         if (!ItemUtils.isActive(stack)) {
             return;
         }
@@ -70,7 +67,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
             return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
         }
         final ItemStack stack = player.getStackInHand(hand);
-        ItemUtils.switchActive(stack, 0, MessageIDs.poweredToolID, player);
+        ItemUtils.switchActive(stack, 0, player);
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);
     }
 
@@ -207,15 +204,5 @@ public class StunGunItem extends Item implements RcEnergyItem {
         line1.formatted(Formatting.GRAY);
         tooltip.add(line1);
     }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> itemList) {
-        if (!isIn(group)) {
-            return;
-        }
-        InitUtils.initPoweredItems(this, itemList);
-    }
-
 
 }

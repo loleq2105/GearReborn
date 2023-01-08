@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn.mixin;;
+package dev.loleq21.gearreborn.mixin;
 import dev.loleq21.gearreborn.HazmatSuitUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.BeeEntity;

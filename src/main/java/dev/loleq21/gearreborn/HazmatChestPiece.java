@@ -11,16 +11,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
@@ -39,7 +37,7 @@ import static dev.loleq21.gearreborn.HazmatSuitUtils.playerIsWearingFullHazmat;
 public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem, ArmorRemoveHandler {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof().maxDamage(-1));
+        super(material, slot, new Settings().maxCount(1).fireproof().maxDamage(-1));
     }
 
     GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
@@ -64,7 +62,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
             for (int i = 0; i < playerEntity.getInventory().size(); i++) {
                 ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
                 if (iteratedStack.getItem() == TRContent.CELL) {
-                    if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air")))) {
+                    if (TRContent.CELL.getFluid(iteratedStack) == (Fluid)Registries.FLUID.get(new Identifier("techreborn:compressed_air"))) {
                         iteratedStack.decrement(1);
                         ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
                         playerEntity.giveItemStack(emptyCell);
@@ -265,15 +263,6 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
         line1.append(Text.translatable("gearreborn.misc.hazmatairpressure"));
         line1.formatted(Formatting.AQUA);
         tooltip.add(1, line1);
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> itemList) {
-        if (!isIn(group)) {
-            return;
-        }
-        InitUtils.initPoweredItems(this, itemList);
     }
 
     @Override

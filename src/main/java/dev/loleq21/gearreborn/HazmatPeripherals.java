@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 public class HazmatPeripherals extends ArmorItem {
 
     public HazmatPeripherals(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof().maxDamage(-1));
+        super(material, slot, new Settings().maxCount(1).fireproof().maxDamage(-1));
     }
 
     @Override

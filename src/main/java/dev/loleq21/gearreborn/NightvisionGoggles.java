@@ -11,29 +11,24 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
-import reborncore.common.util.ChatUtils;
 import reborncore.common.util.ItemUtils;
-import techreborn.utils.InitUtils;
-import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
 public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, ArmorRemoveHandler {
 
     public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).maxDamage(-1));
+        super(material, slot, new Settings().maxCount(1).maxDamage(-1));
     }
 
     GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
@@ -73,7 +68,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
             return;
         }
 
-        checkActive(stack, (int) energyPerTickCost, MessageIDs.poweredToolID, world, user);
+        checkActive(stack, (int) energyPerTickCost, world, user);
 
         if (!tryUseEnergy(stack, energyPerTickCost)) {
             return;
@@ -128,16 +123,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
         GRItemUtils.buildActiveTooltip(stack, tooltip);
     }
 
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> itemList) {
-        if (!isIn(group)) {
-            return;
-        }
-        InitUtils.initPoweredItems(this, itemList);
-    }
-
-    private void checkActive(ItemStack stack, int cost, int messageId, World world, PlayerEntity user) {
+    private void checkActive(ItemStack stack, int cost, World world, PlayerEntity user) {
         if (!ItemUtils.isActive(stack)) {
             disableNightVision(world, user);
             return;
@@ -146,7 +132,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
             return;
         }
         if (user instanceof ServerPlayerEntity serverPlayerEntity) {
-            ChatUtils.sendNoSpamMessage(serverPlayerEntity, messageId, Text.translatable("reborncore.message.energyError")
+            serverPlayerEntity.sendMessage(Text.translatable("reborncore.message.energyError")
                     .formatted(Formatting.GRAY)
                     .append(" ")
                     .append(

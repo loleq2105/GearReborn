@@ -8,16 +8,16 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.item.ClampedModelPredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import reborncore.common.util.ItemUtils;
@@ -54,7 +54,7 @@ public class GearRebornClient implements ClientModInitializer {
                 HazmatChestPiece.class,
                 new Identifier("gearreborn:charged"),
                 (item, stack, world, entity, seed) -> {
-                    if (!stack.isEmpty() && SimpleBatteryItem.getStoredEnergyUnchecked(stack) >=config.hazmatChestpieceLavaCoolingEnergyCost *2) {
+                    if (!stack.isEmpty() && SimpleBatteryItem.getStoredEnergyUnchecked(stack) >=config.hazmatChestpieceLavaCoolingEnergyCost * 2L) {
                         return 1.0F;
                     }
                     return 0.0F;
@@ -72,18 +72,18 @@ public class GearRebornClient implements ClientModInitializer {
             }
         });
 
-    };
+    }
 
 
 
     private static <T extends Item> void registerPredicateProvider(Class<T> itemClass, Identifier identifier, ItemModelPredicateProvider<T> modelPredicateProvider) {
-        Registry.ITEM.stream()
+        Registries.ITEM.stream()
                 .filter(item -> item.getClass().isAssignableFrom(itemClass))
                 .forEach(item -> ModelPredicateProviderRegistry.register(item, identifier, modelPredicateProvider));
     }
 
     //Need the item instance in a few places, this makes it easier
-    private interface ItemModelPredicateProvider<T extends Item> extends UnclampedModelPredicateProvider {
+    private interface ItemModelPredicateProvider<T extends Item> extends ClampedModelPredicateProvider {
 
         float call(T item, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed);
 

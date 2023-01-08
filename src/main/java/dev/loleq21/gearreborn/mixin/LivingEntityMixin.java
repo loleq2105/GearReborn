@@ -14,7 +14,6 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.world.World;
@@ -37,7 +36,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition);
 
     private void spawnBootParticles(ItemStack stack, float fallDistance) {
-        double d = Math.min((double)(0.2F + fallDistance / 15.0F), 2.5D);
+        double d = Math.min((0.2F + fallDistance / 15.0F), 2.5D);
         int i = (int)(150.0D * d);
         ((ServerWorld)this.world).spawnParticles(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), this.getX(), this.getY(), this.getZ(), i, 0.0D, 0.0D, 0.0D, 0.15000000596046448D);
     }
