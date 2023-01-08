@@ -29,7 +29,6 @@ import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemUtils;
 import techreborn.init.ModSounds;
 import techreborn.utils.InitUtils;
-import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, MessageIDs.poweredToolID, entity);
+        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, entity);
         if (!ItemUtils.isActive(stack)) {
             return;
         }
@@ -70,7 +69,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
             return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
         }
         final ItemStack stack = player.getStackInHand(hand);
-        ItemUtils.switchActive(stack, 0, MessageIDs.poweredToolID, player);
+        ItemUtils.switchActive(stack, 0, player);
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);
     }
 
@@ -85,42 +84,26 @@ public class StunGunItem extends Item implements RcEnergyItem {
             return false;
         }
 
-        if (target instanceof CreeperEntity) {
+        if (igniteCreeper && target instanceof CreeperEntity) {
             CreeperEntity creeper = (CreeperEntity) target;
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 4, false, true, true));
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 2, false, true, true));
-            if (igniteCreeper) {
-                creeper.ignite();
-            }
-            target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
-            setCapacitorCharge(stack, 0);
-            return true;
+            creeper.ignite();
         } else if (target.getGroup() == EntityGroup.ARTHROPOD) {
-            target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 4, false, true, true));
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 2, false, true, true));
-            setCapacitorCharge(stack, 0);
             if (attacker instanceof PlayerEntity) {
                 target.damage(DamageSource.player((PlayerEntity) attacker), arthropodDamage);
                 return true;
             }
-            return false;
-        } else if (GearReborn.bossMobs.contains(target.getType()) && !stunBosses) {
+        } else if (!stunBosses && GearReborn.bossMobs.contains(target.getType())) {
             target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
             setCapacitorCharge(stack, 0);
             return false;
-        } else {
-            if (target instanceof PlayerEntity) {
-                if (HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity) target)) {
-                    return false;
-                }
-            }
-            target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 0.8F);
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 5, false, true, true));
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 4, false, true, true));
-            setCapacitorCharge(stack, 0);
-            return true;
+        } else if (target instanceof PlayerEntity && HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity) target)) {
+            return false;
         }
+        target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 0.8F);
+        target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 5, false, true, true));
+        target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 4, false, true, true));
+        setCapacitorCharge(stack, 0);
+        return true;
 
     }
 
@@ -153,7 +136,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
 
     }
 
-    public int getCapCharge4ToolTip(ItemStack stack) {
+    public int getCapChargeForToolTip(ItemStack stack) {
         if (stack.hasNbt()) {
             return stack.getNbt().getInt("capcharge");
         }
@@ -196,9 +179,9 @@ public class StunGunItem extends Item implements RcEnergyItem {
         GRItemUtils.buildActiveTooltip(stack, tooltip);
         MutableText line1 = Text.literal("[");
         line1.formatted(Formatting.GRAY);
-        if (getCapCharge4ToolTip(stack) == capacitorChargeUnits) {
+        if (getCapChargeForToolTip(stack) == capacitorChargeUnits) {
             line1.append(Text.literal("■").formatted(Formatting.GREEN));
-        } else if (getCapCharge4ToolTip(stack) == 0) {
+        } else if (getCapChargeForToolTip(stack) == 0) {
             line1.append(Text.literal("■").formatted(Formatting.DARK_GRAY));
         } else {
             line1.append(Text.literal("■").formatted(Formatting.YELLOW));

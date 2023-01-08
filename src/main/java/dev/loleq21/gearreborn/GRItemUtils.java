@@ -5,13 +5,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import reborncore.common.util.ChatUtils;
 
 import java.util.List;
 
 public class GRItemUtils {
-    public GRItemUtils() {
-    }
 
     public static boolean isActive(ItemStack stack) {
         return !stack.isEmpty() && stack.getNbt() != null && stack.getNbt().getBoolean("isActive");
@@ -21,12 +18,12 @@ public class GRItemUtils {
         if (!isActive(stack)) {
             stack.getOrCreateNbt().putBoolean("isActive", true);
             if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
-                ChatUtils.sendNoSpamMessage(serverPlayerEntity, messageId, (Text.translatable(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(Text.translatable("gearreborn.misc.deviceon").formatted(Formatting.GOLD))));
+                serverPlayerEntity.sendMessage((Text.translatable(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(Text.translatable("gearreborn.misc.deviceon").formatted(Formatting.GOLD))));
             }
         } else {
             stack.getOrCreateNbt().putBoolean("isActive", false);
             if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
-                ChatUtils.sendNoSpamMessage(serverPlayerEntity, messageId, (Text.translatable(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(Text.translatable("gearreborn.misc.deviceoff").formatted(Formatting.GOLD))));
+                serverPlayerEntity.sendMessage((Text.translatable(messageTranslationKey).formatted(Formatting.GRAY).append(" ").append(Text.translatable("gearreborn.misc.deviceoff").formatted(Formatting.GOLD))));
             }
         }
 

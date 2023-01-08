@@ -23,10 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
-import reborncore.common.util.ChatUtils;
 import reborncore.common.util.ItemUtils;
 import techreborn.utils.InitUtils;
-import techreborn.utils.MessageIDs;
 
 import java.util.List;
 
@@ -73,7 +71,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
             return;
         }
 
-        checkActive(stack, (int) energyPerTickCost, MessageIDs.poweredToolID, world, user);
+        checkActive(stack, (int) energyPerTickCost, world, user);
 
         if (!tryUseEnergy(stack, energyPerTickCost)) {
             return;
@@ -137,7 +135,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
         InitUtils.initPoweredItems(this, itemList);
     }
 
-    private void checkActive(ItemStack stack, int cost, int messageId, World world, PlayerEntity user) {
+    private void checkActive(ItemStack stack, int cost, World world, PlayerEntity user) {
         if (!ItemUtils.isActive(stack)) {
             disableNightVision(world, user);
             return;
@@ -146,7 +144,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
             return;
         }
         if (user instanceof ServerPlayerEntity serverPlayerEntity) {
-            ChatUtils.sendNoSpamMessage(serverPlayerEntity, messageId, Text.translatable("reborncore.message.energyError")
+            serverPlayerEntity.sendMessage(Text.translatable("reborncore.message.energyError")
                     .formatted(Formatting.GRAY)
                     .append(" ")
                     .append(

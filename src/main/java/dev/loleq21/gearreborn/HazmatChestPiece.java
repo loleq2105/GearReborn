@@ -48,18 +48,11 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     public final long energyCapacity = config.hazmatChestpieceEnergyCapacity;
     public final long coolingEnergyCost = config.hazmatChestpieceLavaCoolingEnergyCost;
 
-
     @Override
     public void tickArmor(ItemStack itemStack, PlayerEntity playerEntity) {
 
-        if (playerEntity.getEntityWorld().isClient()) {
-            return;
-        }
-
-        if (!playerIsWearingChestAndHelm(playerEntity)) {
-            return;
-        }
-
+        if (playerEntity.getEntityWorld().isClient()) {return;}
+        if (!playerIsWearingChestAndHelm(playerEntity)) {return;}
         if ((getStoredAir(itemStack) == 0)) {
             for (int i = 0; i < playerEntity.getInventory().size(); i++) {
                 ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
@@ -78,7 +71,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
 
         if (playerEntity.isSubmergedInWater()) {
             if (useStoredAir(itemStack, 1)) {
-                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, false));
+                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, true));
             } else {
                 disableWaterBreathing(playerEntity);
             }
@@ -92,10 +85,10 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
         }
 
         if (!playerEntity.isInLava()) {
-            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
+            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, true));
         } else {
             if (tryUseEnergy(itemStack, coolingEnergyCost)) {
-                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
+                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, true));
             } else {
                 disableFireResist(playerEntity);
             }
@@ -106,59 +99,6 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
         }
 
     }
-
-        /*
-
-        if (playerIsWearingFullHazmat(playerEntity)) {
-                if (!playerEntity.isInLava()) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
-                } else {
-                        if (tryUseEnergy(itemStack, coolingEnergyCost)) {
-                            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, false));
-                        } else {
-                            disableFireResist(playerEntity);
-                        }
-                }
-
-                if (playerEntity.isOnFire() && getStoredEnergy(itemStack) >= coolingEnergyCost * 2) {
-                    playerEntity.extinguish();
-                }
-            } else {
-                disableFireResist(playerEntity);
-            }
-
-                if ((getStoredAir(itemStack) == 0)) {
-                    for (int i = 0; i < playerEntity.getInventory().size(); i++) {
-                        ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
-                        if (iteratedStack.getItem() == TRContent.CELL) {
-                            if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air")))) {
-                                iteratedStack.decrement(1);
-                                ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
-                                playerEntity.giveItemStack(emptyCell);
-                                setStoredAir(itemStack, airCapacity);
-                                World world = playerEntity.getEntityWorld();
-                                world.playSound(null, playerEntity.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.NEUTRAL, 0.8F, 1.0F + (world.random.nextFloat() - world.random.nextFloat()) * 0.4F);
-                            }
-                        }
-                    }
-                }
-        f (playerIsWearingChestAndHelm(playerEntity)) {
-            if (playerEntity.isSubmergedInWater()) {
-                if (useStoredAir(itemStack, 1)) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, false));
-                } else {
-                    disableWaterBreathing(playerEntity);
-                }
-            } else {
-                disableWaterBreathing(playerEntity);
-            }
-        }
-                else {
-                    disableWaterBreathing(playerEntity);
-                }
-        }
-
-    */
 
     private void disableFireResist(PlayerEntity playerEntity) {
         if (!playerEntity.getEntityWorld().isClient()) {
@@ -234,7 +174,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
         }
     }
 
-    public int getStoredAir4ToolTip(ItemStack stack) {
+    public int getStoredAirForToolTip(ItemStack stack) {
         if (stack.hasNbt()) {
             return stack.getNbt().getInt("air");
         } else {
@@ -259,7 +199,7 @@ public class HazmatChestPiece extends ArmorItem implements ArmorBlockEntityTicke
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        MutableText line1 = Text.literal(String.valueOf((getStoredAir4ToolTip(stack) * 100) / airCapacity));
+        MutableText line1 = Text.literal(String.valueOf((getStoredAirForToolTip(stack) * 100) / airCapacity));
         line1.append("%");
         line1.append(" ");
         line1.append(Text.translatable("gearreborn.misc.hazmatairpressure"));
