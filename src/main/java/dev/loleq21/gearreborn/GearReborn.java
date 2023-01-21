@@ -1,5 +1,6 @@
 package dev.loleq21.gearreborn;
 
+import dev.loleq21.gearreborn.hazmat.HazmatSuitUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;

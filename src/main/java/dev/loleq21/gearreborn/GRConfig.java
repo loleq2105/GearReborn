@@ -1,6 +1,5 @@
 package dev.loleq21.gearreborn;
 
-
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -11,10 +10,12 @@ public class GRConfig implements ConfigData {
 
     @Comment("The energy capacity of the hazmat chestpiece, expressed in E")
     @ConfigEntry.Gui.RequiresRestart
+    public
     int hazmatChestpieceEnergyCapacity = 80000;
 
     @Comment("How many ticks of water breathing you can get with the hazmat chestpiece with one compressed air cell")
     @ConfigEntry.Gui.RequiresRestart
+    public
     int hazmatChestpieceAirTicksCapacity = 524;
 
     @Comment("How much energy (expressed in E) per tick the hazmat chestpiece consumes when shielding the player from lava damage")

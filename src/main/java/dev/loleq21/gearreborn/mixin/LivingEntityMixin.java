@@ -1,7 +1,7 @@
 package dev.loleq21.gearreborn.mixin;
 
 import dev.loleq21.gearreborn.GRContent;
-import dev.loleq21.gearreborn.HazmatSuitUtils;
+import dev.loleq21.gearreborn.hazmat.HazmatSuitUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -14,7 +14,6 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.world.World;

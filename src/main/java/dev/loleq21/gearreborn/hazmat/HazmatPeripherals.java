@@ -1,5 +1,6 @@
-package dev.loleq21.gearreborn;
+package dev.loleq21.gearreborn.hazmat;
 
+import dev.loleq21.gearreborn.GearReborn;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;

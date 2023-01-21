@@ -1,5 +1,8 @@
 package dev.loleq21.gearreborn;
 
+import dev.loleq21.gearreborn.hazmat.HazmatChestPiece;
+import dev.loleq21.gearreborn.hazmat.HazmatHelmet;
+import dev.loleq21.gearreborn.hazmat.HazmatPeripherals;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
@@ -20,7 +23,7 @@ public class GRContent {
     public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, EquipmentSlot.HEAD));
     public static final Item STUN_GUN = addItem("stun_gun", new StunGunItem());
 
-    public static final Item HAZMAT_HELMET = addItem("hazmat_helmet", new HazmatPeripherals(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.HEAD));
+    public static final Item HAZMAT_HELMET = addItem("hazmat_helmet", new HazmatHelmet(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.HEAD));
     public static final Item HAZMAT_CHESTPIECE = addItem("hazmat_chestpiece", new HazmatChestPiece(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.CHEST));
     public static final Item HAZMAT_LEGGINGS = addItem("hazmat_leggings", new HazmatPeripherals(HAZMAT_ARMOR_MATERIAL, EquipmentSlot.LEGS));
 

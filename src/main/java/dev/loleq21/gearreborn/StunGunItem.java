@@ -1,5 +1,6 @@
 package dev.loleq21.gearreborn;
 
+import dev.loleq21.gearreborn.hazmat.HazmatSuitUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
