@@ -45,6 +45,7 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)
     private void handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> info) {
 
@@ -54,20 +55,21 @@ public abstract class LivingEntityMixin extends Entity {
                 ItemStack equippedBootsItemStack = player.getEquippedStack(EquipmentSlot.FEET);
                 if (!isSneaking()) {
                     int vanillaPlayerDamage = this.computeFallDamage(fallDistance, damageMultiplier);
-                    int userDamage = vanillaPlayerDamage / 3;
-                    int bootDamage = (int) Math.round(vanillaPlayerDamage * 0.4375); //taken from https://wiki.industrial-craft.net/index.php/Rubber_Boots#Technical_Details
-                    int bootDurability = equippedBootsItemStack.getMaxDamage() - equippedBootsItemStack.getDamage();
-                    if (bootDamage > bootDurability) {
-                        this.damage(DamageSource.FALL, (float) vanillaPlayerDamage);
-                        equippedBootsItemStack.decrement(1);
-                        player.sendEquipmentBreakStatus(EquipmentSlot.FEET);
-                    }
+                    int userDamage = (int) Math.floor(vanillaPlayerDamage/8);
+                    int bootDamage = (int) Math.ceil(vanillaPlayerDamage * 0.4375); //reference: https://wiki.industrial-craft.net/index.php/Rubber_Boots#Technical_Details
                     if (bootDamage > 0) {
-                        equippedBootsItemStack.damage(bootDamage, new LocalRandom(new Random().nextLong()), (ServerPlayerEntity) player);
                         spawnBootParticles(TRContent.Parts.RUBBER.getStack(), fallDistance);
+                        equippedBootsItemStack.damage(bootDamage, player, (e) -> {
+                            e.sendEquipmentBreakStatus(EquipmentSlot.FEET);
+                        });
                     }
+                    int bootDurability = equippedBootsItemStack.getMaxDamage() - equippedBootsItemStack.getDamage();
                     if (userDamage > 0) {
-                        this.damage(DamageSource.FALL, (float) userDamage);
+                        if(bootDurability<0){
+                            this.damage(DamageSource.FALL, (float) vanillaPlayerDamage);
+                        } else{
+                            this.damage(DamageSource.FALL, (float) userDamage);
+                        }
                     }
                     info.cancel();
                 }
