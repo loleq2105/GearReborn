@@ -6,20 +6,20 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 
-public class HazmatPeripherals extends ArmorItem {
+public class HazmatOtherPcs extends ArmorItem {
 
-    public HazmatPeripherals(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof().maxDamage(-1));
+    public HazmatOtherPcs(ArmorMaterial material, EquipmentSlot slot) {
+        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof());
     }
 
     @Override
     public boolean isDamageable() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnchantable(ItemStack stack) {
-        return false;
+        return true;
     }
 
 }

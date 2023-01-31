@@ -7,32 +7,64 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import techreborn.init.TRContent;
 
 import java.util.List;
 
 public class HazmatChestPiece extends ArmorItem {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof().maxDamage(-1));
+        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof());
     }
 
-    GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
+    static GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
     public static final String AIR_KEY = "air";
-    public final int barColor = 0xFFFFFF;
-    public final int airCapacity = config.hazmatChestpieceAirTicksCapacity;
+    public static final int barColor = 0xFFFFFF;
+    public static final int airCapacity = config.hazmatChestpieceAirTicksCapacity;
 
+    public static boolean tryConsumeAir(PlayerEntity playerEntity, ItemStack hazmatChestplate){
+        if (tryUseAir(hazmatChestplate, 1)) {
+                return true;
+        } else {
+            if ((getStoredAir(hazmatChestplate) == 0)) {
+                for (int i = 0; i < playerEntity.getInventory().size(); i++) {
+                    ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
+                    if (iteratedStack.getItem() == TRContent.CELL) {
+                        if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air")))) {
+                            iteratedStack.decrement(1);
+                            ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
+                            playerEntity.giveItemStack(emptyCell);
+                            setStoredAir(hazmatChestplate, airCapacity);
+                            World world = playerEntity.getEntityWorld();
+                            world.playSound(null, playerEntity.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.NEUTRAL, 0.8F, 1.0F + (world.random.nextFloat() - world.random.nextFloat()) * 0.4F);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    @Override
     public boolean isEnchantable(ItemStack stack) {
-        return false;
+        return true;
     }
 
     @Environment(EnvType.CLIENT)
@@ -63,10 +95,9 @@ public class HazmatChestPiece extends ArmorItem {
 
     @Override
     public boolean isDamageable() {
-        return false;
+        return true;
     }
 
-    //absolutely hideous coding practices please ignore. copied methods from theSimpleBatteryItem class
 
     protected int getStoredAirForToolTip(ItemStack stack) {
         if (stack.hasNbt()) {
@@ -75,6 +106,8 @@ public class HazmatChestPiece extends ArmorItem {
             return 0;
         }
     }
+
+    //adapted code from RC's SimpleBatteryItem class
 
     protected static int getStoredAir(ItemStack stack) {
         return getStoredAirUnchecked(stack);
