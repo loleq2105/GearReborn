@@ -1,6 +1,7 @@
 package dev.loleq21.gearreborn.hazmat;
 
 import dev.loleq21.gearreborn.GRConfig;
+import dev.loleq21.gearreborn.GRContent;
 import dev.loleq21.gearreborn.GearReborn;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
@@ -9,9 +10,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -19,6 +18,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -70,36 +70,50 @@ public class HazmatChestPiece extends ArmorItem {
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
+        if(getStoredAirForToolTip(stack)==0) return;
+
         MutableText line1 = Text.literal(String.valueOf((getStoredAirForToolTip(stack) * 100) / airCapacity));
         line1.append("%");
         line1.append(" ");
-        line1.append(Text.translatable("gearreborn.misc.hazmatairpressure"));
-        line1.formatted(Formatting.AQUA);
+        line1.append(Text.translatable("block.techreborn.compressed_air").formatted(Formatting.GRAY));
         tooltip.add(1, line1);
+
     }
 
     @Override
     public int getItemBarStep(ItemStack stack) {
+        if(!super.isItemBarVisible(stack)&&getStoredAir(stack)>0){
         return Math.round((getStoredAir(stack) * 100f / airCapacity) * 13) / 100;
-    }
-
-    @Override
-    public boolean isItemBarVisible(ItemStack stack) {
-        return true;
+        } else{
+            return super.getItemBarStep(stack);
+        }
     }
 
     @Override
     public int getItemBarColor(ItemStack stack) {
-        return barColor;
+        if(!super.isItemBarVisible(stack)&&getStoredAir(stack)>0){
+            return barColor;
+        } else{
+            return super.getItemBarColor(stack);
+        }
     }
+
+    @Override
+    public boolean isItemBarVisible(ItemStack stack) {
+        if(getStoredAir(stack)>0){
+            return true;
+        } else{
+            return super.isItemBarVisible(stack);
+        }
+    }
+
 
     @Override
     public boolean isDamageable() {
         return true;
     }
 
-
-    protected int getStoredAirForToolTip(ItemStack stack) {
+    private int getStoredAirForToolTip(ItemStack stack) {
         if (stack.hasNbt()) {
             return getStoredAir(stack);
         } else {
@@ -107,13 +121,15 @@ public class HazmatChestPiece extends ArmorItem {
         }
     }
 
-    //adapted code from RC's SimpleBatteryItem class
+    //adapted code from RC's SimpleBatteryItem class.
+    //Why all this relentless code copying and private- everything? Well, I don't expect anyone to even consider using the same system as mine, and it does its job.
 
-    protected static int getStoredAir(ItemStack stack) {
+
+    private static int getStoredAir(ItemStack stack) {
         return getStoredAirUnchecked(stack);
     }
 
-    protected static void setStoredAirUnchecked(ItemStack stack, int newAmount) {
+    private static void setStoredAirUnchecked(ItemStack stack, int newAmount) {
         if (newAmount == 0) {
             // Make sure newly crafted ~~energy~~ air containers stack with emptied ones.
             stack.removeSubNbt(AIR_KEY);
@@ -122,11 +138,11 @@ public class HazmatChestPiece extends ArmorItem {
         }
     }
 
-    protected static void setStoredAir(ItemStack stack, int newAmount) {
+    private static void setStoredAir(ItemStack stack, int newAmount) {
         setStoredAirUnchecked(stack, newAmount);
     }
 
-    protected static boolean tryUseAir(ItemStack stack, int amount) {
+    private static boolean tryUseAir(ItemStack stack, int amount) {
 
         int newAmount = getStoredAir(stack) - amount;
 
@@ -138,14 +154,34 @@ public class HazmatChestPiece extends ArmorItem {
         }
     }
 
-    protected static int getStoredAirUnchecked(ItemStack stack) {
+    public static int getStoredAirUnchecked(ItemStack stack) {
         return getStoredAirUnchecked(stack.getNbt());
     }
 
-    protected static int getStoredAirUnchecked(@Nullable NbtCompound nbt) {
+    private static int getStoredAirUnchecked(@Nullable NbtCompound nbt) {
         return nbt != null ? nbt.getInt(AIR_KEY) : 0;
     }
 
+    //end of adapted code
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> itemList) {
+        if (!isIn(group)) {
+            return;
+        }
+
+        Item item = GRContent.HAZMAT_CHESTPIECE;
+
+        ItemStack unaired = new ItemStack(item);
+        ItemStack aired = new ItemStack(item);
+
+        setStoredAir(aired, airCapacity);
+
+        itemList.add(unaired);
+        itemList.add(aired);
+
+    }
 
 }
 

@@ -1,7 +1,9 @@
 package dev.loleq21.gearreborn.mixin;
 
 
+import dev.loleq21.gearreborn.GRConfig;
 import dev.loleq21.gearreborn.GRContent;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -13,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -28,7 +29,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         super(type, world);
     }
 
-    private boolean hadHazmatHelmet;
+    GRConfig gearreborn$config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
+
+    private final boolean gearreborn$degradeHazmat = gearreborn$config.hazmatDegradesInLava;
+
+    private boolean gearreborn$hadHazmatHelmet;
 
     private void disableFireResist() {
         this.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
@@ -46,7 +51,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private void updateHazmatSuit() {
         ItemStack itemStack = this.getEquippedStack(EquipmentSlot.HEAD);
         if (itemStack.isOf(GRContent.HAZMAT_HELMET)) {
-            hadHazmatHelmet = true;
+            gearreborn$hadHazmatHelmet = true;
             if (this.getEquippedStack(EquipmentSlot.CHEST).getItem() != GRContent.HAZMAT_CHESTPIECE) {
                 removeHazmatEffects();
                 return;
@@ -72,7 +77,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
             boolean second = world.getTime() % 20 == 0;
 
-            if (second && playerEntity.isInLava()) {
+            if (gearreborn$degradeHazmat && second && playerEntity.isInLava()) {
                 Iterable<ItemStack> suitPieces = playerEntity.getArmorItems();
                 Random random = playerEntity.getRandom();
                 for (ItemStack stack : suitPieces) {
@@ -85,9 +90,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             }
 
             playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, true));
-        } else if (hadHazmatHelmet) {
+        } else if (gearreborn$hadHazmatHelmet) {
             removeHazmatEffects();
-            hadHazmatHelmet = false;
+            gearreborn$hadHazmatHelmet = false;
         }
 
     }

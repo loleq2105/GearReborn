@@ -16,7 +16,9 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import reborncore.common.util.ItemUtils;
 import team.reborn.energy.api.base.SimpleBatteryItem;
+import team.reborn.energy.api.base.SimpleEnergyItem;
 import techreborn.api.events.CableElectrocutionEvent;
 
 import static dev.loleq21.gearreborn.NightvisionGoggles.disableNightVision;
@@ -30,7 +32,7 @@ public class GearReborn implements ModInitializer {
     public static final String MOD_ID = "gearreborn";
     public static final ItemGroup ITEMGROUP = FabricItemGroupBuilder.create(new Identifier(MOD_ID, "items")).icon(() -> new ItemStack(GRContent.HAZMAT_HELMET)).build();
 
-    public static final EntityType[] bossMobsArray = new EntityType[]{EntityType.ENDER_DRAGON, EntityType.WITHER};
+    public static final EntityType[] bossMobsArray = new EntityType[]{EntityType.ENDER_DRAGON, EntityType.WITHER, EntityType.WARDEN};
     public static final Set<EntityType> bossMobs = new HashSet<EntityType>(Arrays.asList(bossMobsArray));
 
     public static final Identifier gogglesTogglePacketIdentifier = new Identifier(MOD_ID, "nvg_toggle");
@@ -58,30 +60,24 @@ public class GearReborn implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(gogglesTogglePacketIdentifier, (client, player, responseSender, buf, handler) -> {
             ItemStack stack = player.getEquippedStack(EquipmentSlot.HEAD);
 
-            if (stack.getItem() == GRContent.NV_GOGGLES.asItem()){
-                boolean active = stack.getOrCreateNbt().getBoolean("isActive");
+            if (stack.getItem() != GRContent.NV_GOGGLES.asItem())
+                return;
+
             World world = player.getEntityWorld();
-            GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
-            if (SimpleBatteryItem.getStoredEnergyUnchecked(stack) >= config.nvgActiveEnergyPerTickCost) {
-                if (!active) {
-                    active = true;
-                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 1.1f);
-                } else {
-                    active = false;
-                    disableNightVision(world, player);
-                    world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.9f);
-                }
-            } else {
-                world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, 0.6f);
+            ItemUtils.switchActive(stack, NightvisionGoggles.energyPerTickCost, player);
+
+            float beepPitch = 1.1f;
+            if (SimpleEnergyItem.getStoredEnergyUnchecked(stack) < NightvisionGoggles.energyPerTickCost) {
+                beepPitch = 0.6f;
             }
-            stack.getOrCreateNbt().putBoolean("isActive", active);
+            if (!ItemUtils.isActive(stack)) {
+                beepPitch = 0.9f;
+                disableNightVision(world, player);
+            }
 
-        }
-
+            world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, beepPitch);
         });
-
-
 
     }
 }

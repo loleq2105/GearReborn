@@ -12,10 +12,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,14 +22,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import techreborn.init.TRContent;
 
-import java.util.Random;
-
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
     @Shadow protected abstract int computeFallDamage(float fallDistance, float damageMultiplier);
-
 
     @Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition);
 
@@ -44,6 +39,12 @@ public abstract class LivingEntityMixin extends Entity {
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
+
+    /*
+     Code adapted from Kibe
+     Available at: https://github.com/lucaargolo/kibe/blob/b437f714dd72a0d77af763a58de3d191c732444e/src/main/java/io/github/lucaargolo/kibe/mixin/LivingEntityMixin.java#L72
+     Licensed under the MPL-2.0 license available at: https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2)
+    */
 
     @SuppressWarnings("ConstantConditions")
     @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)

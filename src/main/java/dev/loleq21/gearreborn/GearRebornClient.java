@@ -55,7 +55,7 @@ public class GearRebornClient implements ClientModInitializer {
                 HazmatChestPiece.class,
                 new Identifier("gearreborn:charged"),
                 (item, stack, world, entity, seed) -> {
-                    if (!stack.isEmpty() && SimpleBatteryItem.getStoredEnergyUnchecked(stack) >=config.hazmatChestpieceLavaCoolingEnergyCost *2) {
+                    if (!stack.isEmpty() && HazmatChestPiece.getStoredAirUnchecked(stack) > 0) {
                         return 1.0F;
                     }
                     return 0.0F;

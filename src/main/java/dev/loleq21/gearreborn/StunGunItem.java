@@ -42,23 +42,24 @@ public class StunGunItem extends Item implements RcEnergyItem {
     GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
 
-    public final long zapEnergyCost = config.stungunOneClickEnergyCost;
+    public final long chargeEnergyCost = config.stungunChargeEnergyCost;
     public final long energyCapacity = config.stungunEnergyCapacity;
-    public final int capacitorChargeUnits = config.stungunChargeTicks;
+    public final int chargeTicks = config.stungunChargeTicks;
     public final int slownessTicks = config.stungunSlownessTicks;
     public final int weaknessTicks = config.stungunWeaknessTicks;
     public final int arthropodDamage = config.stungunDamageDealtToArthropodsOnChargedHit;
     public final boolean igniteCreeper = config.stungunShouldChargedHitsIgniteCreepers;
     public final boolean stunBosses = config.stungunShouldStunBossMobs;
 
+    private final int energyPerChargeTick = (((int)chargeEnergyCost/chargeTicks)>0 ? ((int)chargeEnergyCost/chargeTicks) : 1);
+
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        ItemUtils.checkActive(stack, config.stungunOneClickEnergyCost, entity);
         if (!ItemUtils.isActive(stack)) {
             return;
         }
-        if (getCapacitorCharge(stack) < capacitorChargeUnits && tryUseEnergy(stack, zapEnergyCost)) {
+        if (getCapacitorCharge(stack) < chargeTicks && tryUseEnergy(stack, energyPerChargeTick)) {
             setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
             entity.playSound(ModSounds.CABLE_SHOCK, 0.4F, 1.0F);
         }
@@ -70,7 +71,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
             return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
         }
         final ItemStack stack = player.getStackInHand(hand);
-        ItemUtils.switchActive(stack, 0, player);
+        ItemUtils.switchActive(stack, energyPerChargeTick, player);
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);
     }
 
@@ -81,7 +82,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
             return false;
         }
 
-        if (getCapacitorCharge(stack) != capacitorChargeUnits) {
+        if (getCapacitorCharge(stack) != chargeTicks) {
             return false;
         }
 
@@ -177,10 +178,10 @@ public class StunGunItem extends Item implements RcEnergyItem {
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        GRItemUtils.buildActiveTooltip(stack, tooltip);
+        ItemUtils.buildActiveTooltip(stack, tooltip);
         MutableText line1 = Text.literal("[");
         line1.formatted(Formatting.GRAY);
-        if (getCapChargeForToolTip(stack) == capacitorChargeUnits) {
+        if (getCapChargeForToolTip(stack) == chargeTicks) {
             line1.append(Text.literal("■").formatted(Formatting.GREEN));
         } else if (getCapChargeForToolTip(stack) == 0) {
             line1.append(Text.literal("■").formatted(Formatting.DARK_GRAY));

@@ -11,9 +11,6 @@
    "key.gearreborn.toggle_nv": "Переключить очки ночного видения",
    "category.gearreborn.title": "Gear Reborn",
    "itemGroup.gearreborn.items": "Gear Reborn",
-   "gearreborn.misc.deviceoff": "Неактивно",
-   "gearreborn.misc.deviceon": "Активно",
-   "gearreborn.misc.hazmatairpressure": "O₂",
    "gearreborn.misc.stunguntooltipcapacitors": "Конденсаторы",
    "subtitles.gearreborn.nvgblip": "Свечение очков ночного видения"
  }

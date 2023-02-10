@@ -20,6 +20,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import reborncore.api.items.ArmorBlockEntityTicker;
 import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
@@ -28,56 +29,47 @@ import techreborn.utils.InitUtils;
 
 import java.util.List;
 
-public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, ArmorRemoveHandler {
+public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem, ArmorRemoveHandler {
 
     public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).maxDamage(-1));
     }
 
-    GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
+    private static GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
-    public final long energyPerTickCost = config.nvgActiveEnergyPerTickCost;
-    public final long energyCapacity = config.nvgEnergyCapacity;
+    public static final int energyPerTickCost = config.nvgActiveEnergyPerTickCost;
+    private static final long energyCapacity = config.nvgEnergyCapacity;
 
+    @Override
+    public void tickArmor(ItemStack stack, PlayerEntity playerEntity) {
+
+        if (!(playerEntity instanceof ServerPlayerEntity user)) {
+            return;
+        }
+
+        if (this.slot!=EquipmentSlot.HEAD) {
+            disableNightVision(user.getEntityWorld(), user);
+            if(ItemUtils.isActive(stack)){
+                ItemUtils.switchActive(stack, 0, user);
+            }
+            return;
+        }
+
+        ItemUtils.checkActive(stack, energyPerTickCost, user);
+
+        if (!ItemUtils.isActive(stack)) {
+            disableNightVision(user.getEntityWorld(), user);
+            return;
+        }
+
+        if ((user.isCreative() || user.isSpectator()) || tryUseEnergy(stack, energyPerTickCost)) {
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 0, false, false, false));
+        }
+
+    }
     @Override
     public boolean isDamageable() {
         return false;
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-
-
-        if (world.isClient()) {
-            return;
-        }
-
-        if (!(entity instanceof PlayerEntity)) {
-            return;
-        }
-
-        PlayerEntity user = (PlayerEntity) entity;
-
-        if (!(user.getEquippedStack(EquipmentSlot.HEAD) == stack)) {
-            return;
-        }
-
-        if (!ItemUtils.isActive(stack)) {
-            return;
-        }
-
-        if (user.isCreative() || user.isSpectator()) {
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
-            return;
-        }
-
-        checkActive(stack, (int) energyPerTickCost, world, user);
-
-        if (!tryUseEnergy(stack, energyPerTickCost)) {
-            return;
-        }
-        user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 999999, 0, false, false, false));
-
     }
 
     public static void disableNightVision(World world, PlayerEntity entity) {
@@ -123,7 +115,7 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        GRItemUtils.buildActiveTooltip(stack, tooltip);
+        ItemUtils.buildActiveTooltip(stack, tooltip);
     }
 
     @Environment(EnvType.CLIENT)
@@ -136,10 +128,6 @@ public class NightvisionGoggles extends ArmorItem implements RcEnergyItem, Armor
     }
 
     private void checkActive(ItemStack stack, int cost, World world, PlayerEntity user) {
-        if (!ItemUtils.isActive(stack)) {
-            disableNightVision(world, user);
-            return;
-        }
         if (getStoredEnergy(stack) >= cost) {
             return;
         }

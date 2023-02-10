@@ -20,9 +20,8 @@
 
     "text.autoconfig.gearreborn.title": "Gear Reborn Config",
 
-    "text.autoconfig.gearreborn.option.hazmatChestpieceEnergyCapacity": "Hazmat Chestpiece E capacity",
+    "text.autoconfig.gearreborn.option.hazmatDegradesInLava": "Hazmat suit degrades in lava",
     "text.autoconfig.gearreborn.option.hazmatChestpieceAirTicksCapacity": "Hazmat Chestpiece air capacity",
-    "text.autoconfig.gearreborn.option.hazmatChestpieceLavaCoolingEnergyCost": "Hazmat Chestpiece lava shielding E per tick cost",
     "text.autoconfig.gearreborn.option.nvgActiveEnergyPerTickCost": "NVG operation E per tick cost",
     "text.autoconfig.gearreborn.option.nvgEnergyCapacity": "NVG E capacity",
     "text.autoconfig.gearreborn.option.stungunOneClickEnergyCost": "Stun Gun E per tick cost",
