@@ -62,7 +62,7 @@ public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTic
             return;
         }
 
-        if ((user.isCreative() || user.isSpectator()) || true) {
+        if ((user.isCreative() || user.isSpectator()) || tryUseEnergy(stack, energyPerTickCost)) {
             user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 0, false, false, false));
         }
 
