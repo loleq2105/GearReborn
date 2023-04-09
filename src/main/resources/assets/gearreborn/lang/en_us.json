@@ -21,15 +21,23 @@
     "text.autoconfig.gearreborn.title": "Gear Reborn Config",
 
     "text.autoconfig.gearreborn.option.hazmatDegradesInLava": "Hazmat suit degrades in lava",
+   "text.autoconfig.gearreborn.option.hazmatLavaDegradeSpeed": "Lava degradation speed",
     "text.autoconfig.gearreborn.option.hazmatChestpieceAirTicksCapacity": "Hazmat Chestpiece air capacity",
-    "text.autoconfig.gearreborn.option.nvgActiveEnergyPerTickCost": "NVG operation E per tick cost",
-    "text.autoconfig.gearreborn.option.nvgEnergyCapacity": "NVG E capacity",
-    "text.autoconfig.gearreborn.option.stungunOneClickEnergyCost": "Stun Gun E per tick cost",
-    "text.autoconfig.gearreborn.option.stungunEnergyCapacity": "Stun Gun E capacity",
-    "text.autoconfig.gearreborn.option.stungunChargeTicks": "Stun Gun charge-up length in ticks",
-    "text.autoconfig.gearreborn.option.stungunDamageDealtToArthropodsOnChargedHit": "Stun Gun bonus arthropod damage",
-    "text.autoconfig.gearreborn.option.stungunShouldChargedHitsIgniteCreepers": "Stun Gun should ignite creepers",
-    "text.autoconfig.gearreborn.option.stungunShouldStunBossMobs": "Stun Gun should affect vanilla boss mobs",
-    "text.autoconfig.gearreborn.option.stungunSlownessTicks": "Stun Gun ticks of Slowness afflicted",
-    "text.autoconfig.gearreborn.option.stungunWeaknessTicks": "Stun Gun ticks of Weakness afflicted"
+    "text.autoconfig.gearreborn.option.nvgActiveEnergyPerTickCost": "Active energy per tick cost",
+    "text.autoconfig.gearreborn.option.nvgEnergyCapacity": "Energy capacity",
+    "text.autoconfig.gearreborn.option.stungunChargeEnergyCost": "Charge up energy cost",
+    "text.autoconfig.gearreborn.option.stungunEnergyCapacity": "Energy capacity",
+    "text.autoconfig.gearreborn.option.stungunChargeTicks": "Time it takes to charge up in ticks",
+    "text.autoconfig.gearreborn.option.stungunDamageDealtToArthropodsOnChargedHit": "Bonus arthropod damage",
+    "text.autoconfig.gearreborn.option.stungunShouldChargedHitsIgniteCreepers": "Should ignite creepers",
+    "text.autoconfig.gearreborn.option.stungunShouldStunBossMobs": "Should affect vanilla boss mobs",
+    "text.autoconfig.gearreborn.option.stungunSlownessTicks": "Ticks of Slowness afflicted",
+    "text.autoconfig.gearreborn.option.stungunWeaknessTicks": "Ticks of Weakness afflicted",
+
+    "text.autoconfig.gearreborn.category.hazmat": "Hazmat suit",
+    "text.autoconfig.gearreborn.category.nvg": "Night Vision Goggles",
+    "text.autoconfig.gearreborn.category.stungun": "Stun Gun"
+
+
+
  }

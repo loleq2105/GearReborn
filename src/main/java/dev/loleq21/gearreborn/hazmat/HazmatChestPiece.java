@@ -2,7 +2,6 @@ package dev.loleq21.gearreborn.hazmat;
 
 import dev.loleq21.gearreborn.GRConfig;
 import dev.loleq21.gearreborn.GRContent;
-import dev.loleq21.gearreborn.GearReborn;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,17 +18,21 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import reborncore.api.items.ArmorBlockEntityTicker;
 import techreborn.init.TRContent;
 
 import java.util.List;
 
-public class HazmatChestPiece extends ArmorItem {
+import static dev.loleq21.gearreborn.hazmat.HazmatSuitUtils.*;
+
+public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEntityTicker {
 
     public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof());
+        super(material,slot);
     }
 
     static GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
@@ -37,8 +40,54 @@ public class HazmatChestPiece extends ArmorItem {
     public static final String AIR_KEY = "air";
     public static final int barColor = 0xFFFFFF;
     public static final int airCapacity = config.hazmatChestpieceAirTicksCapacity;
+    public static final boolean degradeHazmat = config.hazmatDegradesInLava;
+    public static final float degradeHazmatChance = config.hazmatLavaDegradeSpeed/100;
 
-    public static boolean tryConsumeAir(PlayerEntity playerEntity, ItemStack hazmatChestplate){
+    @Override
+    public void tickArmor(ItemStack stack, PlayerEntity playerEntity) {
+
+        if (playerEntity.getEquippedStack(EquipmentSlot.HEAD).isOf(GRContent.HAZMAT_HELMET)) {
+
+            if (playerEntity.isSubmergedInWater() && tryConsumeAir(playerEntity, stack)) {
+                giveWaterBreathing(playerEntity);
+            } else {
+                disableWaterBreathing(playerEntity);
+            }
+
+            if (!playerIsWearingHazmatBottoms(playerEntity)) {
+                disableFireResist(playerEntity);
+                return;
+            }
+
+            if (playerEntity.isOnFire()) {
+                playerEntity.extinguish();
+            }
+
+            boolean second = playerEntity.getEntityWorld().getTime() % 20 == 0;
+
+            if (degradeHazmat && second && playerEntity.isInLava()) {
+                Iterable<ItemStack> suitPieces = playerEntity.getArmorItems();
+                Random random = playerEntity.getRandom();
+                for (ItemStack itemStack : suitPieces) {
+                    if (random.nextFloat() <= degradeHazmatChance) {
+                        itemStack.damage(1, playerEntity, (e) -> {
+                            e.sendEquipmentBreakStatus(((ArmorItem) (itemStack.getItem())).getSlotType());
+                        });
+                    }
+                }
+            }
+            giveFireResist(playerEntity);
+        } else {
+            removeHazmatEffects(playerEntity);
+        }
+
+    }
+
+    public static void onRemoved(PlayerEntity playerEntity){
+        removeHazmatEffects(playerEntity);
+    }
+
+    private static boolean tryConsumeAir(PlayerEntity playerEntity, ItemStack hazmatChestplate){
         if (tryUseAir(hazmatChestplate, 1)) {
                 return true;
         } else {
@@ -60,11 +109,6 @@ public class HazmatChestPiece extends ArmorItem {
             }
             return false;
         }
-    }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return true;
     }
 
     @Environment(EnvType.CLIENT)
@@ -108,11 +152,6 @@ public class HazmatChestPiece extends ArmorItem {
     }
 
 
-    @Override
-    public boolean isDamageable() {
-        return true;
-    }
-
     private int getStoredAirForToolTip(ItemStack stack) {
         if (stack.hasNbt()) {
             return getStoredAir(stack);
@@ -124,14 +163,12 @@ public class HazmatChestPiece extends ArmorItem {
     //adapted code from RC's SimpleBatteryItem class.
     //Why all this relentless code copying and private- everything? Well, I don't expect anyone to even consider using the same system as mine, and it does its job.
 
-
     private static int getStoredAir(ItemStack stack) {
         return getStoredAirUnchecked(stack);
     }
 
     private static void setStoredAirUnchecked(ItemStack stack, int newAmount) {
         if (newAmount == 0) {
-            // Make sure newly crafted ~~energy~~ air containers stack with emptied ones.
             stack.removeSubNbt(AIR_KEY);
         } else {
             stack.getOrCreateNbt().putInt(AIR_KEY, newAmount);
@@ -182,6 +219,7 @@ public class HazmatChestPiece extends ArmorItem {
         itemList.add(aired);
 
     }
+
 
 }
 

@@ -8,49 +8,68 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 @Config(name = "gearreborn")
 public class GRConfig implements ConfigData {
 
-    @Comment("How many ticks of water breathing you can get with the hazmat chestpiece with one compressed air cell")
+    @Comment("Amount of ticks of water breathing that one compressed air cell provides")
+    @ConfigEntry.Category("hazmat")
     @ConfigEntry.Gui.RequiresRestart
     public int hazmatChestpieceAirTicksCapacity = 524;
 
-    @Comment("Should the hazmat suit slowly degrade in durability when the users is in lava")
+    @Comment("Should the hazmat suit slowly degrade in durability when the user is in lava")
+    @ConfigEntry.Category("hazmat")
+    @ConfigEntry.Gui.RequiresRestart
     public boolean hazmatDegradesInLava = true;
 
-    @Comment("How much energy (expressed in E) per tick the NVG consume when they're active and on the player's head")
+    @Comment("Percent chance for any piece to lose 1 durability in each second that the player is in lava")
+    @ConfigEntry.Category("hazmat")
+    @ConfigEntry.BoundedDiscrete(max = 100)
+    @ConfigEntry.Gui.RequiresRestart
+    public int hazmatLavaDegradeSpeed = 20;
+
+    @Comment("How much energy per tick the NVG consume when they're active and on the player's head")
+    @ConfigEntry.Category("nvg")
     @ConfigEntry.Gui.RequiresRestart
     int nvgActiveEnergyPerTickCost = 16;
 
-    @Comment("The energy capacity of the NVG, expressed in E")
+    @Comment("The energy capacity of the NVG")
+    @ConfigEntry.Category("nvg")
     @ConfigEntry.Gui.RequiresRestart
     int nvgEnergyCapacity = 80000;
 
-    @Comment("The energy capacity of the stun gun, expressed in E")
+    @Comment("The energy capacity of the stun gun")
+    @ConfigEntry.Category("stungun")
     @ConfigEntry.Gui.RequiresRestart
-    int stungunEnergyCapacity = 8192;
+    int stungunEnergyCapacity = 25600;
 
-    @Comment("How much energy (expressed in E) the stun gun consumes in order to charge its capacitors. Should be divisible by stungunChargeTicks, as the effective value is equal to (stungunChargeEnergyCost÷stungunChargeTicks) without remainder.")
+    @Comment("How much energy the stun gun consumes in order to charge its capacitors")
+    @ConfigEntry.Category("stungun")
     @ConfigEntry.Gui.RequiresRestart
-    int stungunChargeEnergyCost = 1024;
+    int stungunChargeEnergyCost = 5120;
 
-    @Comment("How many ticks it takes for the stun gun's capacitors to fully charge.")
+    @Comment("How many ticks it takes for the stun gun's capacitors to fully charge")
+    @ConfigEntry.Category("stungun")
     @ConfigEntry.Gui.RequiresRestart
     int stungunChargeTicks = 64;
 
-    @Comment("How much damage a charged stun gun deals specifically to arthropods. Set to 0 to disable this whole spider zapping feature")
+    @Comment("How much damage a charged stun gun deals specifically to arthropods")
+    @ConfigEntry.Category("stungun")
     @ConfigEntry.Gui.RequiresRestart
     int stungunDamageDealtToArthropodsOnChargedHit = 16;
 
     @Comment("Should the stun gun ignite Creepers")
+    @ConfigEntry.Category("stungun")
     boolean stungunShouldChargedHitsIgniteCreepers = true;
 
     @Comment("Should the stun gun stun vanilla boss mobs")
     @ConfigEntry.Gui.RequiresRestart
+    @ConfigEntry.Category("stungun")
     boolean stungunShouldStunBossMobs = false;
 
     @Comment("How many ticks of Slowness should the Stun Gun inflict on mobs")
+    @ConfigEntry.Category("stungun")
     @ConfigEntry.Gui.RequiresRestart
     int stungunSlownessTicks = 100;
 
     @Comment("How many ticks of Weakness should the Stun Gun inflict on mobs")
+    @ConfigEntry.Category("stungun")
     @ConfigEntry.Gui.RequiresRestart
     int stungunWeaknessTicks = 100;
 

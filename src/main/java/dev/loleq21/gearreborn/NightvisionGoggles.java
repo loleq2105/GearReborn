@@ -4,7 +4,6 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -14,14 +13,11 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
-import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemUtils;
@@ -29,7 +25,7 @@ import techreborn.utils.InitUtils;
 
 import java.util.List;
 
-public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem, ArmorRemoveHandler {
+public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem {
 
     public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
         super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).maxDamage(-1));
@@ -48,7 +44,7 @@ public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTic
         }
 
         if (this.slot!=EquipmentSlot.HEAD) {
-            disableNightVisionUnchecked(user);
+            disableNightVision(user);
             if(ItemUtils.isActive(stack)){
                 ItemUtils.switchActive(stack, 0, user);
             }
@@ -58,7 +54,7 @@ public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTic
         ItemUtils.checkActive(stack, energyPerTickCost, user);
 
         if (!ItemUtils.isActive(stack)) {
-            disableNightVisionUnchecked(user);
+            disableNightVision(user);
             return;
         }
 
@@ -72,25 +68,17 @@ public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTic
         return false;
     }
 
-    @Override
-    public void onRemoved(PlayerEntity user) {
+    public static void onRemoved(PlayerEntity user) {
         if (!(user instanceof ServerPlayerEntity))
             return;
-
-        System.out.println("This should fire off in the sole event of the user removing the goggles, but it's triggered by each change of the stack's NBT");
-        disableNightVisionUnchecked(user);
+        disableNightVision(user);
     }
 
-    public static void disableNightVision(World world, PlayerEntity entity) {
-        if (!world.isClient()) {
+    public static void disableNightVision(PlayerEntity entity) {
+        if (!entity.getEntityWorld().isClient()) {
             entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
         }
     }
-
-    private static void disableNightVisionUnchecked(PlayerEntity entity) {
-        entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
-    }
-
 
     @Override
     public int getItemBarStep(ItemStack stack) {

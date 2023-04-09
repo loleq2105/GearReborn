@@ -73,7 +73,7 @@ public class GearReborn implements ModInitializer {
             }
             if (!ItemUtils.isActive(stack)) {
                 beepPitch = 0.9f;
-                disableNightVision(world, player);
+                disableNightVision(player);
             }
 
             world.playSound(null, player.getBlockPos(), GearReborn.NVG_SOUND_EVENT, SoundCategory.MASTER, 1f, beepPitch);

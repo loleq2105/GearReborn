@@ -1,26 +1,18 @@
 package dev.loleq21.gearreborn.mixin;
 
-
-import dev.loleq21.gearreborn.GRConfig;
 import dev.loleq21.gearreborn.GRContent;
-import me.shedaniel.autoconfig.AutoConfig;
+import dev.loleq21.gearreborn.NightvisionGoggles;
+import dev.loleq21.gearreborn.hazmat.HazmatChestPiece;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static dev.loleq21.gearreborn.hazmat.HazmatChestPiece.tryConsumeAir;
-import static dev.loleq21.gearreborn.hazmat.HazmatSuitUtils.playerIsWearingHazmatBottoms;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
@@ -29,77 +21,27 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         super(type, world);
     }
 
-    GRConfig gearreborn$config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
+    public boolean gearreborn$hadHazmatChestpiece;
+    public boolean gearreborn$hadNVGoggles;
 
-    private final boolean gearreborn$degradeHazmat = gearreborn$config.hazmatDegradesInLava;
-
-    private boolean gearreborn$hadHazmatHelmet;
-
-    private void disableFireResist() {
-        this.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
-    }
-
-    private void disableWaterBreathing() {
-        this.removeStatusEffect(StatusEffects.WATER_BREATHING);
-    }
-
-    private void removeHazmatEffects() {
-        this.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
-        this.removeStatusEffect(StatusEffects.WATER_BREATHING);
-    }
-
-    private void updateHazmatSuit() {
-        ItemStack itemStack = this.getEquippedStack(EquipmentSlot.HEAD);
-        if (itemStack.isOf(GRContent.HAZMAT_HELMET)) {
-            gearreborn$hadHazmatHelmet = true;
-            if (this.getEquippedStack(EquipmentSlot.CHEST).getItem() != GRContent.HAZMAT_CHESTPIECE) {
-                removeHazmatEffects();
-                return;
+    private void gearreborn$updateGear() {
+        ItemStack headStack = this.getEquippedStack(EquipmentSlot.HEAD);
+            if (headStack.isOf(GRContent.NV_GOGGLES)) {
+                gearreborn$hadNVGoggles= true;
+            } else if (gearreborn$hadNVGoggles) {
+                NightvisionGoggles.onRemoved((PlayerEntity) ((Object) this));
             }
-            PlayerEntity playerEntity = (PlayerEntity) ((Object) this);
-
-            ItemStack hazmatChestplate = playerEntity.getEquippedStack(EquipmentSlot.CHEST);
-
-            if (playerEntity.isSubmergedInWater() && tryConsumeAir(playerEntity, hazmatChestplate)) {
-                playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 999999, 0, false, false, true));
-            } else {
-                disableWaterBreathing();
+        ItemStack chestStack = this.getEquippedStack(EquipmentSlot.CHEST);
+            if (chestStack.isOf(GRContent.HAZMAT_CHESTPIECE)) {
+                gearreborn$hadHazmatChestpiece = true;
+            } else if (gearreborn$hadHazmatChestpiece) {
+                HazmatChestPiece.onRemoved((PlayerEntity) ((Object) this));
             }
-
-            if (!playerIsWearingHazmatBottoms(playerEntity)) {
-                disableFireResist();
-                return;
-            }
-
-            if (playerEntity.isOnFire()) {
-                playerEntity.extinguish();
-            }
-
-            boolean second = world.getTime() % 20 == 0;
-
-            if (gearreborn$degradeHazmat && second && playerEntity.isInLava()) {
-                Iterable<ItemStack> suitPieces = playerEntity.getArmorItems();
-                Random random = playerEntity.getRandom();
-                for (ItemStack stack : suitPieces) {
-                    if (random.nextFloat() < 0.2F) {
-                        stack.damage(1, playerEntity, (e) -> {
-                            e.sendEquipmentBreakStatus(((ArmorItem) (itemStack.getItem())).getSlotType());
-                        });
-                    }
-                }
-            }
-
-            playerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 999999, 0, false, false, true));
-        } else if (gearreborn$hadHazmatHelmet) {
-            removeHazmatEffects();
-            gearreborn$hadHazmatHelmet = false;
-        }
-
     }
 
     @Inject(at = @At("TAIL"), method = "tick()V", cancellable = false)
     public void tick(CallbackInfo ci) {
-        this.updateHazmatSuit();
+        this.gearreborn$updateGear();
     }
 
 }
