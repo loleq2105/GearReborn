@@ -41,7 +41,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
     public static final int barColor = 0xFFFFFF;
     public static final int airCapacity = config.hazmatChestpieceAirTicksCapacity;
     public static final boolean degradeHazmat = config.hazmatDegradesInLava;
-    public static final float degradeHazmatChance = config.hazmatLavaDegradeSpeed/100;
+    public static final float degradeRate = 1.0F/config.hazmatLavaDegradeRate;
 
     @Override
     public void tickArmor(ItemStack stack, PlayerEntity playerEntity) {
@@ -63,13 +63,11 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
                 playerEntity.extinguish();
             }
 
-            boolean second = playerEntity.getEntityWorld().getTime() % 20 == 0;
-
-            if (degradeHazmat && second && playerEntity.isInLava()) {
+            if (degradeHazmat && playerEntity.isInLava()) {
                 Iterable<ItemStack> suitPieces = playerEntity.getArmorItems();
                 Random random = playerEntity.getRandom();
                 for (ItemStack itemStack : suitPieces) {
-                    if (random.nextFloat() <= degradeHazmatChance) {
+                    if (random.nextFloat() <= degradeRate) {
                         itemStack.damage(1, playerEntity, (e) -> {
                             e.sendEquipmentBreakStatus(((ArmorItem) (itemStack.getItem())).getSlotType());
                         });

@@ -18,11 +18,10 @@ public class GRConfig implements ConfigData {
     @ConfigEntry.Gui.RequiresRestart
     public boolean hazmatDegradesInLava = true;
 
-    @Comment("Percent chance for any piece to lose 1 durability in each second that the player is in lava")
+    @Comment("The tick interval in which hazmat suit's pieces get damaged by one point while the player is in lava")
     @ConfigEntry.Category("hazmat")
-    @ConfigEntry.BoundedDiscrete(max = 100)
     @ConfigEntry.Gui.RequiresRestart
-    public int hazmatLavaDegradeSpeed = 20;
+    public int hazmatLavaDegradeRate = 60;
 
     @Comment("How much energy per tick the NVG consume when they're active and on the player's head")
     @ConfigEntry.Category("nvg")

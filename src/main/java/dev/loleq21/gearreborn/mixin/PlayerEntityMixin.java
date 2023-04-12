@@ -25,18 +25,16 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     public boolean gearreborn$hadNVGoggles;
 
     private void gearreborn$updateGear() {
-        ItemStack headStack = this.getEquippedStack(EquipmentSlot.HEAD);
-            if (headStack.isOf(GRContent.NV_GOGGLES)) {
-                gearreborn$hadNVGoggles= true;
-            } else if (gearreborn$hadNVGoggles) {
-                NightvisionGoggles.onRemoved((PlayerEntity) ((Object) this));
-            }
-        ItemStack chestStack = this.getEquippedStack(EquipmentSlot.CHEST);
-            if (chestStack.isOf(GRContent.HAZMAT_CHESTPIECE)) {
-                gearreborn$hadHazmatChestpiece = true;
-            } else if (gearreborn$hadHazmatChestpiece) {
-                HazmatChestPiece.onRemoved((PlayerEntity) ((Object) this));
-            }
+        if (this.getEquippedStack(EquipmentSlot.HEAD).isOf(GRContent.NV_GOGGLES)) {
+            gearreborn$hadNVGoggles = true;
+        } else if (gearreborn$hadNVGoggles) {
+            NightvisionGoggles.onRemoved((PlayerEntity) ((Object) this));
+        }
+        if (this.getEquippedStack(EquipmentSlot.CHEST).isOf(GRContent.HAZMAT_CHESTPIECE)) {
+            gearreborn$hadHazmatChestpiece = true;
+        } else if (gearreborn$hadHazmatChestpiece) {
+            HazmatChestPiece.onRemoved((PlayerEntity) ((Object) this));
+        }
     }
 
     @Inject(at = @At("TAIL"), method = "tick()V", cancellable = false)
