@@ -1,6 +1,7 @@
 package dev.loleq21.gearreborn;
 
-import dev.loleq21.gearreborn.hazmat.HazmatSuitUtils;
+import dev.loleq21.gearreborn.items.NightvisionGoggles;
+import dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
@@ -19,7 +20,7 @@ import reborncore.common.util.ItemUtils;
 import team.reborn.energy.api.base.SimpleEnergyItem;
 import techreborn.api.events.CableElectrocutionEvent;
 
-import static dev.loleq21.gearreborn.NightvisionGoggles.disableNightVision;
+import static dev.loleq21.gearreborn.items.NightvisionGoggles.disableNightVision;
 
 import java.util.Arrays;
 import java.util.HashSet;

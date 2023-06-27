@@ -1,5 +1,6 @@
-package dev.loleq21.gearreborn;
+package dev.loleq21.gearreborn.items;
 
+import dev.loleq21.gearreborn.GRConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -1,6 +1,7 @@
 package dev.loleq21.gearreborn;
 
-import dev.loleq21.gearreborn.hazmat.HazmatChestPiece;
+import dev.loleq21.gearreborn.items.StunGunItem;
+import dev.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;

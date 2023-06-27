@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn.hazmat;
+package dev.loleq21.gearreborn.items.hazmat;
 
 import dev.loleq21.gearreborn.GRConfig;
 import dev.loleq21.gearreborn.GRContent;
@@ -6,7 +6,6 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -27,7 +26,7 @@ import techreborn.init.TRContent;
 
 import java.util.List;
 
-import static dev.loleq21.gearreborn.hazmat.HazmatSuitUtils.*;
+import static dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils.*;
 
 public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEntityTicker {
 
@@ -161,7 +160,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
     //adapted code from RC's SimpleBatteryItem class.
     //Why all this relentless code copying and private- everything? Well, I don't expect anyone to even consider using the same system as mine, and it does its job.
 
-    private static int getStoredAir(ItemStack stack) {
+    public static int getStoredAir(ItemStack stack) {
         return getStoredAirUnchecked(stack);
     }
 
@@ -173,7 +172,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
         }
     }
 
-    private static void setStoredAir(ItemStack stack, int newAmount) {
+    public static void setStoredAir(ItemStack stack, int newAmount) {
         setStoredAirUnchecked(stack, newAmount);
     }
 
@@ -195,6 +194,11 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
 
     private static int getStoredAirUnchecked(@Nullable NbtCompound nbt) {
         return nbt != null ? nbt.getInt(AIR_KEY) : 0;
+    }
+
+    public static int getAirCapacity() {
+        GRConfig config = new GRConfig();
+        return config.hazmatChestpieceAirTicksCapacity;
     }
 
     //end of adapted code

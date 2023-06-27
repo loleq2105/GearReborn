@@ -1,7 +1,7 @@
 package dev.loleq21.gearreborn.mixin;
 
 import dev.loleq21.gearreborn.GRContent;
-import dev.loleq21.gearreborn.hazmat.HazmatSuitUtils;
+import dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import techreborn.init.TRContent;
-import net.minecraft.entity.damage.DamageSources;
 
 
 @Mixin(LivingEntity.class)

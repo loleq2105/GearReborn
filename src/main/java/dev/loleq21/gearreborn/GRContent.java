@@ -1,8 +1,10 @@
 package dev.loleq21.gearreborn;
 
-import dev.loleq21.gearreborn.hazmat.HazmatChestPiece;
-import dev.loleq21.gearreborn.hazmat.HazmatArmorPiece;
-import net.minecraft.entity.EquipmentSlot;
+import dev.loleq21.gearreborn.items.NightvisionGoggles;
+import dev.loleq21.gearreborn.items.StunGunItem;
+import dev.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
+import dev.loleq21.gearreborn.items.hazmat.HazmatArmorPiece;
+import dev.loleq21.gearreborn.items.RubberArmorPiece;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
