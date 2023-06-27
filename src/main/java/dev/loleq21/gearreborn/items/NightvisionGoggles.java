@@ -1,5 +1,6 @@
-package dev.loleq21.gearreborn;
+package dev.loleq21.gearreborn.items;
 
+import dev.loleq21.gearreborn.GRConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,8 +28,8 @@ import java.util.List;
 
 public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem {
 
-    public NightvisionGoggles(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).maxDamage(-1));
+    public NightvisionGoggles(ArmorMaterial material, ArmorItem.Type slot) {
+        super(material, slot, new Settings().maxCount(1).maxDamage(-1));
     }
 
     private static GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
@@ -43,7 +44,7 @@ public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTic
             return;
         }
 
-        if (this.slot!=EquipmentSlot.HEAD) {
+        if (this.getSlotType() != EquipmentSlot.HEAD) {
             disableNightVision(user);
             if(ItemUtils.isActive(stack)){
                 ItemUtils.switchActive(stack, 0, user);
@@ -114,14 +115,4 @@ public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTic
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         ItemUtils.buildActiveTooltip(stack, tooltip);
     }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> itemList) {
-        if (!isIn(group)) {
-            return;
-        }
-        InitUtils.initPoweredItems(this, itemList);
-    }
-
 }

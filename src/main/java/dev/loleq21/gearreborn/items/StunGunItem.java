@@ -1,6 +1,9 @@
-package dev.loleq21.gearreborn;
+package dev.loleq21.gearreborn.items;
 
-import dev.loleq21.gearreborn.hazmat.HazmatSuitUtils;
+import dev.loleq21.gearreborn.GRConfig;
+import dev.loleq21.gearreborn.GRContent;
+import dev.loleq21.gearreborn.GearReborn;
+import dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -8,13 +11,12 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.*;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -22,21 +24,19 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemUtils;
 import techreborn.init.ModSounds;
-import techreborn.utils.InitUtils;
 
 import java.util.List;
 
 public class StunGunItem extends Item implements RcEnergyItem {
 
     public StunGunItem() {
-        super(new Settings().group(GearReborn.ITEMGROUP).maxCount(1));
+        super(new Settings().maxCount(1));
     }
 
     GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
@@ -91,7 +91,8 @@ public class StunGunItem extends Item implements RcEnergyItem {
             creeper.ignite();
         } else if (target.getGroup() == EntityGroup.ARTHROPOD) {
             if (attacker instanceof PlayerEntity) {
-                target.damage(DamageSource.player((PlayerEntity) attacker), arthropodDamage);
+                World world = target.getWorld();
+                target.damage(world.getDamageSources().create(DamageTypes.FALL), arthropodDamage);
                 return true;
             }
         } else if (!stunBosses && GearReborn.bossMobs.contains(target.getType())) {
@@ -192,15 +193,4 @@ public class StunGunItem extends Item implements RcEnergyItem {
         line1.formatted(Formatting.GRAY);
         tooltip.add(line1);
     }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> itemList) {
-        if (!isIn(group)) {
-            return;
-        }
-        InitUtils.initPoweredItems(this, itemList);
-    }
-
-
 }
