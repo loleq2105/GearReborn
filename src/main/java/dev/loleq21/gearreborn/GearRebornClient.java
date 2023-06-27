@@ -22,6 +22,8 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import reborncore.common.util.ItemUtils;
+import team.reborn.energy.api.base.SimpleBatteryItem;
+import techreborn.items.armor.BatpackItem;
 
 @Environment(EnvType.CLIENT)
 public class GearRebornClient implements ClientModInitializer {
@@ -44,7 +46,17 @@ public class GearRebornClient implements ClientModInitializer {
                 StunGunItem.class,
                 new Identifier("gearreborn:active"),
                 (item, stack, world, entity, seed) -> {
-                    if (!item.isEmpty() && ItemUtils.isActive(item) && StunGunItem.getCapacitorCharge(stack)==config.stungunChargeTicks) {
+                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && StunGunItem.getCapacitorCharge(stack)==config.stungunChargeTicks) {
+                        return 1.0F;
+                    }
+                    return 0.0F;
+                }
+        );
+        registerPredicateProvider(
+                BatpackItem.class,
+                new Identifier("techreborn:empty"),
+                (item, stack, world, entity, seed) -> {
+                    if (!stack.isEmpty() && SimpleBatteryItem.getStoredEnergyUnchecked(stack) == 0) {
                         return 1.0F;
                     }
                     return 0.0F;
@@ -54,7 +66,7 @@ public class GearRebornClient implements ClientModInitializer {
                 HazmatChestPiece.class,
                 new Identifier("gearreborn:charged"),
                 (item, stack, world, entity, seed) -> {
-                    if (!item.isEmpty() && HazmatChestPiece.getStoredAirUnchecked() > 0) {
+                    if (!stack.isEmpty() && HazmatChestPiece.getStoredAirUnchecked(stack) > 0) {
                         return 1.0F;
                     }
                     return 0.0F;
@@ -75,7 +87,7 @@ public class GearRebornClient implements ClientModInitializer {
 
 
 
-    private static <T extends Item> void registerPredicateProvider(Class<T> itemClass, Identifier identifier, ClampedModelPredicateProvider modelPredicateProvider) {
+    private static <T extends Item> void registerPredicateProvider(Class<T> itemClass, Identifier identifier, ItemModelPredicateProvider modelPredicateProvider) {
         Registries.ITEM.stream()
                 .filter(item -> item.getClass().isAssignableFrom(itemClass))
                 .forEach(item -> ModelPredicateProviderRegistry.register(item, identifier, modelPredicateProvider));
