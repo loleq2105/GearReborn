@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 
 public class HazmatArmorPiece extends ArmorItem {
 
-    public HazmatArmorPiece(ArmorMaterial material, EquipmentSlot slot) {
-        super(material, slot, new Settings().group(GearReborn.ITEMGROUP).maxCount(1).fireproof());
+    public HazmatArmorPiece(ArmorMaterial material, ArmorItem.Type slot) {
+        super(material, slot, new Settings().maxCount(1).fireproof());
     }
 
     @Override

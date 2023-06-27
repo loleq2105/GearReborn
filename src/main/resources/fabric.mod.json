@@ -30,9 +30,9 @@
     "gearreborn.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.12.12",
+    "fabricloader": ">=0.14.21",
     "fabric": "*",
-    "minecraft": ">=1.18.2",
+    "minecraft": ">=1.20",
     "java": ">=17",
     "techreborn": "*",
     "cloth-config": "*"
