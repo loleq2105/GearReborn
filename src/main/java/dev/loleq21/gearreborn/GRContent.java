@@ -32,7 +32,7 @@ public class GRContent {
 
     public static final Item RUBBER_HELMET = addItem("rubber_helmet", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
     public static final Item RUBBER_CHESTPLATE = addItem("rubber_chestplate", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
-    public static final Item RUBBER_LEGGINGS = addItem("rubber_leggings", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, ArmorItem.Type.BOOTS));
+    public static final Item RUBBER_LEGGINGS = addItem("rubber_leggings", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
 
     private static <I extends Item> I addItem(String name, I item) {
         GRITEMS.put(new Identifier(GearReborn.MOD_ID, name), item);

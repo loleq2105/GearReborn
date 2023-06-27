@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class GRItemGroup {
     public static ItemGroup ITEMGROUP = Registry.register(Registries.ITEM_GROUP, new Identifier(GearReborn.MOD_ID, "items"),
-            FabricItemGroup.builder().displayName(Text.translatable("itemgroup.gearreborn"))
+            FabricItemGroup.builder().displayName(Text.translatable("itemgroup.gearreborn.items"))
                     .icon(() -> new ItemStack(GRContent.HAZMAT_HELMET)).entries((displayContext, entries) -> {
                         entries.add(GRContent.HAZMAT_HELMET);
                         entries.add(GRContent.HAZMAT_CHESTPIECE);
