@@ -11,7 +11,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
 import techreborn.init.TRToolMaterials;
-import techreborn.init.TRToolTier;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class GRContent {
 
     private static final Map<Identifier, Item> GRITEMS = new LinkedHashMap<>();
 
-    public static final Item NV_GOGGLES = addItem("nv_goggles", new NightvisionGoggles(MISCGEAR_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
+    public static final Item NV_GOGGLES = addItem("nv_goggles", new NightVisionGoggles(MISCGEAR_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
     public static final Item STUN_GUN = addItem("stun_gun", new StunGunItem());
 
     public static final Item HAZMAT_HELMET = addItem("hazmat_helmet", new HazmatArmorPiece(HAZMAT_ARMOR_MATERIAL, ArmorItem.Type.HELMET));

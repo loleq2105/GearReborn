@@ -1,6 +1,6 @@
 package dev.loleq21.gearreborn;
 
-import dev.loleq21.gearreborn.items.NightvisionGoggles;
+import dev.loleq21.gearreborn.items.NightVisionGoggles;
 import dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
@@ -20,7 +20,7 @@ import reborncore.common.util.ItemUtils;
 import team.reborn.energy.api.base.SimpleEnergyItem;
 import techreborn.api.events.CableElectrocutionEvent;
 
-import static dev.loleq21.gearreborn.items.NightvisionGoggles.disableNightVision;
+import static dev.loleq21.gearreborn.items.NightVisionGoggles.disableNightVision;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -63,10 +63,10 @@ public class GearReborn implements ModInitializer {
 
             World world = player.getEntityWorld();
 
-            ItemUtils.switchActive(stack, NightvisionGoggles.energyPerTickCost, player);
+            ItemUtils.switchActive(stack, NightVisionGoggles.energyPerTickCost, player);
 
             float beepPitch = 1.1f;
-            if (SimpleEnergyItem.getStoredEnergyUnchecked(stack) < NightvisionGoggles.energyPerTickCost) {
+            if (SimpleEnergyItem.getStoredEnergyUnchecked(stack) < NightVisionGoggles.energyPerTickCost) {
                 beepPitch = 0.6f;
             }
             if (!ItemUtils.isActive(stack)) {
