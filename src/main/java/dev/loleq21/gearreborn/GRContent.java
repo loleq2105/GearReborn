@@ -1,16 +1,17 @@
 package dev.loleq21.gearreborn;
 
-import dev.loleq21.gearreborn.items.NightvisionGoggles;
-import dev.loleq21.gearreborn.items.StunGunItem;
+import dev.loleq21.gearreborn.items.*;
 import dev.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
 import dev.loleq21.gearreborn.items.hazmat.HazmatArmorPiece;
-import dev.loleq21.gearreborn.items.RubberArmorPiece;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
+import techreborn.init.TRToolMaterials;
+import techreborn.init.TRToolTier;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -36,6 +37,9 @@ public class GRContent {
     public static final Item RUBBER_CHESTPLATE = addItem("rubber_chestplate", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
     public static final Item RUBBER_LEGGINGS = addItem("rubber_leggings", new RubberArmorPiece(RUBBER_ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS));
 
+    public static final Item ELECTRIC_WRENCH = addItem("electric_wrench", new ElectricWrenchItem());
+
+    public static final Item ELECTRIC_HOE = addItem("electric_hoe", new ElectricHoeItem(TRToolMaterials.BASIC_DRILL, 0, 0, new FabricItemSettings().maxCount(1).maxDamage(-1)));
     private static <I extends Item> I addItem(String name, I item) {
         GRITEMS.put(new Identifier(GearReborn.MOD_ID, name), item);
         return item;

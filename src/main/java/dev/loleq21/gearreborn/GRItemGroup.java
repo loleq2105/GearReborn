@@ -47,7 +47,23 @@ public class GRItemGroup {
                         energySG.setStoredEnergy(chargedSG, energySG.getEnergyCapacity());
                         entries.add(chargedSG);
 
+                        // uncharged
+                        entries.add(GRContent.ELECTRIC_HOE);
 
+                        // charged
+                        ItemStack chargedEH = new ItemStack(GRContent.ELECTRIC_HOE);
+                        RcEnergyItem energyEH = (RcEnergyItem)GRContent.ELECTRIC_HOE;
+                        energyEH.setStoredEnergy(chargedEH, energyEH.getEnergyCapacity());
+                        entries.add(chargedEH);
+
+                        // uncharged
+                        entries.add(GRContent.ELECTRIC_WRENCH);
+
+                        // charged
+                        ItemStack chargedEW = new ItemStack(GRContent.ELECTRIC_WRENCH);
+                        RcEnergyItem energyEW = (RcEnergyItem)GRContent.ELECTRIC_WRENCH;
+                        energyEW.setStoredEnergy(chargedEW, energyEW.getEnergyCapacity());
+                        entries.add(chargedEW);
                     }).build());
 
     public static void registerItemGroups() {

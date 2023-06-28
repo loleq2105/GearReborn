@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "TB"
+  ],
+  "key": {
+    "T": {
+      "item": "techreborn:wrench"
+    },
+    "B": {
+      "item": "techreborn:red_cell_battery"
+    }
+  },
+  "result": {
+    "item": "gearreborn:electric_wrench"
+  }
+}
