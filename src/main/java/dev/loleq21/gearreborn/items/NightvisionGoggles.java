@@ -19,6 +19,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
+import reborncore.api.items.ArmorRemoveHandler;
 import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemUtils;
@@ -26,7 +27,7 @@ import techreborn.utils.InitUtils;
 
 import java.util.List;
 
-public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem {
+public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem, ArmorRemoveHandler {
 
     public NightvisionGoggles(ArmorMaterial material, ArmorItem.Type slot) {
         super(material, slot, new Settings().maxCount(1).maxDamage(-1));
@@ -65,14 +66,15 @@ public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTic
     }
 
     @Override
-    public boolean isDamageable() {
-        return false;
+    public void onRemoved(PlayerEntity playerEntity) {
+        if (!(playerEntity instanceof ServerPlayerEntity))
+            return;
+        disableNightVision(playerEntity);
     }
 
-    public static void onRemoved(PlayerEntity user) {
-        if (!(user instanceof ServerPlayerEntity))
-            return;
-        disableNightVision(user);
+    @Override
+    public boolean isDamageable() {
+        return false;
     }
 
     public static void disableNightVision(PlayerEntity entity) {
@@ -115,4 +117,5 @@ public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTic
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         ItemUtils.buildActiveTooltip(stack, tooltip);
     }
+
 }

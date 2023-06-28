@@ -12,6 +12,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
@@ -22,13 +23,14 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
+import reborncore.api.items.ArmorRemoveHandler;
 import techreborn.init.TRContent;
 
 import java.util.List;
 
 import static dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils.*;
 
-public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEntityTicker {
+public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEntityTicker, ArmorRemoveHandler {
 
     public HazmatChestPiece(ArmorMaterial material, ArmorItem.Type slot) {
         super(material,slot);
@@ -80,7 +82,10 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
 
     }
 
-    public static void onRemoved(PlayerEntity playerEntity){
+    @Override
+    public void onRemoved(PlayerEntity playerEntity) {
+        if (!(playerEntity instanceof ServerPlayerEntity))
+            return;
         removeHazmatEffects(playerEntity);
     }
 

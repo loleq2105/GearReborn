@@ -32,11 +32,11 @@ public final class HazmatSuitUtils {
     }
 
     public static void giveFireResist(LivingEntity entity) {
-        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 240, 0, false, false, true));
+        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, -1, 0, false, false, true));
     }
 
     public static void giveWaterBreathing(LivingEntity entity) {
-        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 240, 0, false, false, true));
+        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, -1, 0, false, false, true));
 
     }
 
