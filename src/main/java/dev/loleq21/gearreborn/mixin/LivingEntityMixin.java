@@ -1,7 +1,7 @@
 package dev.loleq21.gearreborn.mixin;
 
 import dev.loleq21.gearreborn.GRContent;
-import dev.loleq21.gearreborn.hazmat.HazmatSuitUtils;
+import dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -26,14 +26,16 @@ import techreborn.init.TRContent;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
-    @Shadow protected abstract int computeFallDamage(float fallDistance, float damageMultiplier);
+    @Shadow
+    protected abstract int computeFallDamage(float fallDistance, float damageMultiplier);
 
-    @Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition);
+    @Shadow
+    protected abstract void fall(double heightDifference, boolean onGround, BlockState landedState, BlockPos landedPosition);
 
     private void spawnBootParticles(ItemStack stack, float fallDistance) {
-        double d = Math.min((double)(0.2F + fallDistance / 15.0F), 2.5D);
-        int i = (int)(150.0D * d);
-        ((ServerWorld)this.world).spawnParticles(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), this.getX(), this.getY(), this.getZ(), i, 0.0D, 0.0D, 0.0D, 0.15000000596046448D);
+        double d = Math.min((double) (0.2F + fallDistance / 15.0F), 2.5D);
+        int i = (int) (150.0D * d);
+        ((ServerWorld) this.getWorld()).spawnParticles(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), this.getX(), this.getY(), this.getZ(), i, 0.0D, 0.0D, 0.0D, 0.15000000596046448D);
     }
 
     public LivingEntityMixin(EntityType<?> type, World world) {
@@ -46,17 +48,18 @@ public abstract class LivingEntityMixin extends Entity {
      Licensed under the MPL-2.0 license available at: https://tldrlegal.com/license/mozilla-public-license-2.0-(mpl-2)
     */
 
+
     @SuppressWarnings("ConstantConditions")
     @Inject(at = @At("HEAD"), method = "handleFallDamage", cancellable = true)
     private void handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> info) {
 
-        if (!world.isClient() && (Object) this instanceof PlayerEntity) {
+        if (!getWorld().isClient() && (Object) this instanceof PlayerEntity) {
             PlayerEntity player = ((PlayerEntity) ((Object) this));
             if (player.getEquippedStack(EquipmentSlot.FEET).getItem() == GRContent.RUBBER_BOOTS) {
                 ItemStack equippedBootsItemStack = player.getEquippedStack(EquipmentSlot.FEET);
                 if (!isSneaking()) {
                     int vanillaPlayerDamage = this.computeFallDamage(fallDistance, damageMultiplier);
-                    int userDamage = (int) Math.floor(vanillaPlayerDamage/8);
+                    int userDamage = (int) Math.floor(vanillaPlayerDamage / 8);
                     int bootDamage = (int) Math.ceil(vanillaPlayerDamage * 0.4375); //reference: https://wiki.industrial-craft.net/index.php/Rubber_Boots#Technical_Details
                     if (bootDamage > 0) {
                         spawnBootParticles(TRContent.Parts.RUBBER.getStack(), fallDistance);
@@ -66,10 +69,10 @@ public abstract class LivingEntityMixin extends Entity {
                     }
                     int bootDurability = equippedBootsItemStack.getMaxDamage() - equippedBootsItemStack.getDamage();
                     if (userDamage > 0) {
-                        if(bootDurability<0){
-                            this.damage(DamageSource.FALL, (float) vanillaPlayerDamage);
-                        } else{
-                            this.damage(DamageSource.FALL, (float) userDamage);
+                        if (bootDurability < 0) {
+                            this.damage(damageSource, (float) vanillaPlayerDamage);
+                        } else {
+                            this.damage(damageSource, (float) userDamage);
                         }
                     }
                     info.cancel();
@@ -81,12 +84,11 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(at = @At("HEAD"), method = "canFreeze", cancellable = true)
     private void canFreeze(CallbackInfoReturnable<Boolean> cir) {
 
-        if((Object) this instanceof PlayerEntity && HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity) (Object)this)){
+        if ((Object) this instanceof PlayerEntity && HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity) (Object) this)) {
             cir.setReturnValue(false);
         }
 
     }
-
 
 
 }

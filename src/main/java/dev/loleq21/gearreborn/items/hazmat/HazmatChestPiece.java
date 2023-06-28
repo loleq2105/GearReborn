@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn.hazmat;
+package dev.loleq21.gearreborn.items.hazmat;
 
 import dev.loleq21.gearreborn.GRConfig;
 import dev.loleq21.gearreborn.GRContent;
@@ -11,15 +11,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
@@ -27,11 +26,11 @@ import techreborn.init.TRContent;
 
 import java.util.List;
 
-import static dev.loleq21.gearreborn.hazmat.HazmatSuitUtils.*;
+import static dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils.*;
 
 public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEntityTicker {
 
-    public HazmatChestPiece(ArmorMaterial material, EquipmentSlot slot) {
+    public HazmatChestPiece(ArmorMaterial material, ArmorItem.Type slot) {
         super(material,slot);
     }
 
@@ -93,7 +92,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
                 for (int i = 0; i < playerEntity.getInventory().size(); i++) {
                     ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
                     if (iteratedStack.getItem() == TRContent.CELL) {
-                        if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registry.FLUID.get(new Identifier("techreborn:compressed_air")))) {
+                        if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registries.FLUID.get(new Identifier("techreborn:compressed_air")))) {
                             iteratedStack.decrement(1);
                             ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
                             playerEntity.giveItemStack(emptyCell);
@@ -161,7 +160,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
     //adapted code from RC's SimpleBatteryItem class.
     //Why all this relentless code copying and private- everything? Well, I don't expect anyone to even consider using the same system as mine, and it does its job.
 
-    private static int getStoredAir(ItemStack stack) {
+    public static int getStoredAir(ItemStack stack) {
         return getStoredAirUnchecked(stack);
     }
 
@@ -173,7 +172,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
         }
     }
 
-    private static void setStoredAir(ItemStack stack, int newAmount) {
+    public static void setStoredAir(ItemStack stack, int newAmount) {
         setStoredAirUnchecked(stack, newAmount);
     }
 
@@ -197,28 +196,12 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
         return nbt != null ? nbt.getInt(AIR_KEY) : 0;
     }
 
-    //end of adapted code
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> itemList) {
-        if (!isIn(group)) {
-            return;
-        }
-
-        Item item = GRContent.HAZMAT_CHESTPIECE;
-
-        ItemStack unaired = new ItemStack(item);
-        ItemStack aired = new ItemStack(item);
-
-        setStoredAir(aired, airCapacity);
-
-        itemList.add(unaired);
-        itemList.add(aired);
-
+    public static int getAirCapacity() {
+        GRConfig config = new GRConfig();
+        return config.hazmatChestpieceAirTicksCapacity;
     }
 
-
+    //end of adapted code
 }
 
 

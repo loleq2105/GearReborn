@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn.hazmat;
+package dev.loleq21.gearreborn.items.hazmat;
 
 import dev.loleq21.gearreborn.GRContent;
 import net.minecraft.entity.EquipmentSlot;

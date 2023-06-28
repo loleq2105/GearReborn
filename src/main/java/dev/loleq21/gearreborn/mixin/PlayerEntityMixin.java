@@ -1,13 +1,12 @@
 package dev.loleq21.gearreborn.mixin;
 
 import dev.loleq21.gearreborn.GRContent;
-import dev.loleq21.gearreborn.NightvisionGoggles;
-import dev.loleq21.gearreborn.hazmat.HazmatChestPiece;
+import dev.loleq21.gearreborn.items.NightvisionGoggles;
+import dev.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
