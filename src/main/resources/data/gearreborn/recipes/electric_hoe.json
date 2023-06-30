@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "TB"
+  ],
+  "key": {
+    "T": {
+      "tag": "c:hoes"
+    },
+    "B": {
+      "item": "techreborn:red_cell_battery"
+    }
+  },
+  "result": {
+    "item": "gearreborn:electric_hoe"
+  }
+}

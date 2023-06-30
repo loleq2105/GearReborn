@@ -11,32 +11,28 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
 import reborncore.api.items.ArmorRemoveHandler;
-import reborncore.common.powerSystem.RcEnergyItem;
 import reborncore.common.powerSystem.RcEnergyTier;
 import reborncore.common.util.ItemUtils;
-import techreborn.utils.InitUtils;
+import techreborn.items.armor.TREnergyArmourItem;
 
 import java.util.List;
 
-public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTicker, RcEnergyItem, ArmorRemoveHandler {
+public class NightVisionGoggles extends TREnergyArmourItem implements ArmorBlockEntityTicker, ArmorRemoveHandler {
 
-    public NightvisionGoggles(ArmorMaterial material, ArmorItem.Type slot) {
-        super(material, slot, new Settings().maxCount(1).maxDamage(-1));
+    public NightVisionGoggles(ArmorMaterial material, ArmorItem.Type slot) {
+        super(material, slot, energyCapacity, RcEnergyTier.MEDIUM);
     }
-
-    private static GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
+    private static final GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
     public static final int energyPerTickCost = config.nvgActiveEnergyPerTickCost;
-    private static final long energyCapacity = config.nvgEnergyCapacity;
+    public static final int energyCapacity = config.nvgEnergyCapacity;
 
     @Override
     public void tickArmor(ItemStack stack, PlayerEntity playerEntity) {
@@ -72,44 +68,14 @@ public class NightvisionGoggles extends ArmorItem implements ArmorBlockEntityTic
         disableNightVision(playerEntity);
     }
 
-    @Override
-    public boolean isDamageable() {
-        return false;
-    }
-
     public static void disableNightVision(PlayerEntity entity) {
         if (!entity.getEntityWorld().isClient()) {
             entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
         }
     }
 
-    @Override
-    public int getItemBarStep(ItemStack stack) {
-        return ItemUtils.getPowerForDurabilityBar(stack);
-    }
-
-    @Override
-    public boolean isItemBarVisible(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public int getItemBarColor(ItemStack stack) {
-        return ItemUtils.getColorForDurabilityBar(stack);
-    }
-
     public boolean isEnchantable(ItemStack stack) {
         return false;
-    }
-
-    @Override
-    public long getEnergyCapacity() {
-        return energyCapacity;
-    }
-
-    @Override
-    public RcEnergyTier getTier() {
-        return RcEnergyTier.MEDIUM;
     }
 
     @Environment(EnvType.CLIENT)
