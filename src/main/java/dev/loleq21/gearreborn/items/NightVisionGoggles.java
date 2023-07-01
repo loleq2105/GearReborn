@@ -57,7 +57,7 @@ public class NightVisionGoggles extends TREnergyArmourItem implements ArmorBlock
         }
 
         if ((user.isCreative() || user.isSpectator()) || tryUseEnergy(stack, energyPerTickCost)) {
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 240, 0, false, false, false));
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, -1, 0, false, false, false));
         }
     }
 

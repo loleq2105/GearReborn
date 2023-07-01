@@ -8,22 +8,24 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.*;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
 import reborncore.api.items.ArmorRemoveHandler;
+import techreborn.init.ModFluids;
 import techreborn.init.TRContent;
 
 import java.util.List;
@@ -33,7 +35,7 @@ import static dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils.*;
 public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEntityTicker, ArmorRemoveHandler {
 
     public HazmatChestPiece(ArmorMaterial material, ArmorItem.Type slot) {
-        super(material,slot);
+        super(material, slot);
     }
 
     static GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
@@ -42,42 +44,43 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
     public static final int barColor = 0xFFFFFF;
     public static final int airCapacity = config.hazmatChestpieceAirTicksCapacity;
     public static final boolean degradeHazmat = config.hazmatDegradesInLava;
-    public static final float degradeRate = 1.0F/config.hazmatLavaDegradeRate;
+    public static final float degradeRate = 1.0F / config.hazmatLavaDegradeRate;
 
     @Override
     public void tickArmor(ItemStack stack, PlayerEntity playerEntity) {
 
-        if (playerEntity.getEquippedStack(EquipmentSlot.HEAD).isOf(GRContent.HAZMAT_HELMET)) {
+        if (!(playerEntity instanceof ServerPlayerEntity user)) {
+            return;
+        }
 
-            if (playerEntity.isSubmergedInWater() && tryConsumeAir(playerEntity, stack)) {
-                giveWaterBreathing(playerEntity);
+        if (user.getEquippedStack(EquipmentSlot.HEAD).isOf(GRContent.HAZMAT_HELMET)) {
+
+            if (user.isSubmergedInWater() && tryConsumeAir(user, stack)) {
+                giveWaterBreathing(user);
             } else {
-                disableWaterBreathing(playerEntity);
+                disableWaterBreathing(user);
             }
 
-            if (!playerIsWearingHazmatBottoms(playerEntity)) {
-                disableFireResist(playerEntity);
+            if (!playerIsWearingHazmatBottoms(user)) {
+                disableFireResist(user);
                 return;
             }
 
-            if (playerEntity.isOnFire()) {
-                playerEntity.extinguish();
+            if (user.isOnFire()) {
+                user.extinguish();
             }
 
-            if (degradeHazmat && playerEntity.isInLava()) {
-                Iterable<ItemStack> suitPieces = playerEntity.getArmorItems();
-                Random random = playerEntity.getRandom();
-                for (ItemStack itemStack : suitPieces) {
-                    if (random.nextFloat() <= degradeRate) {
-                        itemStack.damage(1, playerEntity, (e) -> {
-                            e.sendEquipmentBreakStatus(((ArmorItem) (itemStack.getItem())).getSlotType());
-                        });
-                    }
+            if (degradeHazmat && user.isInLava()) {
+                Random random = user.getRandom();
+                if (random.nextFloat() <= degradeRate) {
+                    user.getInventory().damageArmor(user.getDamageSources().generic(), 1.0F, PlayerInventory.ARMOR_SLOTS);
                 }
             }
-            giveFireResist(playerEntity);
+
+            giveFireResist(user);
+
         } else {
-            removeHazmatEffects(playerEntity);
+            removeHazmatEffects(user);
         }
 
     }
@@ -87,17 +90,18 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
         if (!(playerEntity instanceof ServerPlayerEntity))
             return;
         removeHazmatEffects(playerEntity);
+
     }
 
-    private static boolean tryConsumeAir(PlayerEntity playerEntity, ItemStack hazmatChestplate){
+    private static boolean tryConsumeAir(PlayerEntity playerEntity, ItemStack hazmatChestplate) {
         if (tryUseAir(hazmatChestplate, 1)) {
-                return true;
+            return true;
         } else {
             if ((getStoredAir(hazmatChestplate) == 0)) {
                 for (int i = 0; i < playerEntity.getInventory().size(); i++) {
                     ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
                     if (iteratedStack.getItem() == TRContent.CELL) {
-                        if ((TRContent.CELL.getFluid(iteratedStack) == (Fluid) Registries.FLUID.get(new Identifier("techreborn:compressed_air")))) {
+                        if (TRContent.CELL.getFluid(iteratedStack) == (Fluid) ModFluids.COMPRESSED_AIR.getFluid()) {
                             iteratedStack.decrement(1);
                             ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
                             playerEntity.giveItemStack(emptyCell);
@@ -116,7 +120,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        if(getStoredAirForToolTip(stack)==0) return;
+        if (getStoredAirForToolTip(stack) == 0) return;
 
         MutableText line1 = Text.literal(String.valueOf((getStoredAirForToolTip(stack) * 100) / airCapacity));
         line1.append("%");
@@ -128,27 +132,27 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
 
     @Override
     public int getItemBarStep(ItemStack stack) {
-        if(!super.isItemBarVisible(stack)&&getStoredAir(stack)>0){
-        return Math.round((getStoredAir(stack) * 100f / airCapacity) * 13) / 100;
-        } else{
+        if (!super.isItemBarVisible(stack) && getStoredAir(stack) > 0) {
+            return Math.round((getStoredAir(stack) * 100f / airCapacity) * 13) / 100;
+        } else {
             return super.getItemBarStep(stack);
         }
     }
 
     @Override
     public int getItemBarColor(ItemStack stack) {
-        if(!super.isItemBarVisible(stack)&&getStoredAir(stack)>0){
+        if (!super.isItemBarVisible(stack) && getStoredAir(stack) > 0) {
             return barColor;
-        } else{
+        } else {
             return super.getItemBarColor(stack);
         }
     }
 
     @Override
     public boolean isItemBarVisible(ItemStack stack) {
-        if(getStoredAir(stack)>0){
+        if (getStoredAir(stack) > 0) {
             return true;
-        } else{
+        } else {
             return super.isItemBarVisible(stack);
         }
     }

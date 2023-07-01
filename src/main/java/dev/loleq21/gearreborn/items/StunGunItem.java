@@ -71,7 +71,7 @@ public class StunGunItem extends Item implements RcEnergyItem {
             return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
         }
         final ItemStack stack = player.getStackInHand(hand);
-        ItemUtils.switchActive(stack, energyPerChargeTick, player);
+        ItemUtils.switchActive(stack, 0, player);
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);
     }
 
