@@ -101,7 +101,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
                 for (int i = 0; i < playerEntity.getInventory().size(); i++) {
                     ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
                     if (iteratedStack.getItem() == TRContent.CELL) {
-                        if (TRContent.CELL.getFluid(iteratedStack) == (Fluid) ModFluids.COMPRESSED_AIR.getFluid()) {
+                        if (TRContent.CELL.getFluid(iteratedStack) == ModFluids.COMPRESSED_AIR.getFluid()) {
                             iteratedStack.decrement(1);
                             ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
                             playerEntity.giveItemStack(emptyCell);

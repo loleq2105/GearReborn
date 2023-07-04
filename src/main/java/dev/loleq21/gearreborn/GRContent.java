@@ -3,10 +3,14 @@ package dev.loleq21.gearreborn;
 import dev.loleq21.gearreborn.items.*;
 import dev.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
 import dev.loleq21.gearreborn.items.hazmat.HazmatArmorPiece;
+import dev.loleq21.gearreborn.items.hazmat.HazmatEmptyingRecipe;
+import dev.loleq21.gearreborn.items.hazmat.HazmatFillingRecipe;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
@@ -22,6 +26,10 @@ public class GRContent {
     public static final ArmorMaterial HAZMAT_ARMOR_MATERIAL = GRArmorMaterials.HAZMAT;
 
     private static final Map<Identifier, Item> GRITEMS = new LinkedHashMap<>();
+
+    public static final RecipeSerializer<HazmatEmptyingRecipe> CRAFTING_HAZMAT_EMPTY = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(GearReborn.MOD_ID, "hazmat_empty"), new SpecialRecipeSerializer<>(HazmatEmptyingRecipe::new));
+    public static final RecipeSerializer<HazmatFillingRecipe> CRAFTING_HAZMAT_FILL = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(GearReborn.MOD_ID, "hazmat_fill"), new SpecialRecipeSerializer<>(HazmatFillingRecipe::new));
+
 
     public static final Item NV_GOGGLES = addItem("nv_goggles", new NightVisionGoggles(MISCGEAR_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
     public static final Item STUN_GUN = addItem("stun_gun", new StunGunItem());
