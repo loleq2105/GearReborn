@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn;
+package com.loleq21.gearreborn;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;

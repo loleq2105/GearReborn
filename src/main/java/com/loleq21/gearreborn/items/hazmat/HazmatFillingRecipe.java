@@ -1,9 +1,7 @@
-package dev.loleq21.gearreborn.items.hazmat;
+package com.loleq21.gearreborn.items.hazmat;
 
-import dev.loleq21.gearreborn.GRContent;
-import dev.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
+import com.loleq21.gearreborn.GRContent;
 import net.minecraft.inventory.RecipeInputInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;

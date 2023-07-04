@@ -1,6 +1,6 @@
-package dev.loleq21.gearreborn.mixin;
+package com.loleq21.gearreborn.mixin;
 
-import dev.loleq21.gearreborn.GRContent;
+import com.loleq21.gearreborn.GRContent;
 import net.minecraft.block.Block;
 import net.minecraft.block.FluidDrainable;
 import net.minecraft.block.PowderSnowBlock;

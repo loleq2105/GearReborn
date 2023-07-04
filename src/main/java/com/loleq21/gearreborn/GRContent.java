@@ -1,10 +1,10 @@
-package dev.loleq21.gearreborn;
+package com.loleq21.gearreborn;
 
-import dev.loleq21.gearreborn.items.*;
-import dev.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
-import dev.loleq21.gearreborn.items.hazmat.HazmatArmorPiece;
-import dev.loleq21.gearreborn.items.hazmat.HazmatEmptyingRecipe;
-import dev.loleq21.gearreborn.items.hazmat.HazmatFillingRecipe;
+import com.loleq21.gearreborn.items.*;
+import com.loleq21.gearreborn.items.hazmat.HazmatArmorPiece;
+import com.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
+import com.loleq21.gearreborn.items.hazmat.HazmatEmptyingRecipe;
+import com.loleq21.gearreborn.items.hazmat.HazmatFillingRecipe;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
@@ -12,8 +12,8 @@ import net.minecraft.item.Item;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
 import techreborn.init.TRToolMaterials;
 
 import java.util.LinkedHashMap;

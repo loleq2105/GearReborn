@@ -1,9 +1,9 @@
-package dev.loleq21.gearreborn.items;
+package com.loleq21.gearreborn.items;
 
-import dev.loleq21.gearreborn.GRConfig;
-import dev.loleq21.gearreborn.GRContent;
-import dev.loleq21.gearreborn.GearReborn;
-import dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
+import com.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
+import com.loleq21.gearreborn.GRConfig;
+import com.loleq21.gearreborn.GRContent;
+import com.loleq21.gearreborn.GearReborn;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

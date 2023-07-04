@@ -1,6 +1,6 @@
-package dev.loleq21.gearreborn;
+package com.loleq21.gearreborn;
 
-import dev.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
+import com.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;

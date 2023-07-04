@@ -1,7 +1,7 @@
-package dev.loleq21.gearreborn.items.hazmat;
+package com.loleq21.gearreborn.items.hazmat;
 
-import dev.loleq21.gearreborn.GRConfig;
-import dev.loleq21.gearreborn.GRContent;
+import com.loleq21.gearreborn.GRConfig;
+import com.loleq21.gearreborn.GRContent;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -9,7 +9,6 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
@@ -29,8 +28,6 @@ import techreborn.init.ModFluids;
 import techreborn.init.TRContent;
 
 import java.util.List;
-
-import static dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils.*;
 
 public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEntityTicker, ArmorRemoveHandler {
 
@@ -56,13 +53,13 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
         if (user.getEquippedStack(EquipmentSlot.HEAD).isOf(GRContent.HAZMAT_HELMET)) {
 
             if (user.isSubmergedInWater() && tryConsumeAir(user, stack)) {
-                giveWaterBreathing(user);
+                HazmatSuitUtils.giveWaterBreathing(user);
             } else {
-                disableWaterBreathing(user);
+                HazmatSuitUtils.disableWaterBreathing(user);
             }
 
-            if (!playerIsWearingHazmatBottoms(user)) {
-                disableFireResist(user);
+            if (!HazmatSuitUtils.playerIsWearingHazmatBottoms(user)) {
+                HazmatSuitUtils.disableFireResist(user);
                 return;
             }
 
@@ -77,10 +74,10 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
                 }
             }
 
-            giveFireResist(user);
+            HazmatSuitUtils.giveFireResist(user);
 
         } else {
-            removeHazmatEffects(user);
+            HazmatSuitUtils.removeHazmatEffects(user);
         }
 
     }
@@ -89,7 +86,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
     public void onRemoved(PlayerEntity playerEntity) {
         if (!(playerEntity instanceof ServerPlayerEntity))
             return;
-        removeHazmatEffects(playerEntity);
+        HazmatSuitUtils.removeHazmatEffects(playerEntity);
 
     }
 

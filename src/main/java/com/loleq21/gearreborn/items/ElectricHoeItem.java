@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn.items;
+package com.loleq21.gearreborn.items;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.player.PlayerEntity;

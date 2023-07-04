@@ -17,13 +17,13 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "dev.loleq21.gearreborn.GearRebornClient"
+      "com.loleq21.gearreborn.GearRebornClient"
     ],
     "main": [
-      "dev.loleq21.gearreborn.GearReborn"
+      "com.loleq21.gearreborn.GearReborn"
     ],
     "modmenu": [
-      "dev.loleq21.gearreborn.ModMenuIntegration"
+      "com.loleq21.gearreborn.ModMenuIntegration"
     ]
       },
   "mixins": [

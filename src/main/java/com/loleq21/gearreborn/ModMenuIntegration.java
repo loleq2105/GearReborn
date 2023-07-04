@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn;
+package com.loleq21.gearreborn;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

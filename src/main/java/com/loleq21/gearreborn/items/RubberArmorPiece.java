@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn.items;
+package com.loleq21.gearreborn.items;
 
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;

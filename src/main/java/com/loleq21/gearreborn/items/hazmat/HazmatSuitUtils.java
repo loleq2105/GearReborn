@@ -1,6 +1,6 @@
-package dev.loleq21.gearreborn.items.hazmat;
+package com.loleq21.gearreborn.items.hazmat;
 
-import dev.loleq21.gearreborn.GRContent;
+import com.loleq21.gearreborn.GRContent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;

@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn.items;
+package com.loleq21.gearreborn.items;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

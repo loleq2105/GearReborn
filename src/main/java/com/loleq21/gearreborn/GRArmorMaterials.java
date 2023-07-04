@@ -1,4 +1,4 @@
-package dev.loleq21.gearreborn;
+package com.loleq21.gearreborn;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;

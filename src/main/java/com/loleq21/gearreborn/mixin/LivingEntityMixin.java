@@ -1,7 +1,7 @@
-package dev.loleq21.gearreborn.mixin;
+package com.loleq21.gearreborn.mixin;
 
-import dev.loleq21.gearreborn.GRContent;
-import dev.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
+import com.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
+import com.loleq21.gearreborn.GRContent;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
