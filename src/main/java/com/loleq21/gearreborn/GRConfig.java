@@ -31,7 +31,7 @@ public class GRConfig implements ConfigData {
     @Comment("The energy capacity of the NVG")
     @ConfigEntry.Category("nvg")
     @ConfigEntry.Gui.RequiresRestart
-    public int nvgEnergyCapacity = 80000;
+    public int nvgEnergyCapacity = 100000;
 
     @Comment("The energy capacity of the Stun Gun")
     @ConfigEntry.Category("stungun")

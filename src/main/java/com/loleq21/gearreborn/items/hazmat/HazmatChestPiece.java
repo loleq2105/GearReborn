@@ -44,41 +44,38 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
     public static final float degradeRate = 1.0F / config.hazmatLavaDegradeRate;
 
     @Override
-    public void tickArmor(ItemStack stack, PlayerEntity playerEntity) {
+    public void tickArmor(ItemStack stack, PlayerEntity user) {
 
-        if (!(playerEntity instanceof ServerPlayerEntity user)) {
+        if (user.getEquippedStack(EquipmentSlot.CHEST)!=stack) {
             return;
         }
 
-        if (user.getEquippedStack(EquipmentSlot.HEAD).isOf(GRContent.HAZMAT_HELMET)) {
-
-            if (user.isSubmergedInWater() && tryConsumeAir(user, stack)) {
-                HazmatSuitUtils.giveWaterBreathing(user);
-            } else {
-                HazmatSuitUtils.disableWaterBreathing(user);
-            }
-
-            if (!HazmatSuitUtils.playerIsWearingHazmatBottoms(user)) {
-                HazmatSuitUtils.disableFireResist(user);
-                return;
-            }
-
-            if (user.isOnFire()) {
-                user.extinguish();
-            }
-
-            if (degradeHazmat && user.isInLava()) {
-                Random random = user.getRandom();
-                if (random.nextFloat() <= degradeRate) {
-                    user.getInventory().damageArmor(user.getDamageSources().generic(), 1.0F, PlayerInventory.ARMOR_SLOTS);
-                }
-            }
-
-            HazmatSuitUtils.giveFireResist(user);
-
-        } else {
+        if (!user.getEquippedStack(EquipmentSlot.HEAD).isOf(GRContent.HAZMAT_HELMET)) {
             HazmatSuitUtils.removeHazmatEffects(user);
+            return;
         }
+
+        if (user.isSubmergedInWater() && tryConsumeAir(user, stack)) {
+            HazmatSuitUtils.giveWaterBreathing(user);
+        } else {
+            HazmatSuitUtils.disableWaterBreathing(user);
+        }
+
+        if (!HazmatSuitUtils.playerIsWearingHazmatBottoms(user)) {
+            HazmatSuitUtils.disableFireResist(user);
+            return;
+        }
+
+        user.extinguish();
+
+        if (degradeHazmat && user.isInLava()) {
+            Random random = user.getRandom();
+            if (random.nextFloat() <= degradeRate) {
+                user.getInventory().damageArmor(user.getDamageSources().generic(), 1.0F, PlayerInventory.ARMOR_SLOTS);
+            }
+        }
+
+        HazmatSuitUtils.giveFireResist(user);
 
     }
 
@@ -94,14 +91,12 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
         if (tryUseAir(hazmatChestplate, 1)) {
             return true;
         } else {
-            if ((getStoredAir(hazmatChestplate) == 0)) {
                 for (int i = 0; i < playerEntity.getInventory().size(); i++) {
                     ItemStack iteratedStack = playerEntity.getInventory().getStack(i);
                     if (iteratedStack.getItem() == TRContent.CELL) {
                         if (TRContent.CELL.getFluid(iteratedStack) == ModFluids.COMPRESSED_AIR.getFluid()) {
                             iteratedStack.decrement(1);
-                            ItemStack emptyCell = new ItemStack(TRContent.CELL, 1);
-                            playerEntity.giveItemStack(emptyCell);
+                            playerEntity.giveItemStack(new ItemStack(TRContent.CELL));
                             setStoredAir(hazmatChestplate, airCapacity);
                             World world = playerEntity.getEntityWorld();
                             world.playSound(null, playerEntity.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.NEUTRAL, 0.8F, 1.0F + (world.random.nextFloat() - world.random.nextFloat()) * 0.4F);
@@ -109,7 +104,6 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
                         }
                     }
                 }
-            }
             return false;
         }
     }
@@ -119,7 +113,7 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
     public void appendTooltip(ItemStack stack, @Nullable World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         if (getStoredAirForToolTip(stack) == 0) return;
 
-        MutableText line1 = Text.literal(String.valueOf((getStoredAirForToolTip(stack) * 100) / airCapacity));
+        MutableText line1 = Text.literal(String.valueOf((getStoredAirForToolTip(stack) * 100) / airCapacity).formatted(Formatting.GRAY));
         line1.append("%");
         line1.append(" ");
         line1.append(Text.translatable("block.techreborn.compressed_air").formatted(Formatting.GRAY));
