@@ -16,8 +16,8 @@
    "itemgroup.gearreborn.items": "Gear Reborn",
    "gearreborn.misc.deviceoff": "Inactive",
    "gearreborn.misc.deviceon": "Active",
-   "gearreborn.misc.hazmatairpressure": "O₂",
-   "gearreborn.misc.stunguntooltipcapacitors": "Capacitors",
+   "gearreborn.tooltip.hazmat_chestpiece.in_item": "(in Item)",
+   "gearreborn.tooltip.hazmat_chestpiece.in_inventory": "(in Inventory)",
    "subtitles.gearreborn.nvgblip": "Night Vision Goggles blip",
 
     "text.autoconfig.gearreborn.title": "Gear Reborn Config",

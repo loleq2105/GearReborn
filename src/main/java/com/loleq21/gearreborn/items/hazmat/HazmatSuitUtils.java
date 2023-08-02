@@ -24,16 +24,22 @@ public final class HazmatSuitUtils {
         return playerEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == GRContent.HAZMAT_HELMET && playerEntity.getEquippedStack(EquipmentSlot.CHEST).getItem() == GRContent.HAZMAT_CHESTPIECE && playerEntity.getEquippedStack(EquipmentSlot.LEGS).getItem() == GRContent.HAZMAT_LEGGINGS && playerEntity.getEquippedStack(EquipmentSlot.FEET).getItem() == GRContent.RUBBER_BOOTS;
     }
 
-    public static void disableFireResist(LivingEntity entity) {
-        entity.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
+    public static void disableFireResist(LivingEntity entity, World world) {
+        if (!world.isClient()) {
+            entity.removeStatusEffect(StatusEffects.FIRE_RESISTANCE);
+        }
     }
 
-    public static void disableWaterBreathing(LivingEntity entity) {
-        entity.removeStatusEffect(StatusEffects.WATER_BREATHING);
+    public static void disableWaterBreathing(LivingEntity entity, World world) {
+        if (!world.isClient()) {
+            entity.removeStatusEffect(StatusEffects.WATER_BREATHING);
+        }
     }
 
-    public static void giveFireResist(LivingEntity entity) {
-        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, -1, 0, false, false, true));
+    public static void giveFireResist(LivingEntity entity, World world) {
+        if (!world.isClient()) {
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, -1, 0, false, false, true));
+        }
     }
 
     public static void giveWaterBreathing(LivingEntity entity) {
