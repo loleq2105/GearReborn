@@ -30,7 +30,6 @@ public class GRContent {
     public static final RecipeSerializer<HazmatEmptyingRecipe> CRAFTING_HAZMAT_EMPTY = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(GearReborn.MOD_ID, "hazmat_empty"), new SpecialRecipeSerializer<>(HazmatEmptyingRecipe::new));
     public static final RecipeSerializer<HazmatFillingRecipe> CRAFTING_HAZMAT_FILL = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(GearReborn.MOD_ID, "hazmat_fill"), new SpecialRecipeSerializer<>(HazmatFillingRecipe::new));
 
-
     public static final Item NV_GOGGLES = addItem("nv_goggles", new NightVisionGoggles(MISCGEAR_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
     public static final Item STUN_GUN = addItem("stun_gun", new StunGunItem());
 

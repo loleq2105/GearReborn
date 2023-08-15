@@ -1,5 +1,5 @@
 package com.loleq21.gearreborn.mixin;;
-import com.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
+import com.loleq21.gearreborn.components.GRComponents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,7 +14,7 @@ public abstract class BeeEntityMixin {
     @Inject(at = @At("HEAD"), method = "tryAttack", cancellable = true)
     public void tryAttack(Entity target, CallbackInfoReturnable<Boolean> cir) {
 
-        if(target instanceof PlayerEntity && HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity)target)){
+        if(target instanceof PlayerEntity && GRComponents.HAZMAT_COMPONENT_KEY.get(target).isWearingFullSet()){
             cir.setReturnValue(false);
         }
 

@@ -1,12 +1,21 @@
 package com.loleq21.gearreborn;
 
+import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "gearreborn")
 public class GRConfig implements ConfigData {
+
+    public static GRConfig CONFIG;
+
+    public static void init(){
+        AutoConfig.register(GRConfig.class, JanksonConfigSerializer::new);
+        CONFIG = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
+    }
 
     @Comment("Amount of ticks of Water Breathing that one compressed air cell provides")
     @ConfigEntry.Category("hazmat")
@@ -38,7 +47,7 @@ public class GRConfig implements ConfigData {
     @ConfigEntry.Gui.RequiresRestart
     public int stungunEnergyCapacity = 25600;
 
-    @Comment("How much energy the Gtun Gun consumes in order to charge its capacitors")
+    @Comment("How much energy the Stun Gun consumes in order to charge its capacitors")
     @ConfigEntry.Category("stungun")
     @ConfigEntry.Gui.RequiresRestart
     public int stungunChargeEnergyCost = 5120;
@@ -48,14 +57,14 @@ public class GRConfig implements ConfigData {
     @ConfigEntry.Gui.RequiresRestart
     public int stungunChargeTicks = 64;
 
-    @Comment("How much damage a charged Stun Gun deals specifically to arthropods")
+    @Comment("How much bonus damage a charged Stun Gun deals to arthropods")
     @ConfigEntry.Category("stungun")
     @ConfigEntry.Gui.RequiresRestart
     public int stungunDamageDealtToArthropodsOnChargedHit = 16;
 
     @Comment("Should the Stun Gun ignite Creepers")
     @ConfigEntry.Category("stungun")
-    public boolean stungunShouldChargedHitsIgniteCreepers = true;
+    public boolean stungunShouldChargedHitsIgniteCreepers = false;
 
     @Comment("Should the Stun Gun stun vanilla boss mobs")
     @ConfigEntry.Gui.RequiresRestart

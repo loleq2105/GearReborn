@@ -25,7 +25,7 @@ public class HazmatFillingRecipe extends SpecialCraftingRecipe {
         for (int i = 0; i < inventory.size(); ++i) {
             ItemStack iteratedStack = inventory.getStack(i);
             if (iteratedStack.isEmpty()) continue;
-            if (iteratedStack.isOf(GRContent.HAZMAT_CHESTPIECE) && HazmatChestPiece.getStoredAir(iteratedStack) < HazmatChestPiece.getAirCapacity()) {
+            if (iteratedStack.isOf(GRContent.HAZMAT_CHESTPIECE) && HazmatAirUtil.getStoredAir(iteratedStack) < HazmatAirUtil.getAirCapacity()) {
                 if (bl) {
                     return false;
                 }
@@ -51,9 +51,9 @@ public class HazmatFillingRecipe extends SpecialCraftingRecipe {
             ItemStack itemStack = inventory.getStack(i);
             if (itemStack.isEmpty()) continue;
 
-            if (itemStack.isOf(GRContent.HAZMAT_CHESTPIECE)) {
+            if (itemStack.getItem() instanceof HazmatChestPiece hazmatChestPiece) {
                 itemStack1 = itemStack.copy();
-                HazmatChestPiece.setStoredAir(itemStack1, HazmatChestPiece.getAirCapacity());
+                HazmatAirUtil.fillAir(itemStack1);
             }
         }
         return itemStack1;

@@ -1,6 +1,6 @@
 package com.loleq21.gearreborn.mixin;
 
-import com.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
+import com.loleq21.gearreborn.components.GRComponents;
 import com.loleq21.gearreborn.GRContent;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -84,8 +84,10 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(at = @At("HEAD"), method = "canFreeze", cancellable = true)
     private void canFreeze(CallbackInfoReturnable<Boolean> cir) {
 
-        if ((Object) this instanceof PlayerEntity && HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity) (Object) this)) {
-            cir.setReturnValue(false);
+        if ((Object) this instanceof PlayerEntity player) {
+            if(GRComponents.HAZMAT_COMPONENT_KEY.get(player).isWearingFullSet()){
+                cir.setReturnValue(false);
+            }
         }
 
     }

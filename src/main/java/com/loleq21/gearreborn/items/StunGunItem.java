@@ -1,6 +1,6 @@
 package com.loleq21.gearreborn.items;
 
-import com.loleq21.gearreborn.items.hazmat.HazmatSuitUtils;
+import com.loleq21.gearreborn.components.GRComponents;
 import com.loleq21.gearreborn.GRConfig;
 import com.loleq21.gearreborn.GRContent;
 import com.loleq21.gearreborn.GearReborn;
@@ -33,40 +33,42 @@ import techreborn.init.ModSounds;
 
 import java.util.List;
 
+import static com.loleq21.gearreborn.GRConfig.CONFIG;
+
 public class StunGunItem extends Item implements RcEnergyItem {
 
     public StunGunItem() {
         super(new Settings().maxCount(1));
     }
 
-    GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
-
-
-    public final long chargeEnergyCost = config.stungunChargeEnergyCost;
-    public final long energyCapacity = config.stungunEnergyCapacity;
-    public final int chargeTicks = config.stungunChargeTicks;
-    public final int slownessTicks = config.stungunSlownessTicks;
-    public final int weaknessTicks = config.stungunWeaknessTicks;
-    public final int arthropodDamage = config.stungunDamageDealtToArthropodsOnChargedHit;
-    public final boolean igniteCreeper = config.stungunShouldChargedHitsIgniteCreepers;
-    public final boolean stunBosses = config.stungunShouldStunBossMobs;
+    public final long chargeEnergyCost = CONFIG.stungunChargeEnergyCost;
+    public final long energyCapacity = CONFIG.stungunEnergyCapacity;
+    public final int chargeTicks = CONFIG.stungunChargeTicks;
+    public final int slownessTicks = CONFIG.stungunSlownessTicks;
+    public final int weaknessTicks = CONFIG.stungunWeaknessTicks;
+    public final int arthropodDamage = CONFIG.stungunDamageDealtToArthropodsOnChargedHit;
+    public final boolean igniteCreeper = CONFIG.stungunShouldChargedHitsIgniteCreepers;
+    public final boolean stunBosses = CONFIG.stungunShouldStunBossMobs;
 
     private final int energyPerChargeTick = (((int)chargeEnergyCost/chargeTicks)>0 ? ((int)chargeEnergyCost/chargeTicks) : 1);
 
-
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (!ItemUtils.isActive(stack)) {
+    public void inventoryTick(ItemStack stunGun, World world, Entity entity, int slot, boolean selected) {
+        if(!(entity instanceof PlayerEntity user))
             return;
-        }
-        if (getCapacitorCharge(stack) < chargeTicks && tryUseEnergy(stack, energyPerChargeTick)) {
-            setCapacitorCharge(stack, getCapacitorCharge(stack) + 1);
-            entity.playSound(ModSounds.CABLE_SHOCK, 0.4F, 1.0F);
+
+        if (!ItemUtils.isActive(stunGun))
+            return;
+
+        if (getCapacitorCharge(stunGun) < chargeTicks && tryUseEnergy(stunGun, energyPerChargeTick)) {
+            setCapacitorCharge(stunGun, getCapacitorCharge(stunGun) + 1);
+            user.playSound(ModSounds.CABLE_SHOCK, 0.4F, 1.0F);
         }
     }
 
     @Override
     public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
+        player.sendMessage(Text.of(String.format("%8s", Integer.toBinaryString(GRComponents.HAZMAT_COMPONENT_KEY.get(player).getBits() & 0xFF)).replace(' ', '0')), false);
         if (!player.isSneaking()) {
             return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
         }
@@ -99,13 +101,18 @@ public class StunGunItem extends Item implements RcEnergyItem {
             target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 8.0F);
             setCapacitorCharge(stack, 0);
             return false;
-        } else if (target instanceof PlayerEntity && HazmatSuitUtils.playerIsWearingFullHazmat((PlayerEntity) target)) {
+        } else if (target instanceof PlayerEntity && GRComponents.HAZMAT_COMPONENT_KEY.get(target).isWearingFullSet()) {
             return false;
         }
         target.playSound(ModSounds.CABLE_SHOCK, 1.1F, 0.8F);
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 5, false, true, true));
         target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 4, false, true, true));
         setCapacitorCharge(stack, 0);
+
+        if(attacker instanceof PlayerEntity user){
+            user.getItemCooldownManager().set(GRContent.STUN_GUN, chargeTicks);
+        }
+
         return true;
 
     }

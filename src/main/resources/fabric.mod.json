@@ -9,6 +9,11 @@
     "sources": "https://github.com/loleq2105/GearReborn",
     "issues": "https://github.com/loleq2105/GearReborn/issues"
   },
+  "custom": {
+    "cardinal-components": [
+      "gearreborn:hazmat"
+    ]
+  },
   "authors": [
     "loleq21"
   ],
@@ -24,6 +29,9 @@
     ],
     "modmenu": [
       "com.loleq21.gearreborn.ModMenuIntegration"
+    ],
+    "cardinal-components-entity": [
+      "com.loleq21.gearreborn.components.GRComponents"
     ]
       },
   "mixins": [

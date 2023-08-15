@@ -24,28 +24,23 @@ import techreborn.items.armor.TREnergyArmourItem;
 
 import java.util.List;
 
+import static com.loleq21.gearreborn.GRConfig.CONFIG;
+
 public class NightVisionGoggles extends TREnergyArmourItem implements ArmorBlockEntityTicker, ArmorRemoveHandler {
 
     public NightVisionGoggles(ArmorMaterial material, ArmorItem.Type slot) {
         super(material, slot, energyCapacity, RcEnergyTier.MEDIUM);
     }
-    private static final GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
-    public static final int energyPerTickCost = config.nvgActiveEnergyPerTickCost;
-    public static final int energyCapacity = config.nvgEnergyCapacity;
+    private static final int EFFECT_DURATION = 290;
+
+    public static final int energyPerTickCost = CONFIG.nvgActiveEnergyPerTickCost;
+    public static final int energyCapacity = CONFIG.nvgEnergyCapacity;
 
     @Override
     public void tickArmor(ItemStack stack, PlayerEntity playerEntity) {
 
         if (!(playerEntity instanceof ServerPlayerEntity user)) {
-            return;
-        }
-
-        if (this.getSlotType() != EquipmentSlot.HEAD) {
-            disableNightVision(user);
-            if(ItemUtils.isActive(stack)){
-                ItemUtils.switchActive(stack, 0, user);
-            }
             return;
         }
 
@@ -57,7 +52,7 @@ public class NightVisionGoggles extends TREnergyArmourItem implements ArmorBlock
         }
 
         if ((user.isCreative() || user.isSpectator()) || tryUseEnergy(stack, energyPerTickCost)) {
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, -1, 0, false, false, false));
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, EFFECT_DURATION, 0, false, false, false));
         }
     }
 
@@ -69,7 +64,7 @@ public class NightVisionGoggles extends TREnergyArmourItem implements ArmorBlock
     }
 
     public static void disableNightVision(PlayerEntity entity) {
-        if (!entity.getEntityWorld().isClient()) {
+        if (!entity.getEntityWorld().isClient() && entity.getStatusEffect(StatusEffects.NIGHT_VISION) != null && entity.getStatusEffect(StatusEffects.NIGHT_VISION).getDuration()<=EFFECT_DURATION) {
             entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
         }
     }

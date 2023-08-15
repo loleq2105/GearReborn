@@ -1,5 +1,6 @@
 package com.loleq21.gearreborn;
 
+import com.loleq21.gearreborn.items.hazmat.HazmatAirUtil;
 import com.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -51,7 +52,7 @@ public class GRItemGroup {
     private static void addAired(ItemGroup.Entries entries, Item item) {
         ItemStack aired = new ItemStack(item);
         GRConfig config = new GRConfig();
-        HazmatChestPiece.setStoredAir(aired, config.hazmatChestpieceAirTicksCapacity);
+        HazmatAirUtil.setStoredAir(aired, config.hazmatChestpieceAirTicksCapacity);
         entries.add(aired);
     }
 }

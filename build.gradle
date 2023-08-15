@@ -13,6 +13,10 @@ group = project.maven_group
 repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/" }
+    maven {
+        name = "Ladysnake Mods"
+        url = 'https://maven.ladysnake.org/releases'
+    }
 }
 
 dependencies {
@@ -33,9 +37,14 @@ dependencies {
 
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.1"
+
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.1"
+
+}
+
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
-}
 
 processResources {
     inputs.property "version", project.version

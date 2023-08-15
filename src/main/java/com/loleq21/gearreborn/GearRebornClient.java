@@ -1,6 +1,7 @@
 package com.loleq21.gearreborn;
 
 import com.loleq21.gearreborn.items.StunGunItem;
+import com.loleq21.gearreborn.items.hazmat.HazmatAirUtil;
 import com.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import reborncore.common.util.ItemUtils;
 import team.reborn.energy.api.base.SimpleBatteryItem;
+import team.reborn.energy.api.base.SimpleEnergyItem;
 import techreborn.items.armor.BatpackItem;
 
 @Environment(EnvType.CLIENT)
@@ -41,37 +43,7 @@ public class GearRebornClient implements ClientModInitializer {
         KeyBindingHelper.registerKeyBinding(NV_KEY_BIND);
         GRConfig config = AutoConfig.getConfigHolder(GRConfig.class).getConfig();
 
-        //predicates for animated textures
-
-        registerPredicateProvider(
-                StunGunItem.class,
-                new Identifier("gearreborn:active"),
-                (item, stack, world, entity, seed) -> {
-                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && StunGunItem.getCapacitorCharge(stack)==config.stungunChargeTicks) {
-                        return 1.0F;
-                    }
-                    return 0.0F;
-                }
-        );
-        registerPredicateProvider(
-                BatpackItem.class,
-                new Identifier("techreborn:empty"),
-                (item, stack, world, entity, seed) -> {
-                    if (!stack.isEmpty() && SimpleBatteryItem.getStoredEnergyUnchecked(stack) == 0) {
-                        return 1.0F;
-                    }
-                    return 0.0F;
-                }
-        );
-        registerPredicateProvider(
-                HazmatChestPiece.class,
-                new Identifier("gearreborn:charged"),
-                (item, stack, world, entity, seed) -> {
-                    if (!stack.isEmpty() && HazmatChestPiece.getStoredAirUnchecked(stack) > 0) {
-                        return 1.0F;
-                    }
-                    return 0.0F;
-                });
+        // Register event that sends the packet for toggling NVG
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (NV_KEY_BIND.isPressed()) {
@@ -84,9 +56,33 @@ public class GearRebornClient implements ClientModInitializer {
             }
         });
 
+        // Register predicate providers for dynamic item models. Part of lifted code, see below
+
+        registerPredicateProvider(
+                StunGunItem.class,
+                new Identifier("gearreborn:active"),
+                (item, stack, world, entity, seed) -> {
+                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && StunGunItem.getCapacitorCharge(stack)==config.stungunChargeTicks) {
+                        return 1.0F;
+                    }
+                    return 0.0F;
+                }
+        );
+
+        registerPredicateProvider(
+                HazmatChestPiece.class,
+                new Identifier("gearreborn:charged"),
+                (item, stack, world, entity, seed) -> {
+                    if (!stack.isEmpty() && HazmatAirUtil.hasAir(stack)) {
+                        return 1.0F;
+                    }
+                    return 0.0F;
+                });
+
     };
 
-
+    // Code lifted from TR's TechRebornClient class
+    // Available at: https://github.com/TechReborn/TechReborn/blob/aa4abdfdb5c75568c5c8e9af3320d770e488868b/src/client/java/techreborn/TechRebornClient.java#L227C1-L227C1
 
     private static <T extends Item> void registerPredicateProvider(Class<T> itemClass, Identifier identifier, ItemModelPredicateProvider modelPredicateProvider) {
         Registries.ITEM.stream()
@@ -94,7 +90,6 @@ public class GearRebornClient implements ClientModInitializer {
                 .forEach(item -> ModelPredicateProviderRegistry.register(item, identifier, modelPredicateProvider));
     }
 
-    //Need the item instance in a few places, this makes it easier
     private interface ItemModelPredicateProvider<T extends Item> extends ClampedModelPredicateProvider {
 
         float call(T item, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed);
@@ -105,4 +100,6 @@ public class GearRebornClient implements ClientModInitializer {
         }
 
     }
+
+    // End of lifted code
 }
