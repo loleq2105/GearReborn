@@ -5,7 +5,8 @@
   "mixins": [
     "LivingEntityMixin",
     "PowderSnowBlockMixin",
-    "BeeEntityMixin"
+    "BeeEntityMixin",
+    "DrawContextMixin"
   ],
   "client": [
   ],

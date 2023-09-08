@@ -6,9 +6,9 @@
   "overrides": [
     {
       "predicate": {
-        "gearreborn:active": 1
+        "gearreborn:ready": 1
       },
-      "model": "gearreborn:item/stun_gun_active"
+      "model": "gearreborn:item/stun_gun_ready"
     }
   ]
 }

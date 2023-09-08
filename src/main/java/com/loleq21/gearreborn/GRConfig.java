@@ -45,12 +45,7 @@ public class GRConfig implements ConfigData {
     @Comment("The energy capacity of the Stun Gun")
     @ConfigEntry.Category("stungun")
     @ConfigEntry.Gui.RequiresRestart
-    public int stungunEnergyCapacity = 25600;
-
-    @Comment("How much energy the Stun Gun consumes in order to charge its capacitors")
-    @ConfigEntry.Category("stungun")
-    @ConfigEntry.Gui.RequiresRestart
-    public int stungunChargeEnergyCost = 5120;
+    public int stungunEnergyCapacity = 20000;
 
     @Comment("How many ticks it takes for the Stun Gun's capacitors to fully charge")
     @ConfigEntry.Category("stungun")

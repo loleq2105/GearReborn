@@ -60,9 +60,9 @@ public class GearRebornClient implements ClientModInitializer {
 
         registerPredicateProvider(
                 StunGunItem.class,
-                new Identifier("gearreborn:active"),
+                new Identifier("gearreborn:ready"),
                 (item, stack, world, entity, seed) -> {
-                    if (!stack.isEmpty() && ItemUtils.isActive(stack) && StunGunItem.getCapacitorCharge(stack)==config.stungunChargeTicks) {
+                    if (!stack.isEmpty() && StunGunItem.isReady(stack)) {
                         return 1.0F;
                     }
                     return 0.0F;

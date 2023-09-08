@@ -55,8 +55,6 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
 
         HazmatComponent hazmatInfo = HAZMAT_COMPONENT_KEY.get(user);
 
-
-
         if (user.isSubmergedInWater() && hazmatInfo.canDive() && tryConsumeAir(user, stack)) {
             int airCells = 0;
             for (int i = 0; i < user.getInventory().size(); i++) {

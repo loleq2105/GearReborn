@@ -1,7 +1,13 @@
 package com.loleq21.gearreborn.items;
 
+import com.loleq21.gearreborn.components.GRComponents;
+import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -55,4 +61,13 @@ public class ElectricWrenchItem extends WrenchItem implements RcEnergyItem {
             return false;
         }
     }
+
+//    @Override
+//    public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
+//        player.sendMessage(Text.of(String.format("%8s", Integer.toBinaryString(GRComponents.HAZMAT_COMPONENT_KEY.get(player).getBits() & 0xFF)).replace(' ', '0')), false);
+//        ItemCooldownManager manager = player.getItemCooldownManager();
+//        player.sendMessage(Text.of(Long.toString(player.deathTime)));
+//        return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
+//    }
+
 }
