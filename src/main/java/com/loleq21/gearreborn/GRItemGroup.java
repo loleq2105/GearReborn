@@ -1,7 +1,6 @@
 package com.loleq21.gearreborn;
 
-import com.loleq21.gearreborn.items.hazmat.HazmatAirUtil;
-import com.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
+import com.loleq21.gearreborn.items.hazmat.HazmatUtil;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
@@ -52,7 +51,7 @@ public class GRItemGroup {
     private static void addAired(ItemGroup.Entries entries, Item item) {
         ItemStack aired = new ItemStack(item);
         GRConfig config = new GRConfig();
-        HazmatAirUtil.setStoredAir(aired, config.hazmatChestpieceAirTicksCapacity);
+        HazmatUtil.setStoredAir(aired, config.hazmatChestpieceAirTicksCapacity);
         entries.add(aired);
     }
 }

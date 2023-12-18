@@ -37,9 +37,9 @@ dependencies {
 
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.1"
+    //modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.1"
 
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.1"
+    //modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.1"
 
 }
 

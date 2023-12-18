@@ -1,7 +1,7 @@
 package com.loleq21.gearreborn.mixin;
 
-import com.loleq21.gearreborn.components.GRComponents;
 import com.loleq21.gearreborn.GRContent;
+import com.loleq21.gearreborn.items.hazmat.HazmatTag;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -84,10 +84,10 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(at = @At("HEAD"), method = "canFreeze", cancellable = true)
     private void canFreeze(CallbackInfoReturnable<Boolean> cir) {
 
-        if ((Object) this instanceof PlayerEntity player) {
-            if(GRComponents.HAZMAT_COMPONENT_KEY.get(player).isWearingFullSet()){
+        if((Object)this instanceof PlayerEntity && ((PlayerEntity) (Object)this).getEquippedStack(EquipmentSlot.CHEST).getItem()==GRContent.HAZMAT_CHESTPIECE) {
+            var bt = new HazmatTag(((PlayerEntity) (Object)this).getEquippedStack(EquipmentSlot.CHEST).getOrCreateNbt());
+            if(bt.isWearingFullSet() )
                 cir.setReturnValue(false);
-            }
         }
 
     }

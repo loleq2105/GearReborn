@@ -1,7 +1,7 @@
 package com.loleq21.gearreborn;
 
 import com.loleq21.gearreborn.items.StunGunItem;
-import com.loleq21.gearreborn.items.hazmat.HazmatAirUtil;
+import com.loleq21.gearreborn.items.hazmat.HazmatUtil;
 import com.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
@@ -23,10 +23,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-import reborncore.common.util.ItemUtils;
-import team.reborn.energy.api.base.SimpleBatteryItem;
-import team.reborn.energy.api.base.SimpleEnergyItem;
-import techreborn.items.armor.BatpackItem;
 
 @Environment(EnvType.CLIENT)
 public class GearRebornClient implements ClientModInitializer {
@@ -73,7 +69,7 @@ public class GearRebornClient implements ClientModInitializer {
                 HazmatChestPiece.class,
                 new Identifier("gearreborn:charged"),
                 (item, stack, world, entity, seed) -> {
-                    if (!stack.isEmpty() && HazmatAirUtil.hasAir(stack)) {
+                    if (!stack.isEmpty() && HazmatUtil.hasAir(stack)) {
                         return 1.0F;
                     }
                     return 0.0F;

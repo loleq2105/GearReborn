@@ -1,9 +1,5 @@
 package com.loleq21.gearreborn.items.hazmat;
 
-import com.loleq21.gearreborn.GRConfig;
-import com.loleq21.gearreborn.GRContent;
-import com.loleq21.gearreborn.components.HazmatComponent;
-import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -11,7 +7,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,17 +23,15 @@ import net.minecraft.util.StringHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import reborncore.api.items.ArmorBlockEntityTicker;
-import reborncore.api.items.ArmorRemoveHandler;
 import techreborn.init.ModFluids;
 import techreborn.init.TRContent;
 
 import java.util.List;
 
 import static com.loleq21.gearreborn.GRConfig.CONFIG;
-import static com.loleq21.gearreborn.components.GRComponents.HAZMAT_COMPONENT_KEY;
-import static com.loleq21.gearreborn.items.hazmat.HazmatAirUtil.*;
+import static com.loleq21.gearreborn.items.hazmat.HazmatUtil.*;
 
-public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEntityTicker, ArmorRemoveHandler{
+public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEntityTicker{
 
     public HazmatChestPiece(ArmorMaterial material, ArmorItem.Type slot) {
         super(material, slot);
@@ -49,13 +42,15 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
     @Override
     public void tickArmor(ItemStack stack, PlayerEntity user) {
 
-        World world = user.getEntityWorld();
+        if (user.getEntityWorld().isClient()) return;
 
-        if (world.isClient()) return;
+        HazmatTag ht = getHazmatTag(user);
 
-        HazmatComponent hazmatInfo = HAZMAT_COMPONENT_KEY.get(user);
+        // this should never really fire
+        if(ht==null)
+        return;
 
-        if (user.isSubmergedInWater() && hazmatInfo.canDive() && tryConsumeAir(user, stack)) {
+        if (user.isSubmergedInWater() && ht.canDive() && tryConsumeAir(user, stack)) {
             int airCells = 0;
             for (int i = 0; i < user.getInventory().size(); i++) {
                 ItemStack iteratedStack = user.getInventory().getStack(i);
@@ -65,15 +60,17 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
                     }
                 }
             }
-            if (!hazmatInfo.wasDiving() || airCells != hazmatInfo.getLastCells()) {
+            if (!ht.wasDiving() || airCells != ht.getLastCells() || user.getStatusEffect(StatusEffects.WATER_BREATHING)==null) {
                 int waterBreathingTicks = airCells * airCapacity + getStoredAir(stack);
                 user.setStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, waterBreathingTicks, 0, false, false, true), null);
-                hazmatInfo.setLastCells(airCells);
+                ht.setLastCells(airCells);
             }
             user.setAir(Math.min(user.getAir() + 4, user.getMaxAir()));
-            hazmatInfo.setWasDiving(true);
+            ht.setWasDiving(true);
+
+            ht.serializeAsSubtag(stack);
         } else {
-            removeDivingEffect(user, hazmatInfo);
+            removeDivingEffect(user, stack);
         }
 
 //        if (degradeHazmat && user.isInLava()) {
@@ -83,29 +80,26 @@ public class HazmatChestPiece extends HazmatArmorPiece implements ArmorBlockEnti
 //            }
 //        }
 
-        if (!hazmatInfo.isWearingFullSet()) return;
+        if (!ht.isWearingFullSet()) return;
 
         user.extinguish();
 
     }
 
-    @Override
-    public void onRemoved(PlayerEntity user) {
+    public static void onRemoved(PlayerEntity user, ItemStack itemStack) {
 
-        World world = user.getEntityWorld();
-
-        if (world.isClient) return;
-
-        HazmatComponent hazmatInfo = HAZMAT_COMPONENT_KEY.get(user);
-
-        removeDivingEffect(user, hazmatInfo);
+        if (!user.getEntityWorld().isClient)
+            removeDivingEffect(user, itemStack);
 
     }
 
-    private static void removeDivingEffect(PlayerEntity playerEntity, HazmatComponent hazmatComponent) {
-        if (hazmatComponent.wasDiving()) {
+    private static void removeDivingEffect(PlayerEntity playerEntity, ItemStack stack) {
+        var ht = new HazmatTag(stack.getOrCreateNbt());
+        if (ht.wasDiving()) {
             playerEntity.removeStatusEffect(StatusEffects.WATER_BREATHING);
-            hazmatComponent.setWasDiving(false);
+            playerEntity.sendMessage(Text.of("DEBUG: disabling water breathing"));
+            //TODO: This doesn't seem to work
+            HazmatTag.mutate(stack, t -> t.setWasDiving(false));
         }
     }
 

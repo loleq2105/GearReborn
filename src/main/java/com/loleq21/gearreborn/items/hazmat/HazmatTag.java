@@ -1,17 +1,14 @@
-package com.loleq21.gearreborn.components;
+package com.loleq21.gearreborn.items.hazmat;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 
-import static com.loleq21.gearreborn.components.GRComponents.HAZMAT_COMPONENT_KEY;
+import java.util.function.Consumer;
 
-public class HazmatComponent implements ComponentV3, AutoSyncedComponent {
+public class HazmatTag {
 
-    private final Object provider;
+    public static final String SLUG = "hazmat_data";
 
     public static final String BITS_KEY = "bits";
     public static final String DIVE_KEY = "dive";
@@ -25,14 +22,38 @@ public class HazmatComponent implements ComponentV3, AutoSyncedComponent {
     private boolean wasDiving;
     private int lastCells;
 
-    public HazmatComponent(Object provider) {
-        this.provider = provider;
+    public HazmatTag(NbtCompound nbtCompound) {
+        var domain = nbtCompound.getCompound(SLUG);
+        this.readFromNbt(domain);
     }
 
     /*
      Code partially adapted from Create
      Available at: https://github.com/Fabricators-of-Create/Create/blob/caac54ea1f6ab7dcd22aa810a027e73eae34233d/src/main/java/com/simibubi/create/content/equipment/armor/NetheriteDivingHandler.java#L48
     */
+
+    public static void mutate(ItemStack stack, Consumer<HazmatTag> action)
+    {
+        var nbt = stack.getOrCreateNbt();
+        var ht = new HazmatTag(nbt);
+        action.accept(ht);
+        ht.serializeAsSubtag(stack);
+    }
+
+
+    public void serializeAsSubtag(ItemStack stack)
+    {
+        var nbt = stack.getOrCreateNbt();
+        this.serializeAsSubtag(nbt);
+        stack.setNbt(nbt);
+    }
+
+    public void serializeAsSubtag(NbtCompound nbt)
+    {
+        var compound = new NbtCompound();
+        this.writeToNbt(compound);
+        nbt.put(SLUG, compound);
+    }
 
     public void setBit(EquipmentSlot equipmentSlot){
         if ((this.bits & 0b1111) == 0b1111) {
@@ -66,12 +87,10 @@ public class HazmatComponent implements ComponentV3, AutoSyncedComponent {
 
     public void setDive(boolean dive) {
         this.dive = dive;
-        HAZMAT_COMPONENT_KEY.sync(this.provider);
     }
 
     public void setFull(boolean full) {
         this.full = full;
-        HAZMAT_COMPONENT_KEY.sync(this.provider);
     }
 
     public boolean canDive() {
@@ -100,7 +119,6 @@ public class HazmatComponent implements ComponentV3, AutoSyncedComponent {
         this.wasDiving = wasDiving;
     }
 
-    @Override
     public void readFromNbt(NbtCompound tag) {
         this.bits = tag.getByte(BITS_KEY);
         this.dive = tag.getBoolean(DIVE_KEY);
@@ -109,7 +127,6 @@ public class HazmatComponent implements ComponentV3, AutoSyncedComponent {
         this.wasDiving = tag.getBoolean(WAS_DIVING_KEY);
     }
 
-    @Override
     public void writeToNbt(NbtCompound tag) {
         tag.putByte(BITS_KEY, this.bits);
         tag.putBoolean(DIVE_KEY, this.dive);
@@ -118,22 +135,4 @@ public class HazmatComponent implements ComponentV3, AutoSyncedComponent {
         tag.putBoolean(WAS_DIVING_KEY, this.wasDiving);
     }
 
-    // Only sync the info that's useful for the client
-
-    @Override
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
-        NbtCompound tag = new NbtCompound();
-        tag.putBoolean(DIVE_KEY, this.dive);
-        tag.putBoolean(FULL_KEY, this.full);
-        buf.writeNbt(tag);
-    }
-
-    @Override
-    public void applySyncPacket(PacketByteBuf buf) {
-        NbtCompound tag = buf.readNbt();
-        if (tag != null) {
-            this.dive = tag.getBoolean(DIVE_KEY);
-            this.full = tag.getBoolean(FULL_KEY);
-        }
-    }
 }

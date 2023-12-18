@@ -1,7 +1,8 @@
 package com.loleq21.gearreborn.items;
 
-import com.loleq21.gearreborn.components.GRComponents;
 import com.loleq21.gearreborn.GearReborn;
+import com.loleq21.gearreborn.items.hazmat.HazmatTag;
+import com.loleq21.gearreborn.items.hazmat.HazmatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -93,8 +94,11 @@ public class StunGunItem extends Item implements RcEnergyItem, CooldownItem {
             target.damage(world.getDamageSources().create(TRDamageTypes.ELECTRIC_SHOCK), arthropodDamage);
         } else if (!stunBosses && GearReborn.bossMobs.contains(target.getType())) {
             // Do nothing, just make a fool of the player >:))))
-        } else if (target instanceof PlayerEntity && GRComponents.HAZMAT_COMPONENT_KEY.get(target).isWearingFullSet()) {
-            return false;
+        } else if (target instanceof PlayerEntity) {
+            HazmatTag ht = HazmatUtil.getHazmatTag(target);
+            if(ht!=null && ht.isWearingFullSet()){
+                return false;
+            }
         } else {
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessTicks, 5, false, true, true));
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, weaknessTicks, 4, false, true, true));
@@ -161,7 +165,7 @@ public class StunGunItem extends Item implements RcEnergyItem, CooldownItem {
 
     @Override
     public float getCooldownProgress(PlayerEntity player, World world, ItemStack stack, float tickDelta) {
-        if(!canCoolDown(stack)){
+        if(!canCoolDown(stack)) {
             return 0.0f;
         }
         return MathHelper.clamp((getCooldown(stack) - 1 * tickDelta) / cooldownTicks, 0.0f, 1.0f);

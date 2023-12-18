@@ -1,35 +1,33 @@
 package com.loleq21.gearreborn;
 
+import com.loleq21.gearreborn.items.hazmat.HazmatTag;
 import com.loleq21.gearreborn.items.NightVisionGoggles;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import com.loleq21.gearreborn.items.hazmat.HazmatChestPiece;
+import com.loleq21.gearreborn.items.hazmat.HazmatUtil;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
-import net.minecraft.world.World;
 import reborncore.common.util.ItemUtils;
 import team.reborn.energy.api.base.SimpleEnergyItem;
 import techreborn.api.events.CableElectrocutionEvent;
-
-import static com.loleq21.gearreborn.items.NightVisionGoggles.disableNightVision;
-import static com.loleq21.gearreborn.components.GRComponents.HAZMAT_COMPONENT_KEY;
 
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.loleq21.gearreborn.items.NightVisionGoggles.disableNightVision;
 
 public class GearReborn implements ModInitializer {
 
@@ -78,7 +76,8 @@ public class GearReborn implements ModInitializer {
 
         CableElectrocutionEvent.EVENT.register((livingEntity, cableType, blockPos, world, cableBlockEntity) -> {
             if (livingEntity instanceof PlayerEntity player) {
-                if (HAZMAT_COMPONENT_KEY.get(player).isWearingFullSet()) {
+                HazmatTag ht = HazmatUtil.getHazmatTag(livingEntity);
+                if (ht != null && ht.isWearingFullSet()) {
                     return false;
                 }
             }
@@ -91,10 +90,36 @@ public class GearReborn implements ModInitializer {
                     return;
                 }
 
-                if(currentStack.isOf(hazmatSlotMap.get(slot))){
-                    HAZMAT_COMPONENT_KEY.get(entity).setBit(slot);
-                } else {
-                    HAZMAT_COMPONENT_KEY.get(entity).clearBit(slot);
+                if((previousStack.isOf(GRContent.HAZMAT_CHESTPIECE) || currentStack.isOf(GRContent.HAZMAT_CHESTPIECE)) && HazmatUtil.isEqualIgnoreHazmatTag(previousStack, currentStack)){
+                    return;
+                }
+
+                if(previousStack.isOf(GRContent.HAZMAT_CHESTPIECE)){
+                    HazmatChestPiece.onRemoved((PlayerEntity) entity, previousStack);
+                }
+
+                ItemStack hc = HazmatUtil.getChestpiece(entity);
+
+                if(ItemStack.areEqual(currentStack, hc)){
+                    for(int entityId : PlayerInventory.ARMOR_SLOTS) {
+                        HazmatTag ht = new HazmatTag(hc.getOrCreateNbt());
+                        EquipmentSlot equipmentSlot = EquipmentSlot.fromTypeIndex(EquipmentSlot.Type.ARMOR, entityId);
+                        if (entity.getEquippedStack(equipmentSlot).isOf(hazmatSlotMap.get(equipmentSlot))) {
+                            ht.setBit(equipmentSlot);
+                        } else {
+                            ht.clearBit(equipmentSlot);
+                        }
+                        ht.serializeAsSubtag(hc);
+                    }
+                }
+                else if (hc!=ItemStack.EMPTY){
+                    HazmatTag ht = new HazmatTag(hc.getOrCreateNbt());
+                    if(currentStack.isOf(hazmatSlotMap.get(slot))){
+                        ht.setBit(slot);
+                    } else {
+                        ht.clearBit(slot);
+                    }
+                    ht.serializeAsSubtag(hc);
                 }
 
             }

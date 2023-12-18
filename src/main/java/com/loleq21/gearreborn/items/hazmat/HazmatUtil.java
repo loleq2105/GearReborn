@@ -1,7 +1,6 @@
 package com.loleq21.gearreborn.items.hazmat;
 
 import com.loleq21.gearreborn.GRContent;
-import com.loleq21.gearreborn.GearReborn;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -9,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.loleq21.gearreborn.GRConfig.CONFIG;
 
-public class HazmatAirUtil {
+public class HazmatUtil {
 
     /**
      <p>Largely adapted code from {@link team.reborn.energy.api.base.SimpleBatteryItem} for the purpose of handling the air level of the hazmat suit</p>
@@ -20,11 +19,40 @@ public class HazmatAirUtil {
 
     public static final String AIR_KEY = "air";
 
+    public static HazmatTag getHazmatTag(LivingEntity entity){
+        ItemStack itemStack = getChestpiece(entity);
+        return itemStack == ItemStack.EMPTY ? null : new HazmatTag(itemStack.getOrCreateNbt());
+    }
+
     public static ItemStack getChestpiece(LivingEntity entity) {
         for (ItemStack itemStack : entity.getArmorItems())
             if (!itemStack.isEmpty() && itemStack.isOf(GRContent.HAZMAT_CHESTPIECE))
                 return itemStack;
         return ItemStack.EMPTY;
+    }
+
+    /**
+     Adapted method of {@link reborncore.common.util.ItemUtils#isEqualIgnoreEnergy}
+     */
+
+    public static boolean isEqualIgnoreHazmatTag(ItemStack stack1, ItemStack stack2) {
+        if (stack1 == stack2) {
+            return true;
+        } else if (!stack1.isOf(stack2.getItem())) {
+            return false;
+        } else if (stack1.getNbt() == stack2.getNbt()) {
+            return true;
+        } else if (stack1.getNbt() != null && stack2.getNbt() != null) {
+            NbtCompound nbt1Copy = stack1.getNbt().copy();
+            NbtCompound nbt2Copy = stack2.getNbt().copy();
+            nbt1Copy.remove(AIR_KEY);
+            nbt2Copy.remove(AIR_KEY);
+            nbt1Copy.remove(HazmatTag.SLUG);
+            nbt2Copy.remove(HazmatTag.SLUG);
+            return nbt1Copy.equals(nbt2Copy);
+        } else {
+            return false;
+        }
     }
 
     public static boolean hasAir(ItemStack stack){

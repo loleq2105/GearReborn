@@ -1,11 +1,9 @@
 package com.loleq21.gearreborn.items;
 
-import com.loleq21.gearreborn.components.GRComponents;
-import net.minecraft.entity.player.ItemCooldownManager;
+import com.loleq21.gearreborn.items.hazmat.HazmatUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -62,12 +60,14 @@ public class ElectricWrenchItem extends WrenchItem implements RcEnergyItem {
         }
     }
 
-//    @Override
-//    public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
-//        player.sendMessage(Text.of(String.format("%8s", Integer.toBinaryString(GRComponents.HAZMAT_COMPONENT_KEY.get(player).getBits() & 0xFF)).replace(' ', '0')), false);
-//        ItemCooldownManager manager = player.getItemCooldownManager();
-//        player.sendMessage(Text.of(Long.toString(player.deathTime)));
-//        return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
-//    }
+    @Override
+    public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
+        var ht = HazmatUtil.getHazmatTag(player);
+        if(ht!=null) {
+            player.sendMessage(Text.of(String.format("%8s", Integer.toBinaryString(ht.getBits() & 0xFF)).replace(' ', '0')), false);
+        }
+        player.sendMessage(Text.of(Long.toString(player.deathTime)));
+        return TypedActionResult.success(player.getStackInHand(hand));
+    }
 
 }
